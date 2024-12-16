@@ -1,13 +1,32 @@
 import { faBars, faSignOut } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React from 'react'
-import SideMenu from './SideMenu'
+import React, { useEffect, useState } from 'react'
 import Section from './Navigation/Section/Section'
 import NavItem from './Navigation/Section/NavItem'
+import {LogoutService} from "@/Infrastructure/Services/Auth/LoginService";
+import { useRouter } from 'next/router'
+import { UserDetailsEntitie } from '@/domain/entities/user.entities'
 
 export default function Menu({pageTitle} : {pageTitle? : string}) {
+    const router  = useRouter();
+    const [currentUser, setCurrentUser] = useState<UserDetailsEntitie>();
+    const handleLogout = () => {
+        LogoutService();
+        router.push('/auth/login')
+    }
+
+    useEffect(() => {
+        const user  = localStorage.getItem('user')
+        if (user) {
+            const userDetails  = JSON.parse(user) as UserDetailsEntitie
+            setCurrentUser(userDetails)
+        }
+
+    }, []);
+
+    
   return (
-    <div className='lg:px-14  xs:px-2 flex flex-col lg:flex-row justify-between lg:items-center'>
+    <div className='lg:px-14  xs:px-2 flex flex-col lg:flex-row justify-between lg:items-center '>
         <div className='mb-5 space-x-4 flex items-center'>
             
             <div className="drawer drawer-start w-fit z-200 lg:hidden xs:block ">
@@ -73,22 +92,22 @@ export default function Menu({pageTitle} : {pageTitle? : string}) {
                     <div className="dropdown dropdown-bottom dropdown-end hover:cursor-pointer">
                         <div tabIndex={0}  className="m-1 flex items-center">
                             <div className="avatar online">
-                                <div className="w-24 rounded-full w-9">
-                                    <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                                <div className="rounded-full w-9">
+                                    <img src={currentUser?.picture} />
                                 </div>
                                 
                             </div>
                             <div className='ml-2'>
                                 <div>
-                                    <span className=' text-md  font-gray-500'>Alex T. Ruben</span>
+                                    <span className=' text-md  font-gray-500'>{currentUser?.username}</span>
                                 </div>
                                 <div>
-                                    <span className=' text-xs font-gray-500'>ynguetse@gmail.com</span>
+                                    <span className=' text-xs font-gray-500'>{currentUser?.email}</span>
                                 </div>
                             </div>
                         </div>
                         <ul className="menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
-                            <li><a className='text-red-800'><FontAwesomeIcon icon={faSignOut} /> Sign Out</a></li>
+                            <li ><a href='#' onClick={() => handleLogout() } className='text-red-800' ><FontAwesomeIcon icon={faSignOut} /> Sign Out</a></li>
                         </ul>
                     </div>
                 </div>

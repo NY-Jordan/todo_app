@@ -3,7 +3,7 @@ import SectionTaskHeader from './SectionTaskHeader'
 import SectionTaskCard from './SectionTaskCard'
 import { Reorder } from 'framer-motion'
 import AddTask from './AddTask'
-import { useResponsive } from '@/Infrastructure/Hooks/useResponsive'
+import { useResponsive } from '@/Infrastructure/hooks/useResponsive'
 
 type props = {
     showMoreButton? : boolean,

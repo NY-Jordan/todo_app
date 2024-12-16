@@ -4,13 +4,13 @@ import Menu from '../components/Menu'
 
 export default function Layout({children, pageTitle} : {children : React.ReactNode, pageTitle? : string}) {
   return (
-    <div className=' h-screen w-full flex'>
+    <div className='h-full w-full flex overflow-y-hidden '>
       <div className="bg-white flex overflow-y-hidden  w-full">
             <SideMenu />
-            <div className='lg:w-[87%] w-full p-4 overflow-y-auto h-full'>
+            <div className='lg:w-[87%]   w-full  pt-4 scrollbar-rounded scrollbar-hidden hover:scrollbar-hover  overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500   h-full'>
                 <Menu pageTitle={pageTitle} />
-                <div className="divider"></div>
-                {children}
+                <div className="bg-gray-50 divider mb-0 pb-0"></div>
+                <div className='bg-gray-50 p-4 h-full'>{children}</div>
             </div>
       </div>
     </div>

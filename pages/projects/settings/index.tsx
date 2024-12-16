@@ -1,7 +1,7 @@
 import Image from "next/image";
 import localFont from "next/font/local";
 import Layout from "@/presentation/layout/Layout";
-import { useResponsive } from "@/Infrastructure/Hooks/useResponsive";
+import { useResponsive } from "@/Infrastructure/hooks/useResponsive";
 import Card from "@/presentation/components/Card/Card";
 import ProjectsTable from "@/presentation/components/ProjectsTable";
 import CollaboratorsTab from "@/presentation/components/ProjectSetting/CollaboratorsTab";

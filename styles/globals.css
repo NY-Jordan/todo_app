@@ -33,8 +33,55 @@
     font-family: Nunito, "Segoe UI", arial;
   }
 
+
 }
+
+
 
 .drawer {
   z-index : 9999 !important;
+}
+
+
+.scrollbar-rounded {
+  scrollbar-width: thin; /* Pour Firefox */
+}
+.scrollbar-rounded::-webkit-scrollbar {
+  width: 8px; /* Largeur verticale */
+  height: 8px; /* Largeur horizontale */
+}
+.scrollbar-rounded::-webkit-scrollbar-thumb {
+  background-color: #4b5563; /* Couleur de la barre */
+  border-radius: 10px; /* Bord arrondi */
+}
+.scrollbar-rounded::-webkit-scrollbar-track {
+  background-color: #d1d5db; /* Couleur de l'arrière-plan */
+  border-radius: 10px; /* Bord arrondi */
+}
+
+.scrollbar-hidden {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+.scrollbar-hover {
+  scrollbar-width: thin; /* Firefox */
+}
+
+.scrollbar-hover::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrollbar-hover::-webkit-scrollbar-thumb {
+  background-color: #4b5563; /* Couleur de la scrollbar */
+  border-radius: 4px; /* Bord arrondi */
+}
+
+.scrollbar-hover::-webkit-scrollbar-track {
+  background-color: #d1d5db; /* Couleur de l’arrière-plan */
 }

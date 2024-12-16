@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
-import useOutsideClick from '@/Infrastructure/Hooks/useOutsideClick';
+import useOutsideClick from '@/Infrastructure/hooks/useOutsideClick';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
