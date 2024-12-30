@@ -16,6 +16,7 @@ export const LoginService = async (email : string, password : string) => {
         setCookie("token", data.token, {
             maxAge : 60 * 60 * 24,
         });
+        localStorage.setItem('token', data.token)
         localStorage.setItem("user", JSON.stringify(data.user));
         store.dispatch(loginUserSucess());
     } catch (e) {
@@ -64,6 +65,8 @@ export const googleAuthCallback = async (callbackParams : string) => {
       setCookie("token", data.token, {
         maxAge : 60 * 60 * 24,
      });
+   
+     localStorage.setItem('token', data.token.access_token)
       localStorage.setItem("user", JSON.stringify(data.user) );
       store.dispatch(loginUserSucess()); 
     }
@@ -80,6 +83,7 @@ export const githubAuthCallback = async (callbackParams : string) => {
       setCookie("token", data.token, {
         maxAge : 60 * 60 * 24,
      });
+     localStorage.setItem('token', data.token.access_token)
       localStorage.setItem("user", JSON.stringify(data.user) );
       store.dispatch(loginUserSucess()); 
     }

@@ -32,6 +32,17 @@
   html {
     font-family: Nunito, "Segoe UI", arial;
   }
+  body {
+    overflow-y: hidden;
+  }
+
+  .btn-dark{
+    @apply btn rounded-md bg-gray-700  text-white shadow-md shadow-black border-gray-700 hover:bg-gray-600 hover:border-gray-600
+  }
+
+  .btn-primary {
+    @apply btn rounded-md bg-indigo-600 text-white shadow-md shadow-indigo-500 border-indigo-600 hover:bg-indigo-700 hover:border-indigo-700
+  }
 
 
 }

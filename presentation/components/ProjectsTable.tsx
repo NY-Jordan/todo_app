@@ -1,61 +1,31 @@
-import { faGear, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faGear, faPlus, faTrash, faUndo } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import CreateProjectsModal from "./Projects/CreateProjectsModal";
+import { useState } from "react";
+import { useAppSelector } from "@/app/store/hook";
+import { IProject } from "@/domain/entities/project.entities";
+import DeleteProjectModal from "./Projects/DeleteProjectModal";
 
-const brandData = [
-  {
-    logo: "/images/brand/brand-01.svg",
-    name: "Google",
-    visitors: 3.5,
-    revenues: "5,768",
-    sales: 590,
-    conversion: 4.8,
-  },
-  {
-    logo: "/images/brand/brand-02.svg",
-    name: "Twitter",
-    visitors: 2.2,
-    revenues: "4,635",
-    sales: 467,
-    conversion: 4.3,
-  },
-  {
-    logo: "/images/brand/brand-03.svg",
-    name: "Github",
-    visitors: 2.1,
-    revenues: "4,290",
-    sales: 420,
-    conversion: 3.7,
-  },
-  {
-    logo: "/images/brand/brand-04.svg",
-    name: "Vimeo",
-    visitors: 1.5,
-    revenues: "3,580",
-    sales: 389,
-    conversion: 2.5,
-  },
-  {
-    logo: "/images/brand/brand-05.svg",
-    name: "Facebook",
-    visitors: 3.5,
-    revenues: "6,768",
-    sales: 390,
-    conversion: 4.2,
-  },
-];
 
 const ProjectsTable = () => {
     const router  = useRouter();
+    const [createProjectModal, setCreateProjectModal] = useState<boolean>(false)
+    const [deleteProjectModal, setDeleteProjectModal] = useState<boolean>(false);
+    const [deleteProjectId, setDeleteProjectId] = useState<number>();
+    const fecthProjectsState = useAppSelector(state => state.projects).fetch
+
+ 
   return (
-    <div className="rounded-sm shadow-lg border border-stroke bg-white px-5 pb-2.5 pt-6  dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+    <>
+         <div className="rounded-sm shadow-lg border border-stroke bg-white px-5 pb-2.5 pt-6  dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
       <div className="flex justify-between">
         <h4 className="mb-6 text-xl font-semibold text-black dark:text-white">
             My Projects
         </h4>
         <h4 className="mb-6 text-xl font-semibold text-black dark:text-white">
-           <button className="btn bg-indigo-500 hover:bg-indigo-700 text-white"><FontAwesomeIcon icon={faPlus} /> New Project</button>
+           <button onClick={() => setCreateProjectModal(true)} className="btn bg-indigo-500 hover:bg-indigo-700 text-white"><FontAwesomeIcon icon={faPlus} /> New Project</button>
         </h4>
       </div>
 
@@ -88,10 +58,10 @@ const ProjectsTable = () => {
           </div>
         </div>
 
-        {brandData.map((brand, key) => (
+        {(fecthProjectsState.data?.projects && fecthProjectsState.data?.projects?.length) ? fecthProjectsState.data.projects.map((project : IProject, key : number) => (
           <div
             className={`grid grid-cols-3  sm:grid-cols-5 ${
-              key === brandData.length - 1
+              key === fecthProjectsState.data.projects.length - 1
                 ? ""
                 : "border-b border-stroke dark:border-strokedark"
             }`}
@@ -99,34 +69,50 @@ const ProjectsTable = () => {
           >
             <div className="flex items-center gap-3 p-2.5 xl:p-5">
               <div className="flex-shrink-0">
-                <Image src={brand.logo} alt="Brand" width={48} height={48} />
+               {project.logo && <img src={project.logo} alt="Brand" width={68} height={68} />}
               </div>
               <p className="hidden text-black dark:text-white sm:block">
-                {brand.name}
+                {project.name}
               </p>
             </div>
 
             <div className="flex items-center justify-center p-2.5 xl:p-5">
-              <p className="text-black dark:text-white">{brand.visitors}K</p>
+              <p className="text-black dark:text-white">{project.collaborators}</p>
             </div>
 
             <div className="flex items-center justify-center p-2.5 xl:p-5">
-              <p className="text-meta-3">${brand.revenues}</p>
+              <p className="text-meta-3">{project.tasks}</p>
             </div>
 
             <div className="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
-              <p className="text-black dark:text-white">{brand.sales}</p>
+              <p className="text-black dark:text-white">00</p>
             </div>
 
-            <div className="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
+            <div className="hidden items-center space-x-6 justify-center p-2.5 sm:flex xl:p-5">
               <a className="tooltip hover:cursor-pointer" onClick={() => router.push('/projects/settings')} data-tip='Settings'>
                 <FontAwesomeIcon icon={faGear} />
               </a>
+             {project.is_admin ? <a className="tooltip hover:cursor-pointer" onClick={() => {
+                  setDeleteProjectModal(true);
+                  setDeleteProjectId(project.id);
+              }} data-tip='Delete'>
+                <FontAwesomeIcon icon={faTrash} color="red" />
+              </a> :
+              <a className="tooltip hover:cursor-pointer" onClick={() => router.push('/projects/settings')} data-tip='Left  Project'>
+                <FontAwesomeIcon icon={faUndo}  color="red" />
+              </a>}
             </div>
-          </div>
-        ))}
+          </div> 
+          
+          )) :  <div className="text-red-500 w-full text-center mb-4">No Project Yet</div>
+
+        }
       </div>
     </div>
+    <CreateProjectsModal active={createProjectModal} setActive={setCreateProjectModal} />
+    {deleteProjectId  && <DeleteProjectModal active={deleteProjectModal} projectId={deleteProjectId} setActive={setDeleteProjectModal} />}
+    </>
+   
   );
 };
 

@@ -1,15 +1,25 @@
 import { faFilter, faSort , faPlus} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React from 'react'
+import React, { useState } from 'react'
 import DailyTaskITem from './DailyTaskITem'
+import CreateDailyTaskModal from './CreateDailyTaskModal'
+import { useAppSelector } from '@/app/store/hook'
+import classNames from 'classnames';
+import CustomButton from './button/CustomButton'
+import { ITask } from '@/domain/entities/task.entities'
 
 export default function DailyTodoCard() {
+  const [active, setActive] = useState<boolean>(false);
+  const fetchDailyTasks = useAppSelector(state => state.dailyTask).fetch;
+  
+  
   return (
-    <div className=' mb-4 w-2/3 bg-white border rounded-sm px-5 pb-2 pt-4  '>
+    <>
+           <div className=' mb-4 w-2/3 bg-white border rounded-sm px-5 pb-2 pt-4  '>
       <div className='  max-h-[10%]  w-full flex items-center justify-between'>
 
         <div>
-          <h4 className='text-2xl font-bold'>To do</h4>
+          <h4 className='text-2xl font-bold'>Daily Todo</h4>
           <div>
             <span className='text-gray-500'>Task assigned to me</span>
           </div>
@@ -42,21 +52,30 @@ export default function DailyTodoCard() {
         </div>
       </div>
       <div className='h-[75%] scrollbar-rounded scrollbar-hidden hover:scrollbar-hover  overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-white'>
-        <DailyTaskITem />
-        <DailyTaskITem />
-        <DailyTaskITem />
-        <DailyTaskITem />
-        <DailyTaskITem />
-        <DailyTaskITem />
-        <DailyTaskITem />
-        <DailyTaskITem />
+       {
+        (fetchDailyTasks.data ) && 
+        fetchDailyTasks.data.length ?  fetchDailyTasks.data.map((task : ITask) => { return <DailyTaskITem 
+            title={task.title}
+            status={task.type.name}
+            date={task.updated_at}
+           /> }) : 
+        <div className=' flex justify-center items-center w-full h-full'>
+            <div className='flex flex-col items-center space-y-4 justify-center'>
+              <p>Hey there! 👋 It looks like your to-do list is empty. Why not add your first task and get started? 🚀 You've got this! 💪</p>
+              <CustomButton text='Add Task'  btnClassName='w-[20%]' onClick={() => setActive(true)}   />
+            </div>
+        </div>
+        }
+        
       </div>
       <div className='mt-2'>
-          <a className='flex items-center font-bold text-indigo-700  space-x-3'>
+          <a onClick={() => setActive(true)} className='flex items-center hover:cursor-pointer font-bold text-indigo-700  space-x-3'>
             <FontAwesomeIcon icon={faPlus} size='xs' />
             <span className='text-sm'>Add new task</span>
           </a>
       </div>
     </div>
+    <CreateDailyTaskModal active={active} setActive={setActive} />
+    </>
   )
 }
