@@ -14,7 +14,6 @@ export default function index() {
 
   useEffect(() => {
     FetchAllProjects();
-    FetchAllDailyTasks();
   }, [])
 
   return (

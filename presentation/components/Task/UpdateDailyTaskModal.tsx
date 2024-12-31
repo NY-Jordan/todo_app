@@ -1,39 +1,56 @@
 import { faClose } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useEffect } from 'react'
-import CustomButton from './button/CustomButton'
+import CustomButton from '../button/CustomButton'
 import { FieldValues, useForm } from 'react-hook-form';
-import { createNewDailyTasks } from '@/Infrastructure/Services/Task/DailyTaskService';
-import { useAppDispatch, useAppSelector } from '../../app/store/hook';
-import { createDailyTaskInit, resetCreateDailyTask } from '@/app/Actions/DailyTaskActions';
+import { createNewDailyTasks, updateDailyTasks } from '@/Infrastructure/Services/Task/DailyTaskService';
+import { useAppDispatch, useAppSelector } from '../../../app/store/hook';
+import { createDailyTaskInit, editDailyTaskInit, resetCreateDailyTask, resetEditDailyTask } from '@/app/Actions/DailyTaskActions';
 import toast from 'react-hot-toast';
+import { ITask } from '@/domain/entities/task.entities';
 
-export default function CreateDailyTaskModal({active, setActive} : {active : boolean, setActive : React.Dispatch<React.SetStateAction<boolean>>}) {
+export default function UpdateDailyTaskModal({active, setActive, task} : {active : boolean, setActive : React.Dispatch<React.SetStateAction<boolean>>, task : ITask}) {
     const { handleSubmit, register, watch , reset} = useForm();
     const dispatch = useAppDispatch();
-    const createDailyTaskState = useAppSelector(state => state.dailyTask).create; 
-
-    const handleCreateDailyTask = (data : FieldValues) => {
-        dispatch(createDailyTaskInit());
-        createNewDailyTasks({
+    const updateDailyTaskState = useAppSelector(state => state.dailyTask).edit; 
+ 
+    const handleUpdateDailyTask = (data : FieldValues) => {
+        dispatch(editDailyTaskInit());
+        updateDailyTasks({
           title : data.title,
           breifing : data.breifing
-        })
+        }, task.id)
     }
 
     useEffect(() => {
-      if (createDailyTaskState.status === "success") {
-          toast.success('task created successfully 🎉🎉')
+        const defaultValues : {
+            title : string | undefined,
+            breifing : string | undefined,
+        } = {
+            title : undefined,
+            breifing : undefined,
+        }
+
+        defaultValues.title = task.title;
+        defaultValues.breifing = task.breifing;
+        reset({...defaultValues})
+    }, [task])
+
+    useEffect(() => {
+      if (updateDailyTaskState.taskId === task.id) {
+        if (updateDailyTaskState.status === "success") {
+          toast.success('Task updated successfully.')
           setActive(false);
-          dispatch(resetCreateDailyTask());
+          dispatch(resetEditDailyTask());
           reset();
   
+        }
+        if (updateDailyTaskState.status === "failure") {
+          toast.error('Process Failed');
+          dispatch(resetCreateDailyTask());
+        }
       }
-      if (createDailyTaskState.status === "failure") {
-        toast.error('Process Failed');
-        dispatch(resetCreateDailyTask());
-      }
-    },[createDailyTaskState.status])
+    },[updateDailyTaskState.status])
   
   return (
     <>
@@ -48,7 +65,7 @@ export default function CreateDailyTaskModal({active, setActive} : {active : boo
                  </div>
       
                  <div className="w-full my-4">
-                    <form id='create-daily-task-form' onSubmit={handleSubmit(handleCreateDailyTask)} className="w-full"  >
+                    <form id={`update-daily-task-form${task.id}`} onSubmit={handleSubmit(handleUpdateDailyTask)} className="w-full"  >
                         <label className="form-control w-full ">
                         <div className="label">
                             <span className="label-text font-bold dark:text-white">Title of your task? <small className='text-red-800'>*</small></span>
@@ -73,7 +90,7 @@ export default function CreateDailyTaskModal({active, setActive} : {active : boo
                  </div>
       
                   <div className="modal-action">
-                    <CustomButton loader={createDailyTaskState.status === 'loading'} form='create-daily-task-form' type="submit" btnClassName="w-1/4"  text="Submit" size='lg'  variant='primary'  />
+                    <CustomButton loader={updateDailyTaskState.status === 'loading'} form={`update-daily-task-form${task.id}`} type="submit" btnClassName="w-1/4"  text="Update" size='lg'  variant='primary'  />
                   </div>
               </div>
               </div>

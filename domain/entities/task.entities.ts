@@ -11,6 +11,13 @@ export interface ITaskType {
     updated_at: string;
   }
   
+  export interface ITaskPhase {
+    id: number;
+    name: TaskPhasesEnum;
+    created_at: string;
+    updated_at: string;
+  }
+  
  export interface ITask {
     id: number;
     taskgroup_id: number | null;
@@ -19,7 +26,7 @@ export interface ITaskType {
     breifing: string;
     details: string | null;
     reminder: string | null;
-    phase: number;
+    phase: ITaskPhase;
     type: ITaskType;
     status: string;
     created_at: string;
