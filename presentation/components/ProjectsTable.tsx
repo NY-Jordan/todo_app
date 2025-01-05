@@ -89,7 +89,7 @@ const ProjectsTable = () => {
             </div>
 
             <div className="hidden items-center space-x-6 justify-center p-2.5 sm:flex xl:p-5">
-              <a className="tooltip hover:cursor-pointer" onClick={() => router.push('/projects/settings')} data-tip='Settings'>
+              <a className="tooltip hover:cursor-pointer" onClick={() => router.push(`/projects/settings/${project.id}`)} data-tip='Settings'>
                 <FontAwesomeIcon icon={faGear} />
               </a>
              {project.is_admin ? <a className="tooltip hover:cursor-pointer" onClick={() => {
@@ -98,7 +98,7 @@ const ProjectsTable = () => {
               }} data-tip='Delete'>
                 <FontAwesomeIcon icon={faTrash} color="red" />
               </a> :
-              <a className="tooltip hover:cursor-pointer" onClick={() => router.push('/projects/settings')} data-tip='Left  Project'>
+              <a className="tooltip hover:cursor-pointer" onClick={() => router.push(`/projects/settings/${project.id}`)} data-tip='Left  Project'>
                 <FontAwesomeIcon icon={faUndo}  color="red" />
               </a>}
             </div>

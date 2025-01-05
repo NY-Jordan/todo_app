@@ -8,34 +8,39 @@ import CollaboratorsTab from "@/presentation/components/ProjectSetting/Collabora
 import FileTab from "@/presentation/components/ProjectSetting/FileTab";
 import TaskTab from "@/presentation/components/ProjectSetting/TaskTab";
 import TaskGroups from "@/presentation/components/ProjectSetting/TaskGroups";
+import { getProjectDetails } from "@/Infrastructure/Services/projects/ProjectsService";
+import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/router";
+import { type } from "node:os";
+import { IProject } from "@/domain/entities/project.entities";
+import ProjectSettingLoader from "@/presentation/components/ProjectSettingLoader";
+import { useEffect } from "react";
 
 export default function index() {
-  const {isTabletOrMobile, isSM} = useResponsive();
+    const {isTabletOrMobile, isSM} = useResponsive();
+    const router  = useRouter();
+    const {id} = router.query;
+
+    const fecthProjectDetails = useQuery({
+        queryKey: ['projectDetails', id], 
+        queryFn: ({ queryKey }) => {
+        const [, id] = queryKey;
+        if (typeof id === 'string') {
+            return getProjectDetails(parseInt(id));
+        }
+        },
+        staleTime: 1000 * 60 * 60,
+    });
+
+    const projectDetails = fecthProjectDetails.data as IProject 
+
 
   return (
-  <Layout pageTitle="isiQuest Settings">
+  <Layout pageTitle={`${projectDetails?.name} Settings`}>
     
-    <div role="tablist" className="tabs tabs-bordered items-center">
-        <input type="radio" name="my_tabs_1" role="tab" className="tab w-full " aria-label="About The Projects" defaultChecked />
-        <div role="tabpanel" className="tab-content p-10">Tab content 1</div>
-        <input type="radio" name="my_tabs_1" role="tab" className="tab w-full" aria-label="Basic Update"  />
-        <div role="tabpanel" className="tab-content p-10">
-                <form className="space-y-4  w-1/2">
-                    <label className="input input-bordered flex items-center gap-2">
-                        Name
-                        <input type="text" className="grow" placeholder="Daisy" />
-                    </label>
-                   
-                    <label className="form-control">
-                        <div className="label">
-                            <span className="label-text-alt">About</span>
-                        </div>
-                        <textarea className="textarea textarea-bordered h-24" placeholder="Bio"></textarea>
-                    </label>
-                </form>
-        </div>
-
-        <input type="radio" name="my_tabs_1" role="tab" className="tab w-full" aria-label="Colaborators" />
+   {!fecthProjectDetails.isLoading ? <div role="tablist" className="tabs tabs-bordered items-center">
+       
+        <input type="radio" name="my_tabs_1" role="tab" className="tab w-full" defaultChecked aria-label="Colaborators" />
         <div role="tabpanel" className="tab-content p-10">
             <CollaboratorsTab />
         </div>
@@ -52,9 +57,9 @@ export default function index() {
             <TaskTab />
         </div>
 
+    </div> :
+    <ProjectSettingLoader active={fecthProjectDetails.isLoading} />}
 
-    </div>
-    
   </Layout>
   );
 }

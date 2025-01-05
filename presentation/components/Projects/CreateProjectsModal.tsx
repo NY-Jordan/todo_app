@@ -1,4 +1,4 @@
-import { createProjectInit, resetCreateProjectState } from "@/app/Actions/ProjectsSctions";
+import { createProjectInit, resetCreateProjectState } from "@/app/Actions/ProjectsActions";
 import { useAppDispatch, useAppSelector } from "@/app/store/hook";
 import { CreateProject, FetchAllProjects } from "@/Infrastructure/Services/projects/ProjectsService";
 import { faClose } from "@fortawesome/free-solid-svg-icons";

@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useEffect, useState } from 'react'
 import CustomButton from '../button/CustomButton'
 import { useAppDispatch, useAppSelector } from '@/app/store/hook'
-import { deleteProjectInit, resetDeleteProjectState } from '@/app/Actions/ProjectsSctions'
+import { deleteProjectInit, resetDeleteProjectState } from '@/app/Actions/ProjectsActions'
 import { deleteProject, FetchAllProjects } from '@/Infrastructure/Services/projects/ProjectsService'
 import toast from 'react-hot-toast'
 

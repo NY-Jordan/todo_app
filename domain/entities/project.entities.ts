@@ -18,3 +18,60 @@ export interface IProject {
     created_at: string; 
     updated_at: string; 
 }
+
+
+
+export interface ProjectInvitationInterface {
+    uuid : string,
+    status : Status,
+    project : {
+        id : number,
+        name : string
+    },
+    receiver : {
+        id : number,
+        email : string,
+        picture : string,
+        username : string
+    },
+    sender : {
+        id : number,
+        email : string,
+        picture : string,
+        username : string
+    }
+}
+
+
+interface IPRojectUser {
+    id: number;
+    name: string;
+    picture: string;
+    email: string;
+    email_verified_at: string | null;
+    status_id: number;
+    google_id: string | null;
+    github_id: string | null;
+    created_at: string;
+    updated_at: string;
+    is_admin: boolean;
+  }
+  
+  interface Status {
+    id: number;
+    name: string;
+    created_at: string;
+    updated_at: string;
+  }
+  
+ export  interface IInvitation {
+    id: number;
+    uuid: string;
+    project : IProject;
+    sender: IPRojectUser;
+    receiver: IPRojectUser;
+    status: Status;
+    created_at : string,
+    updated_at : string
+  }
+  

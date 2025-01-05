@@ -8,7 +8,7 @@ export const  LoginActions = {
 }
 
 
-export const loginUserFailed = (error : string) => ({
+export const loginUserFailed = (error : any) => ({
     type : LoginActions.LOGIN_USER_FAILED,
     payload : {error : error}
 });
