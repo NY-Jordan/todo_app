@@ -1,3 +1,5 @@
+import { TaskPhasesEnum, TaskTypeEnum } from "../enum/TaskEnum";
+import { IUser } from "./user.entities";
 
 
 export interface INewDailyTaskPayload {
@@ -17,11 +19,19 @@ export interface ITaskType {
     created_at: string;
     updated_at: string;
   }
+
+  export interface IPagination {
+    current_page: number;  
+    total_pages: number;   
+    total_items: number;   
+    per_page: number;      
+  }
   
  export interface ITask {
     id: number;
     taskgroup_id: number | null;
     user_id: number;
+    assigned_user : IUser[];
     title: string;
     breifing: string;
     details: string | null;
@@ -32,3 +42,11 @@ export interface ITaskType {
     created_at: string;
     updated_at: string;
   }
+
+  export type CreateTaskType = {
+    task_group_id: number;  
+    title: string; 
+    breifing: string;
+    details: string; 
+    reminder?: Date; 
+  };

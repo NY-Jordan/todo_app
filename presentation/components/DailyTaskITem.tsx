@@ -5,8 +5,8 @@ import moment from 'moment'
 import DeleteProjectModal from './Projects/DeleteProjectModal';
 import { tasks } from '../../Infrastructure/data/task';
 import { ITask } from '@/domain/entities/task.entities';
-import DeleteDailyTaskModal from './Task/DeleteDailyTaskModal';
-import UpdateDailyTaskModal from './Task/UpdateDailyTaskModal';
+import DeleteDailyTaskModal from './Task/Daily/DeleteDailyTaskModal';
+import UpdateDailyTaskModal from './Task/Daily/UpdateDailyTaskModal';
 import { updateDailyTaskPhase } from '../../Infrastructure/Services/Task/DailyTaskService';
 import { TaskPhases } from '@/domain/enum/TaskEnum';
 import { useAppDispatch, useAppSelector } from '@/app/store/hook';

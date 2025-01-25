@@ -1,12 +1,12 @@
 import { faClose } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useEffect } from 'react'
-import CustomButton from '../button/CustomButton'
 import { FieldValues, useForm } from 'react-hook-form';
 import { createNewDailyTasks } from '@/Infrastructure/Services/Task/DailyTaskService';
-import { useAppDispatch, useAppSelector } from '../../../app/store/hook';
 import { createDailyTaskInit, resetCreateDailyTask } from '@/app/Actions/DailyTaskActions';
 import toast from 'react-hot-toast';
+import { useAppDispatch, useAppSelector } from '@/app/store/hook';
+import CustomButton from '../../button/CustomButton';
 
 export default function CreateDailyTaskModal({active, setActive} : {active : boolean, setActive : React.Dispatch<React.SetStateAction<boolean>>}) {
     const { handleSubmit, register, watch , reset} = useForm();

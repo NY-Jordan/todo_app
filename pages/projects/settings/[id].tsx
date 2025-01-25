@@ -8,7 +8,7 @@ import CollaboratorsTab from "@/presentation/components/ProjectSetting/Collabora
 import FileTab from "@/presentation/components/ProjectSetting/FileTab";
 import TaskTab from "@/presentation/components/ProjectSetting/TaskTab";
 import TaskGroups from "@/presentation/components/ProjectSetting/TaskGroups";
-import { getProjectDetails } from "@/Infrastructure/Services/projects/ProjectsService";
+import { getProjectCollaborators, getProjectDetails } from "@/Infrastructure/Services/projects/ProjectsService";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { type } from "node:os";
@@ -29,12 +29,12 @@ export default function index() {
             return getProjectDetails(parseInt(id));
         }
         },
-        staleTime: 1000 * 60 * 60,
+        staleTime: Infinity,
     });
 
     const projectDetails = fecthProjectDetails.data as IProject 
-
-
+     
+   
   return (
   <Layout pageTitle={`${projectDetails?.name} Settings`}>
     

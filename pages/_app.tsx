@@ -5,6 +5,10 @@ import {Provider} from "react-redux";
 import {store} from "@/app/store/store";
 import  { Toaster } from 'react-hot-toast';
 import usePusherSetup from "@/Infrastructure/hooks/usePusherSetup";
+import { persistQueryClient } from '@tanstack/react-query-persist-client'
+import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister'
+
+
 import {
   useQuery,
   useMutation,
@@ -16,7 +20,28 @@ import {
 export default function App({ Component, pageProps }: AppProps) {
   const echo = usePusherSetup();
 
-  const queryClient = new QueryClient()
+   // Créer un QueryClient
+   const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: 1000 * 60 * 5, 
+      },
+    },
+  });
+
+  if (typeof window !== "undefined") {
+    const persister = createSyncStoragePersister({
+      storage: window.localStorage,
+    });
+ 
+  
+  // Persister le cache
+  persistQueryClient({
+    queryClient,
+    persister,
+  });
+}
+  
 
   return <QueryClientProvider client={queryClient}> 
   <Provider store={store}>

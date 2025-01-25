@@ -1,7 +1,7 @@
 import React from 'react'
 
 type CustomButtonType = {
-    variant? : 'primary' | 'secondary' | 'dark',
+    variant? : 'primary' | 'secondary' | 'dark'| 'submit',
     loader? : boolean,
     size? : 'xs'| 'sm' | 'md' | 'lg',
     btnClassName? : string,

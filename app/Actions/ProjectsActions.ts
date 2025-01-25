@@ -1,6 +1,7 @@
 // projectsActions.js
 
 import { IInvitation, IProject } from "@/domain/entities/project.entities";
+import { ITask } from "@/domain/entities/task.entities";
 import { IUser } from "@/domain/entities/user.entities";
 
 // Constants
@@ -55,6 +56,9 @@ export const ProjectsActions = {
   REMOVE_USER_FROM_PROJECT_FAILED : "REMOVE_USER_FROM_PROJECT_FAILED",
   INIT_REMOVE_USER_FROM_PROJECT : "INIT_REMOVE_USER_FROM_PROJECT",
   RESET_REMOVE_USER_FROM_PROJECT_STATE: "RESET_REMOVE_USER_FROM_PROJECT_STATE",
+
+
+
 };
 
 
@@ -235,4 +239,7 @@ export const initRemoveUserFromProject = () => ({
 export const resetRemoveUserFromProjectState = () => ({
   type: ProjectsActions.RESET_REMOVE_USER_FROM_PROJECT_STATE,
 });
+
+
+
 

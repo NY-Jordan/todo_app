@@ -1,10 +1,10 @@
 import { faClose } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useEffect } from 'react'
-import CustomButton from '../button/CustomButton'
+import CustomButton from '../../button/CustomButton'
 import { FieldValues, useForm } from 'react-hook-form';
 import { createNewDailyTasks, updateDailyTasks } from '@/Infrastructure/Services/Task/DailyTaskService';
-import { useAppDispatch, useAppSelector } from '../../../app/store/hook';
+import { useAppDispatch, useAppSelector } from '../../../../app/store/hook';
 import { createDailyTaskInit, editDailyTaskInit, resetCreateDailyTask, resetEditDailyTask } from '@/app/Actions/DailyTaskActions';
 import toast from 'react-hot-toast';
 import { ITask } from '@/domain/entities/task.entities';

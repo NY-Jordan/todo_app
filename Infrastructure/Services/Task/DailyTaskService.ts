@@ -7,7 +7,7 @@ import { createDailyTaskFailure } from '../../../app/Actions/DailyTaskActions';
 
 export const FetchAllDailyTasks = async (search? : string, date? : string) => {
     try {
-        const reponse = await ApiClient().get(`/project/task/daily?search=${search}&date=${date}`,{
+        const reponse = await ApiClient().get(`/project/tasks/daily?search=${search}&date=${date}`,{
             headers : {
                 Authorization : await getBearerAuthToken()
             }
@@ -21,7 +21,7 @@ export const FetchAllDailyTasks = async (search? : string, date? : string) => {
 
 export const createNewDailyTasks = async (NewDailyTaskPayload : INewDailyTaskPayload ) => {
     try {
-        const reponse = await ApiClient().post("/project/task/daily/create",NewDailyTaskPayload,{
+        const reponse = await ApiClient().post("/project/tasks/daily/create",NewDailyTaskPayload,{
             headers : {
                 Authorization : await getBearerAuthToken()
             }
@@ -35,7 +35,7 @@ export const createNewDailyTasks = async (NewDailyTaskPayload : INewDailyTaskPay
 
 export const updateDailyTasks = async (NewDailyTaskPayload : INewDailyTaskPayload, taskId : number ) => {
     try {
-        const reponse = await ApiClient().post(`/project/task/daily/update/${taskId}`,NewDailyTaskPayload,{
+        const reponse = await ApiClient().post(`/project/tasks/daily/update/${taskId}`,NewDailyTaskPayload,{
             headers : {
                 Authorization : await getBearerAuthToken()
             }
@@ -50,7 +50,7 @@ export const updateDailyTasks = async (NewDailyTaskPayload : INewDailyTaskPayloa
 
 export const updateDailyTaskPhase = async (phaseId : number, taskId : number ) => {
     try {
-        const reponse = await ApiClient().post(`/project/task/daily/update/phase/${taskId}`,{phaseId : phaseId},{
+        const reponse = await ApiClient().post(`/project/tasks/daily/update/phase/${taskId}`,{phaseId : phaseId},{
             headers : {
                 Authorization : await getBearerAuthToken()
             }
@@ -65,7 +65,7 @@ export const updateDailyTaskPhase = async (phaseId : number, taskId : number ) =
 
 
 
-export const deleteTask = async  (taskId : number) => {
+export const deleteDailyTask = async  (taskId : number) => {
     try {
         const reponse = await ApiClient().delete(`/project/task/delete/${taskId}`,{
             headers : {

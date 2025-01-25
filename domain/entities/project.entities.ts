@@ -1,3 +1,4 @@
+import { IUser, UserDetailsEntitie } from '@/domain/entities/user.entities';
 export interface ICreateProject {
     name : string,
     logo : FileList|null
@@ -75,3 +76,11 @@ interface IPRojectUser {
     updated_at : string
   }
   
+
+  export interface ICollaborator {
+    id: number;
+    project : IProject,
+    user : UserDetailsEntitie,
+    created_at : string,
+    updated_at : string
+  }

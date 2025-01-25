@@ -28,6 +28,7 @@ export const LoginService = async (email : string, password : string) => {
 export const LogoutService =  () => {
     deleteCookie("token");
     localStorage.removeItem("user");
+    localStorage.clear();
 }
 
 

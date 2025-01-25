@@ -18,7 +18,7 @@ interface DropdownProps {
   hasImage?: boolean;
   style?: string;
   selectedId?: string;
-  onSelect?: (id: string) => void;
+  onSelect?: (id: string|null) => void;
 }
 
 const Dropdown = ({
@@ -36,10 +36,16 @@ const Dropdown = ({
     selectedId ? data?.find((item) => item.id === selectedId) : undefined
   );
 
-  const handleChange = (item: DropdownItem) => {
-    setSelectedItem(item);
-    onSelect && onSelect(item.id);
-    setIsOpen(false);
+  const handleChange = (item: DropdownItem|null) => {
+    if (item) {
+      setSelectedItem(item);
+      onSelect && onSelect(item.id);
+      setIsOpen(false);
+    } else {
+      setSelectedItem(undefined);
+      onSelect && onSelect(null);
+      setIsOpen(false)
+    }
   };
   useEffect(() => {
     if (selectedId && data) {
@@ -97,6 +103,24 @@ const Dropdown = ({
             aria-orientation='vertical'
             className='leading-10'
           >
+            <li
+                key={0}
+                onClick={() => handleChange(null)}
+                className={classNames(
+                  'flex items-center cursor-pointer hover:bg-gray-200 px-3',
+                  
+                )}
+              >
+                {hasImage && (
+                  <img
+                    src={'/images/profile.jpg'}
+                    alt='image'
+                    loading='lazy'
+                    className='w-8 h-8 rounded-full bg-gray-400 object-cover me-2'
+                  />
+                )}
+                <span>All</span>
+              </li>
             {data?.map((item) => (
               <li
                 key={item.id}

@@ -121,6 +121,7 @@ export default function CollaboratorsTab() {
           </tfoot>
         </table>
       </div>
+     
       <CollaboratorsSearchModal active={searchModal} setActive={setSearchModal} />
       {uuid && id &&  typeof id  === 'string' && <CancelProjectInvitationConfirmation uuid={uuid} projectId={parseInt(id)} active={cancelInvitation} setActive={setCancelInvitation} />}
       {userId && invitationId && id &&  typeof id  === 'string' && <RemoveUserFromProjectConfirmation invitationId={invitationId} userId={userId} projectId={parseInt(id)} active={removeUser} setActive={setRemoveUser} />}

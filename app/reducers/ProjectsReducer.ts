@@ -233,8 +233,6 @@ export const ProjectsReducer = (state = initialState, action : ActionType) => {
           return {...state, remove_user : { userId : null, status: "idle", error: null }
       }
 
-
-
     default:
       return state;
   }

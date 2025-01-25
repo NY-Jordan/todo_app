@@ -2,7 +2,6 @@ import { faFilter, faSort , faPlus} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useEffect, useState } from 'react'
 import DailyTaskITem from './DailyTaskITem'
-import CreateDailyTaskModal from './Task/CreateDailyTaskModal'
 import { useAppSelector } from '@/app/store/hook'
 import classNames from 'classnames';
 import CustomButton from './button/CustomButton'
@@ -11,6 +10,7 @@ import { FetchAllDailyTasks } from '@/Infrastructure/Services/Task/DailyTaskServ
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import moment, { now } from 'moment'
+import CreateDailyTaskModal from './Task/Daily/CreateDailyTaskModal'
 
 export default function DailyTodoCard() {
   const [active, setActive] = useState<boolean>(false);

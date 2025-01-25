@@ -207,9 +207,9 @@ export async function getProjectDetails(projectId : number)  {
 
 
 
-/* export const leaveProject = async  (options : FormData) => {
+export const getProjectCollaborators = async  (projectId : number) => {
     try {
-        const reponse = await ApiClient().post("/project/create",options,{
+        const reponse = await ApiClient().get(`project/collaborators/${projectId}`,{
             headers : {
                 Authorization : await getBearerAuthToken(),
                 "Content-Type" : 'multipart/form-data'
@@ -217,8 +217,10 @@ export async function getProjectDetails(projectId : number)  {
             }
         });
         const data = reponse.data.data;
-        store.dispatch(createProjectSuccess(data));
+       return data;
     } catch (e) {
-        store.dispatch(createProjectFailure(e))
+        return null;
     }
-} */
+}
+
+

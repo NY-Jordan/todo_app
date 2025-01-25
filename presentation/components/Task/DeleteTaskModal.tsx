@@ -3,41 +3,37 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useEffect, useState } from 'react'
 import CustomButton from '../button/CustomButton'
 import { useAppDispatch, useAppSelector } from '@/app/store/hook'
-import { deleteProjectInit, resetDeleteProjectState } from '@/app/Actions/ProjectsActions'
-import { deleteProject, FetchAllProjects } from '@/Infrastructure/Services/projects/ProjectsService'
 import toast from 'react-hot-toast'
 import { tasks } from '../../../Infrastructure/data/task';
 import { deleteDailyTaskInit, resetDeleteDailyTask } from '@/app/Actions/DailyTaskActions'
-import { deleteTask } from '@/Infrastructure/Services/Task/DailyTaskService'
+import { deleteTask } from '@/Infrastructure/Services/Task/TaskService'
+import { deleteTaskInit, deleteTaskReset } from '@/app/Actions/TaskActions'
 
-export default function DeleteDailyTaskModal({active, setActive, taskId} : {active : boolean, setActive : React.Dispatch<React.SetStateAction<boolean>>, taskId : number }) {
+export default function DeleteTaskModal({active, setActive, taskId} : {active : boolean, setActive : React.Dispatch<React.SetStateAction<boolean>>, taskId : number }) {
   const dispatch = useAppDispatch();
-  const deleteTaskState = useAppSelector(state => state.dailyTask).delete
-  const [processedTaskId, setProcessedTaskId] = useState<number>();
+  const deleteTaskState = useAppSelector(state => state.task).delete
+  const [_taskId, _setTaskId] = useState<number>(taskId)
 
+  useEffect(() => {
+    _setTaskId(taskId)
+  }, [taskId])
   const handleTaskDeleteAction = () => {
-    dispatch(deleteDailyTaskInit());
-    setProcessedTaskId(taskId)
-    deleteTask(taskId);
+    dispatch(deleteTaskInit());
+    deleteTask(_taskId);
   }
 
  
 
   useEffect(() => {
-      if (processedTaskId &&  deleteTaskState.taskId === processedTaskId) {
-        if (deleteTaskState.status === 'success') {
+        if (deleteTaskState.status === 'succeeded') {
           toast.success('The Task has been deleted successfully.');
-          dispatch(resetDeleteDailyTask());
+          dispatch(deleteTaskReset());
           setActive(false);
         }
-        if (deleteTaskState.status === 'failure') {
+        if (deleteTaskState.status === 'failed') {
           toast.error('Task deletion failed. Please try again.');
           setActive(false)
         }
-      }
-      if (deleteTaskState.status === 'idle') {
-        setProcessedTaskId(undefined);
-      }
   }, [deleteTaskState.status])
 
   return (

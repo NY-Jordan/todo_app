@@ -1,4 +1,4 @@
-enum TaskTypeEnum {
+export enum TaskTypeEnum {
     OWN = "own",
     ASSIGN = "assign",
   }
@@ -10,7 +10,7 @@ enum TaskTypeEnum {
     Done = 4,
   }
 
-  enum TaskPhasesEnum {
+  export enum TaskPhasesEnum {
     Backlog = 'Backlog',
     Started = 'Started',
     InProgress = 'InProgress',
