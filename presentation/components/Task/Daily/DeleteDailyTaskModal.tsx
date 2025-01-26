@@ -8,7 +8,7 @@ import { deleteProject, FetchAllProjects } from '@/Infrastructure/Services/proje
 import toast from 'react-hot-toast'
 import { tasks } from '../../../../Infrastructure/data/task';
 import { deleteDailyTaskInit, resetDeleteDailyTask } from '@/app/Actions/DailyTaskActions'
-import { deleteTask } from '@/Infrastructure/Services/Task/DailyTaskService'
+import { deleteDailyTask } from '@/Infrastructure/Services/Task/DailyTaskService'
 
 export default function DeleteDailyTaskModal({active, setActive, taskId} : {active : boolean, setActive : React.Dispatch<React.SetStateAction<boolean>>, taskId : number }) {
   const dispatch = useAppDispatch();

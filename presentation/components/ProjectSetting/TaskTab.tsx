@@ -23,6 +23,7 @@ import { ICollaborator, IProject } from '@/domain/entities/project.entities'
 import useAuth from '@/Infrastructure/hooks/useAuth'
 import { ITaskGroup } from '@/domain/entities/task.group.entities'
 import Pagination from '../Pagination/Pagination'
+import ViewTaskModal from '../Task/ViewTaskModal'
 
 
 export default function TaskTab() {
@@ -30,13 +31,14 @@ export default function TaskTab() {
     const [assignModal, setAssignModal] = useState(false);
     const [deleteModal, setDeleteModal] = useState(false);
     const [deleteTaskId, setDeleteTaskId] = useState<number>();
-    const [assignTask, setAssignTask] = useState<ITask>();
+    const [assignTask, setAssignTask] = useState<ITask|undefined>(undefined);
+    const [viewTask, setViewTask] = useState<ITask|undefined>(undefined);
     const router = useRouter();
     const {id} = router.query;
     const fecthTasksState = useAppSelector(state => state.task).fetch.data;
     const fecthTasksPagination = useAppSelector(state => state.task).fetch.data.pagination as IPagination;
     const [collaboratorId, setCollaboratorId] = useState<string>();
-    const {user} = useAuth();
+    const [viewModal, setViewModal] = useState<boolean>(false);
     const queryClient = useQueryClient();
     const tasksGroupState = useAppSelector(state => state.taskGroup).taskGroups as ITaskGroup[]
     const [projectDetails, setProjectDetails] = useState<IProject|undefined>()
@@ -66,7 +68,11 @@ export default function TaskTab() {
     
     const collaborators  = data as ICollaborator[];
 
-    
+    useEffect(() => {
+        if (!assignModal) {
+            setAssignTask(undefined);
+        }
+    }, [assignModal])
    
     
   return (
@@ -155,7 +161,7 @@ export default function TaskTab() {
                         <a href='#' className='text-black tooltip' data-tip='edit'>
                             <FontAwesomeIcon icon={faEdit} size='lg'/>
                         </a>
-                        <a href='#' className='text-indigo-600 tooltip' data-tip='view'>
+                        <a href='#'  onClick={() => {setViewTask(task); setViewModal(true)}} className='text-indigo-600 tooltip' data-tip='view'>
                             <FontAwesomeIcon icon={faEye} size='lg'/>
                         </a>
                         
@@ -173,13 +179,14 @@ export default function TaskTab() {
 
             {fecthTasksPagination && fecthTasksPagination?.total_pages >1 && <Pagination 
             onChange={(page : number) => setCurrentPage(page)} 
-            totalPages={11} 
+            totalPages={fecthTasksPagination.total_pages} 
             currentPage={fecthTasksPagination.current_page} /> }
       </div>
       
      <AddTaskForm active={showAddTask} setActive={setShowAddTask} />
-    {assignTask && <AssignTaskToUserModal task={assignTask} active={assignModal} setActive={setAssignModal} />}
+    {assignTask ? <AssignTaskToUserModal task={assignTask} active={assignModal} setActive={setAssignModal} /> : <></>}
      {deleteTaskId && <DeleteTaskModal taskId={deleteTaskId} active={deleteModal} setActive={setDeleteModal} />}
+     {viewTask && <ViewTaskModal task={viewTask} active={viewModal} setActive={setViewModal} />}
     </div>
   )
 }

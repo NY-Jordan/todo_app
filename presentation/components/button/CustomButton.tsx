@@ -13,9 +13,10 @@ type CustomButtonType = {
 }
 
 export default function CustomButton({text, onClick, variant='primary',type = 'button', form, btnClassName, size = 'md', isDisabled = false , loader=false} : CustomButtonType) {
+  const variantValue  = `btn-${variant}`;
   return (
     <>
-       <button type={type} disabled={isDisabled || loader} onClick={() => onClick ?onClick() : {}} form={form} className={`btn-${variant} btn-${size} ${btnClassName} disabled:shadow-gray-400`}>{loader ? <span className="loading loading-dots loading-xs"></span>
+       <button type={type} disabled={isDisabled || loader} onClick={() => onClick ?onClick() : {}} form={form} className={` ${variantValue} ${btnClassName} disabled:shadow-gray-400`}>{loader ? <span className="loading loading-dots loading-xs"></span>
  : text}</button>
     </>
   )

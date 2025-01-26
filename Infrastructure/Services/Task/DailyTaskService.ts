@@ -67,7 +67,7 @@ export const updateDailyTaskPhase = async (phaseId : number, taskId : number ) =
 
 export const deleteDailyTask = async  (taskId : number) => {
     try {
-        const reponse = await ApiClient().delete(`/project/task/delete/${taskId}`,{
+        const reponse = await ApiClient().delete(`/project/tasks/delete/${taskId}`,{
             headers : {
                 Authorization : await getBearerAuthToken(),
             }

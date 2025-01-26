@@ -5,7 +5,7 @@ import { faClose } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FieldValues, useForm } from "react-hook-form";
 import CustomButton from "../button/CustomButton";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { createTaskGroup, fecthTaskGroupsProject } from "@/Infrastructure/Services/TaskGroup/TaskGroupService";
 import { useRouter } from "next/router";
@@ -26,22 +26,17 @@ export default function AssignTaskToUserModal({active, setActive, task} : {activ
   const router  = useRouter();
   const {id} = router.query;
   const {user} = useAuth();
-  const [userSelected, setUserSelected] = useState<number[]>([]);
   const assignTaskState = useAppSelector(state => state.task).assign_task
-  
+  const users = useMemo(() => task.assigned_user?.map((item) => item.id) as number[], [task.assigned_user]);
+  const [userSelected, setUserSelected] = useState<number[]>(users);
+
+
 
   const { data, error, isLoading } = useQuery({
     queryKey: ['collaborators', id],
     queryFn: fetchCollaborators,
     staleTime: 10*(60*1000), // 10 mins
   });
-
-  useEffect(() => {
-    
-    const users = task.assigned_user?.map((item) => {return item.id}) as number[]
-    setUserSelected(users);
-    console.log(users);
-  }, [task])
 
   const collaborators  = data as ICollaborator[];
 
@@ -82,27 +77,11 @@ export default function AssignTaskToUserModal({active, setActive, task} : {activ
            </div>
             <div className="space-y-6 mt-6">
               {
-                user && <>
-                  <div className="flex items-center gap-4">
-                  <label>
-                    <input  defaultChecked={userSelected.includes(user.id)} onChange={(e) => {
-                      if (e.target.checked ===true) {
-                        setUserSelected((prev) => [...prev, user.id]);
-                      } else {
-                        setUserSelected((prev) => prev.filter((id) => id !== user.id));
-                      }
-                    }} type="checkbox" className="checkbox" />
-                  </label>
-                  <CollaboratorsIem user={{...user, username : 'Me'}} />
-                  </div>
-                </>
-              }
-              {
-                (isLoading  && !error)? <CollaboratorLoaderSkelleton /> : collaborators.map((collaborator : ICollaborator, key : number) => {
-                  const isSelected = userSelected.includes(collaborator.user.id);
+                (isLoading  && !error && active)? <CollaboratorLoaderSkelleton /> : collaborators.map((collaborator : ICollaborator, key : number) => {
+                  const isSelected = users.includes(collaborator.user.id);
                   return  <div className="flex items-center gap-4" key={key}>
                         <label>
-                          <input  key={task.id} defaultChecked={isSelected} onChange={(e) => {
+                          <input  key={task.id+key} defaultChecked={isSelected} onChange={(e) => {
                           if (e.target.checked) {
                             setUserSelected((prev) => [...prev, collaborator.user.id]);
                           } else {
