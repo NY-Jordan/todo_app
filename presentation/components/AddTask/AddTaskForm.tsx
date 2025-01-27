@@ -113,8 +113,6 @@ export default function AddTaskForm({active, setActive} : {active : boolean, set
                                     <option>Frontend</option>
                             </select>
                         </label>
-                    
-
 
                         <CustomButton variant='submit' type='submit' text='Submit' loader={createTaskState.status === 'loading'} />
                         {/* end add tools */}

@@ -1,8 +1,15 @@
-import { ITask } from "@/domain/entities/task.entities";
+import { IPagination, ITask } from "@/domain/entities/task.entities";
 import { TaskActions } from "../Actions/TaskActions";
 
 // État initial
-const initialState = {
+const initialState  : {
+  create: { status: string, error: null|any },
+  fetch: { status: string, error: null|any, data: {tasks : ITask[], pagination : IPagination|null} },
+  update: { status: string, error: null|any },
+  delete: { status: string, error: null|any },
+  assign: { status: string, error: null|any },
+  assign_task : { status: string, error: null|any, task : null|ITask },
+} ={
   create: { status: 'idle', error: null },
   fetch: { status: 'idle', error: null, data: {tasks : [], pagination : null} },
   update: { status: 'idle', error: null },
@@ -61,15 +68,16 @@ const TaskReducer = (state = initialState, action : ActionType) => {
       return { ...state, update: { status: 'loading', error: null } };
 
     case TaskActions.UPDATE_TASK_SUCCESS:
+     
       return {
         ...state,
         update: { status: 'succeeded', error: null },
-        /* fetch: {
+        fetch: {
           ...state.fetch,
-          data: state.fetch.data.tasks.map((task : ITask) =>
-            task.id === action.payload.id ? action.payload : task
-          ),
-        }, */
+          data : {tasks : state.fetch.data.tasks.map((task : ITask) =>
+            task.id === action.payload.task.id ? action.payload.task : task
+          ), pagination : state.fetch.data.pagination} ,
+        },
       };
 
     case TaskActions.UPDATE_TASK_FAILURE:
@@ -109,12 +117,12 @@ const TaskReducer = (state = initialState, action : ActionType) => {
         return {
           ...state,
           assign_task: { ...state.assign_task, status: "success", error: null, task : action.payload.task  },
-          /* fetch: {
+          fetch: {
             ...state.fetch,
-            data: state.fetch.data.tasks.map((task : ITask) =>
+            data : {tasks : state.fetch.data.tasks.map((task : ITask) =>
               task.id === action.payload.task.id ? action.payload.task : task
-            ),
-          }, */
+            ), pagination : state.fetch.data.pagination} ,
+          },
         };
   
         case TaskActions.ASSIGN_TASK_TO_USERS_FAILED:

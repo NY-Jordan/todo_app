@@ -1,4 +1,4 @@
-import { assignTaskToUserFailed, assignTaskToUserSucess, createTaskFailure, createTaskSuccess, deleteTaskFailure, deleteTaskSuccess, fetchTasksFailure, fetchTasksSuccess } from "@/app/Actions/TaskActions";
+import { assignTaskToUserFailed, assignTaskToUserSucess, createTaskFailure, createTaskSuccess, deleteTaskFailure, deleteTaskSuccess, fetchTasksFailure, fetchTasksSuccess, updateTaskFailure, updateTaskSuccess } from "@/app/Actions/TaskActions";
 import { store } from "@/app/store/store";
 import { CreateTaskType } from "@/domain/entities/task.entities";
 import ApiClient from "@/Infrastructure/helpers/ApiClient";
@@ -35,6 +35,20 @@ export const createTask = async (options : CreateTaskType) => {
         store.dispatch(createTaskSuccess(data, pagination));
     } catch (e) {
         store.dispatch(createTaskFailure(e))
+    }
+}
+
+export const updateTask = async (options : CreateTaskType, taskId : number) => {
+    try {
+        const reponse = await ApiClient().post(`/project/tasks/update/${taskId}`, options, {
+            headers : { 
+                Authorization : await getBearerAuthToken()
+            }
+        });
+        const data = reponse.data.task;
+        store.dispatch(updateTaskSuccess(data));
+    } catch (e) {
+        store.dispatch(updateTaskFailure(e))
     }
 }
 

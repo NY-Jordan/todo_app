@@ -24,15 +24,18 @@ import useAuth from '@/Infrastructure/hooks/useAuth'
 import { ITaskGroup } from '@/domain/entities/task.group.entities'
 import Pagination from '../Pagination/Pagination'
 import ViewTaskModal from '../Task/ViewTaskModal'
+import UpdateTaskForm from '../AddTask/UpdateTaskForm'
 
 
 export default function TaskTab() {
     const [showAddTask, setShowAddTask] = useState(false);
     const [assignModal, setAssignModal] = useState(false);
     const [deleteModal, setDeleteModal] = useState(false);
+    const [updateModal, setUpdateModal] = useState(false);
     const [deleteTaskId, setDeleteTaskId] = useState<number>();
     const [assignTask, setAssignTask] = useState<ITask|undefined>(undefined);
     const [viewTask, setViewTask] = useState<ITask|undefined>(undefined);
+    const [updateTask, setUpdateTask] = useState<ITask|undefined>(undefined);
     const router = useRouter();
     const {id} = router.query;
     const fecthTasksState = useAppSelector(state => state.task).fetch.data;
@@ -51,6 +54,7 @@ export default function TaskTab() {
             setProjectDetails(queryClient.getQueryData(['projectDetails', id]) as IProject)
           }
         }, [id]);
+        
         
         
         useEffect(() => {
@@ -79,7 +83,7 @@ export default function TaskTab() {
     <div className='flex justify-between lg:flex-row md:flex-col'>
       <div className='w-full'>
             <div className='mb-7 flex justify-between '>
-                <button onClick={() => setShowAddTask(true)} className='btn bg-indigo-500 hover:bg-indigo-700 text-white'><FontAwesomeIcon icon={faPlus} />  New Task</button>
+                <button onClick={() => {setShowAddTask(true); setUpdateModal(false)}} className='btn bg-indigo-500 hover:bg-indigo-700 text-white'><FontAwesomeIcon icon={faPlus} />  New Task</button>
                <div className='flex w-[80%] justify-end space-x-3'>
                 <select onChange={(e) => setPhaseSelected(parseInt(e.target.value))} className="select select-bordered w-full max-w-xs">
                         <option  value={undefined} selected>All</option>
@@ -158,7 +162,7 @@ export default function TaskTab() {
                         }} className='text-red-500 tooltip' data-tip='delete'>
                             <FontAwesomeIcon icon={faTrash} size='lg' />
                         </a>
-                        <a href='#' className='text-black tooltip' data-tip='edit'>
+                        <a href='#' onClick={() => {setShowAddTask(false);setUpdateTask(task); setUpdateModal(true)}}  className='text-black tooltip' data-tip='edit'>
                             <FontAwesomeIcon icon={faEdit} size='lg'/>
                         </a>
                         <a href='#'  onClick={() => {setViewTask(task); setViewModal(true)}} className='text-indigo-600 tooltip' data-tip='view'>
@@ -184,6 +188,7 @@ export default function TaskTab() {
       </div>
       
      <AddTaskForm active={showAddTask} setActive={setShowAddTask} />
+    {updateTask ? <UpdateTaskForm task={updateTask} active={updateModal} setActive={setUpdateModal} /> : <></>}
     {assignTask ? <AssignTaskToUserModal task={assignTask} active={assignModal} setActive={setAssignModal} /> : <></>}
      {deleteTaskId && <DeleteTaskModal taskId={deleteTaskId} active={deleteModal} setActive={setDeleteModal} />}
      {viewTask && <ViewTaskModal task={viewTask} active={viewModal} setActive={setViewModal} />}

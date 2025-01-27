@@ -74,7 +74,7 @@ export const TaskActions = {
   
   export const updateTaskSuccess = (task : ITask) => ({
     type: TaskActions.UPDATE_TASK_SUCCESS,
-    payload: task,
+    payload: {task : task},
   });
   
   export const updateTaskFailure = (error : any) => ({
