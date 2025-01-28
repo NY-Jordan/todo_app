@@ -4,15 +4,16 @@ import ApiClient from "@/Infrastructure/helpers/ApiClient";
 import { getBearerAuthToken } from "@/Infrastructure/helpers/HelperUtils";
 import { updateTaskGroupFailure } from '../../../app/Actions/TaskGroupActions';
 
-export const fecthTaskGroupsProject = async (projectId : number) => {
+export const fecthTaskGroupsProject = async (projectId : number, currentPage : number|undefined) => {
     try {
-        const reponse = await ApiClient().get(`project/taskgroup/${projectId}`,{
+        const reponse = await ApiClient().get(`project/taskgroup/${projectId}?page=${currentPage}`,{
             headers : {
                 Authorization : await getBearerAuthToken()
             }
         });
         const data = reponse.data.task_groups;
-        store.dispatch(fetchTaskGroupsSuccess(data));
+        const pagination = reponse.data.pagination;
+        store.dispatch(fetchTaskGroupsSuccess(data, pagination));
     } catch (e) {
         store.dispatch(fetchTaskGroupsFailure(e))
     }
@@ -26,8 +27,9 @@ export const createTaskGroup = async (option  : { name : string, project_id : nu
                 Authorization : await getBearerAuthToken()
             }
         });
-        const data = reponse.data.data;
-        store.dispatch(createTaskGroupSuccess(data));
+        const data = reponse.data.task_groups;
+        const pagination = reponse.data.pagination;
+        store.dispatch(createTaskGroupSuccess(data, pagination));
     } catch (e) {
         store.dispatch(createTaskGroupFailure(e))
     }

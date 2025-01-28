@@ -1,10 +1,12 @@
 import { error } from "console";
 import { TaskGroupActions } from "../Actions/TaskGroupActions";
 import { ITaskGroup } from '../../domain/entities/task.group.entities';
+import Pagination from "@/presentation/components/Pagination/Pagination";
 
 const initialState = {
   taskGroups: [],
   status: 'idle',
+  pagination : null,
   error: null,
   create: { status: "idle", error: null }, 
   update: { status: "idle", error: null , taskGroupId : null},  
@@ -29,7 +31,8 @@ const taskGroupReducer = (state = initialState, action : ActionType) => {
       return {
         ...state,
         create: {status :  'succeeded', error : null},
-        taskGroups: [...state.taskGroups, action.payload],
+        taskGroups: action.payload.taskGroups,
+        pagination: action.payload.pagination,
       };
     case TaskGroupActions.CREATE_TASKGROUP_FAILURE:
       return {
@@ -54,7 +57,8 @@ const taskGroupReducer = (state = initialState, action : ActionType) => {
       return {
         ...state,
         status: 'succeeded',
-        taskGroups: action.payload,
+        taskGroups: action.payload.taskGroups,
+        pagination: action.payload.pagination,
       };
     case TaskGroupActions.FETCH_TASKGROUPS_FAILURE:
       return {

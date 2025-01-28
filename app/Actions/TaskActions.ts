@@ -36,9 +36,9 @@ export const TaskActions = {
     type: TaskActions.CREATE_TASK_INIT,
   });
   
-  export const createTaskSuccess = (tasks : ITask[], pagination : IPagination) => ({
+  export const createTaskSuccess = (task : ITask) => ({
     type: TaskActions.CREATE_TASK_SUCCESS,
-    payload: {tasks : tasks, pagination : pagination},
+    payload: {task : task},
   });
   
   export const createTaskFailure = (error : any) => ({

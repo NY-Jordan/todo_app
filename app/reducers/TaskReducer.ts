@@ -1,5 +1,6 @@
 import { IPagination, ITask } from "@/domain/entities/task.entities";
 import { TaskActions } from "../Actions/TaskActions";
+import Pagination from "@/presentation/components/Pagination/Pagination";
 
 // État initial
 const initialState  : {
@@ -32,13 +33,25 @@ const TaskReducer = (state = initialState, action : ActionType) => {
       return { ...state, create: { status: 'loading', error: null } };
 
     case TaskActions.CREATE_TASK_SUCCESS:
+      const task  = action.payload.task
+      const tasksLenght = state.fetch.data.tasks.length  === 10 ?  1 :  state.fetch.data.tasks.length;
+     
       return {
         ...state,
         create: { status: 'succeeded', error: null },
         fetch: {
           ...state.fetch,
-          data: {tasks : action.payload.tasks , pagination : action.payload.pagination}, 
-        },
+          data: {
+            tasks : {...state.fetch.data.tasks, task},
+             pagination : {
+              current_page: state.fetch.data.pagination?.current_page,
+              total_pages:  (tasksLenght  === 1 ? 
+                (state.fetch.data.pagination?.total_pages ? state.fetch.data.pagination?.total_pages + 1 : undefined) : state.fetch.data.pagination?.total_pages ),   
+              total_items: tasksLenght,  
+              per_page: state.fetch.data.pagination?.per_page
+             }
+          },
+        }
       };
 
     case TaskActions.CREATE_TASK_FAILURE:
@@ -91,13 +104,24 @@ const TaskReducer = (state = initialState, action : ActionType) => {
       return { ...state, delete: { status: 'loading', error: null } };
 
     case TaskActions.DELETE_TASK_SUCCESS:
+      const newTasks = state.fetch.data.tasks.filter((task : ITask) => task.id !== action.payload);
+      console.log(newTasks.length === 0 ? (state.fetch.data.pagination?.current_page ? state.fetch.data.pagination?.current_page- 1 : undefined) : state.fetch.data.pagination?.current_page ,);
+      
       return {
         ...state,
         delete: { status: 'succeeded', error: null },
-        /* fetch: {
+        fetch: {
           ...state.fetch,
-          data: state.fetch.data.tasks.filter((task : ITask) => task.id !== action.payload),
-        }, */
+          data: {
+            tasks : newTasks,
+             pagination : {
+              current_page:  newTasks.length === 0 ? (state.fetch.data.pagination?.current_page ? state.fetch.data.pagination?.current_page- 1 : undefined) : state.fetch.data.pagination?.current_page ,
+              total_pages:  newTasks.length === 0 ? (state.fetch.data.pagination?.total_pages ? state.fetch.data.pagination?.total_pages- 1 : undefined) : state.fetch.data.pagination?.total_pages ,   
+              total_items: newTasks.length,  
+              per_page: state.fetch.data.pagination?.per_page
+             }
+          },
+        },
       };
 
     case TaskActions.DELETE_TASK_FAILURE:

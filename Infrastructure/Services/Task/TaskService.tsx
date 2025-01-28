@@ -29,10 +29,9 @@ export const createTask = async (options : CreateTaskType) => {
                 Authorization : await getBearerAuthToken()
             }
         });
-        const data = reponse.data.tasks;
-        const pagination = reponse.data.pagination;
+        const data = reponse.data.task;
 
-        store.dispatch(createTaskSuccess(data, pagination));
+        store.dispatch(createTaskSuccess(data));
     } catch (e) {
         store.dispatch(createTaskFailure(e))
     }

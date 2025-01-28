@@ -18,6 +18,23 @@
     display: none;
 }
 
+.your-scroll-container {
+  scrollbar-width: thin; 
+  scrollbar-color: #ccc transparent; 
+}
+
+.your-scroll-container::-webkit-scrollbar {
+  width: 18px; 
+}
+
+.your-scroll-container::-webkit-scrollbar-track {
+  background: transparent; /* Arrière-plan du track */
+}
+
+.your-scroll-container::-webkit-scrollbar-thumb {
+  background-color: #ccc; /* Couleur de la scrollbar */
+  border-radius: 4px; /* Coins arrondis */
+}
 
 @media (prefers-color-scheme: dark) {
   :root {

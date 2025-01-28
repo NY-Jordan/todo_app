@@ -97,7 +97,7 @@ export default function AddTaskForm({active, setActive} : {active : boolean, set
                                 <span className="label-text font-bold dark:text-white">Details </span>
                                 <span className="label-text-alt"></span>
                             </div>
-                            <textarea {...register('details', {
+                            <textarea rows={6}  {...register('details', {
                             })} className="textarea textarea-bordered dark:bg-slate-600" placeholder="more details"></textarea>
                             
                         </label>

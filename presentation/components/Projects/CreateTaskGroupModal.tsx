@@ -35,7 +35,7 @@ export default function CreateTaskGroupModal({active, setActive} : {active : boo
     if (createTaskGroupState.status === "succeeded") {
         toast.success('Task Group created successfully.')
         setActive(false);
-        dispatch(resetCreateProjectState());
+        dispatch(createTaskGroupInit());
         reset();
     }
     if (createTaskGroupState.status === "failure") {

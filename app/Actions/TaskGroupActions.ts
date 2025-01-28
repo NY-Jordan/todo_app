@@ -1,3 +1,4 @@
+import { IPagination } from "@/domain/entities/task.entities";
 import { ITaskGroup } from "@/domain/entities/task.group.entities";
 
 export const TaskGroupActions = {
@@ -28,9 +29,9 @@ export const createTaskGroupInit = () => ({
   type: TaskGroupActions.CREATE_TASKGROUP_INIT,
 });
 
-export const createTaskGroupSuccess = (taskGroup : ITaskGroup) => ({
+export const createTaskGroupSuccess = (taskGroups : ITaskGroup[], pagination : IPagination) => ({
   type: TaskGroupActions.CREATE_TASKGROUP_SUCCESS,
-  payload: taskGroup,
+  payload: {taskGroups : taskGroups, pagination : pagination},
 });
 
 export const createTaskGroupFailure = (error : any) => ({
@@ -47,9 +48,9 @@ export const fetchTaskGroupsInit = () => ({
   type: TaskGroupActions.FETCH_TASKGROUPS_INIT,
 });
 
-export const fetchTaskGroupsSuccess = (taskGroups : ITaskGroup[]) => ({
+export const fetchTaskGroupsSuccess = (taskGroups : ITaskGroup[], pagination : IPagination) => ({
   type: TaskGroupActions.FETCH_TASKGROUPS_SUCCESS,
-  payload: taskGroups,
+  payload: {taskGroups : taskGroups, pagination : pagination},
 });
 
 export const fetchTaskGroupsFailure = (error : any) => ({

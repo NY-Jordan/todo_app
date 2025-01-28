@@ -4,25 +4,28 @@ export default function Pagination({
   totalPages,
   currentPage,
   onChange,
+  name
 }: {
   totalPages: number;
   currentPage: number;
   onChange: (page: number) => void;
+  name : string
 }) {
   const generateButtons = () => {
     if (totalPages <= 10) {
       // Si le total des pages est inférieur ou égal à 10, afficher toutes les pages
-      return Array.from({ length: totalPages }, (_, index) => (
+      return Array.from({ length: totalPages }, (_, index) => {
+        return (
         <input
-          key={index.toString()}
-          className="join-item btn btn-square"
+        key={`page-${index + 1}`}
+        className="join-item btn btn-square"
           type="radio"
-          name="options"
+          name={name}
           aria-label={(index + 1).toString()}
           onClick={() => onChange(index + 1)}
-          defaultChecked={currentPage === index + 1}
+          defaultChecked={currentPage === (index + 1)}
         />
-      ));
+      ) });
     } else {
       // Si le total des pages est supérieur à 10, appliquer la logique de points de rupture
       const buttons = [];
@@ -34,7 +37,7 @@ export default function Pagination({
             key={`start-${i}`}
             className="join-item btn btn-square"
             type="radio"
-            name="options"
+            name={name}
             aria-label={i.toString()}
             onClick={() => onChange(i)}
             defaultChecked={currentPage === i}
@@ -52,7 +55,7 @@ export default function Pagination({
               key={`middle-${i}`}
               className="join-item btn btn-square"
               type="radio"
-              name="options"
+              name={name}
               aria-label={i.toString()}
               onClick={() => onChange(i)}
               defaultChecked={currentPage === i}
@@ -72,7 +75,7 @@ export default function Pagination({
             key={`end-${i}`}
             className="join-item btn btn-square"
             type="radio"
-            name="options"
+            name={name}
             aria-label={i.toString()}
             onClick={() => onChange(i)}
             defaultChecked={currentPage === i}

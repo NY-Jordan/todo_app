@@ -1,6 +1,6 @@
 import { faCheck, faDownload, faEdit, faEye, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { mdiClose, mdiFileEdit } from '@mdi/js'
 import Icon from '@mdi/react'
 import Tag from '../Tag'
@@ -22,9 +22,10 @@ import { data } from '@/Infrastructure/data/data'
 import { ICollaborator, IProject } from '@/domain/entities/project.entities'
 import useAuth from '@/Infrastructure/hooks/useAuth'
 import { ITaskGroup } from '@/domain/entities/task.group.entities'
-import Pagination from '../Pagination/Pagination'
 import ViewTaskModal from '../Task/ViewTaskModal'
-import UpdateTaskForm from '../AddTask/UpdateTaskForm'
+import UpdateTaskForm from '../AddTask/UpdateTaskModal'
+import UpdateTaskModal from '../AddTask/UpdateTaskModal'
+import Pagination from '../Pagination/Pagination'
 
 
 export default function TaskTab() {
@@ -55,6 +56,12 @@ export default function TaskTab() {
           }
         }, [id]);
         
+       useMemo(() => {
+            if (fecthTasksPagination?.current_page) {
+                setCurrentPage(fecthTasksPagination?.current_page);
+            }
+       }, [fecthTasksPagination?.current_page])
+        
         
         
         useEffect(() => {
@@ -62,6 +69,13 @@ export default function TaskTab() {
                 FetchAllTasks(parseInt(id),collaboratorId, taskGroupSelected, phaseSelected, currentPage);
             }
         }, [id,currentPage, collaboratorId, taskGroupSelected, phaseSelected])
+
+
+        useEffect(() => {
+            if (currentPage>=2) {
+                setCurrentPage(1);
+            }
+        }, [id, collaboratorId, taskGroupSelected, phaseSelected])
 
 
     const { data, error, isLoading } = useQuery({
@@ -83,9 +97,9 @@ export default function TaskTab() {
     <div className='flex justify-between lg:flex-row md:flex-col'>
       <div className='w-full'>
             <div className='mb-7 flex justify-between '>
-                <button onClick={() => {setShowAddTask(true); setUpdateModal(false)}} className='btn bg-indigo-500 hover:bg-indigo-700 text-white'><FontAwesomeIcon icon={faPlus} />  New Task</button>
-               <div className='flex w-[80%] justify-end space-x-3'>
-                <select onChange={(e) => setPhaseSelected(parseInt(e.target.value))} className="select select-bordered w-full max-w-xs">
+                <button onClick={() => {setShowAddTask(true); setUpdateModal(false)}} className='btn  bg-indigo-500 hover:bg-indigo-700 text-white'><FontAwesomeIcon icon={faPlus} />  New Task</button>
+               <div className='flex w-[80%] gap-4 flex-wrap justify-end space-x-3'>
+                    <select onChange={(e) => setPhaseSelected(parseInt(e.target.value))} className="select select-bordered w-full max-w-xs">
                         <option  value={undefined} selected>All</option>
                         <option  value={TaskPhases.Backlog}>Backlog</option>
                         <option value={TaskPhases.Started}>Started</option>
@@ -100,7 +114,7 @@ export default function TaskTab() {
                     </select>
                     {collaborators && <Dropdown
                     id='person'
-                    title='--- please select your team mates ---- '
+                    title='-- Choose a team mate --'
                     data={collaborators.map((collaborator : ICollaborator) => {
                         return {
                             id: collaborator.user.id.toString(),
@@ -182,13 +196,14 @@ export default function TaskTab() {
             </div>
 
             {fecthTasksPagination && fecthTasksPagination?.total_pages >1 && <Pagination 
+            name='tasks'
             onChange={(page : number) => setCurrentPage(page)} 
             totalPages={fecthTasksPagination.total_pages} 
-            currentPage={fecthTasksPagination.current_page} /> }
+            currentPage={currentPage} /> }
       </div>
       
      <AddTaskForm active={showAddTask} setActive={setShowAddTask} />
-    {updateTask ? <UpdateTaskForm task={updateTask} active={updateModal} setActive={setUpdateModal} /> : <></>}
+    {updateTask ? <UpdateTaskModal task={updateTask} active={updateModal} setActive={setUpdateModal} /> : <></>}
     {assignTask ? <AssignTaskToUserModal task={assignTask} active={assignModal} setActive={setAssignModal} /> : <></>}
      {deleteTaskId && <DeleteTaskModal taskId={deleteTaskId} active={deleteModal} setActive={setDeleteModal} />}
      {viewTask && <ViewTaskModal task={viewTask} active={viewModal} setActive={setViewModal} />}
