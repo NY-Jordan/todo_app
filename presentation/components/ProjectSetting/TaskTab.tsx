@@ -26,72 +26,40 @@ import ViewTaskModal from '../Task/ViewTaskModal'
 import UpdateTaskForm from '../AddTask/UpdateTaskModal'
 import UpdateTaskModal from '../AddTask/UpdateTaskModal'
 import Pagination from '../Pagination/Pagination'
+import { StatusStateEnum } from '@/domain/enum/StatusStateEnum'
+import FetchTasksPresenter from '@/Infrastructure/presenter/FetchTasksPresenter'
 
 
 export default function TaskTab() {
     const [showAddTask, setShowAddTask] = useState(false);
-    const [assignModal, setAssignModal] = useState(false);
     const [deleteModal, setDeleteModal] = useState(false);
     const [updateModal, setUpdateModal] = useState(false);
     const [deleteTaskId, setDeleteTaskId] = useState<number>();
-    const [assignTask, setAssignTask] = useState<ITask|undefined>(undefined);
     const [viewTask, setViewTask] = useState<ITask|undefined>(undefined);
     const [updateTask, setUpdateTask] = useState<ITask|undefined>(undefined);
     const router = useRouter();
     const {id} = router.query;
     const fecthTasksState = useAppSelector(state => state.task).fetch.data;
-    const fecthTasksPagination = useAppSelector(state => state.task).fetch.data.pagination as IPagination;
-    const [collaboratorId, setCollaboratorId] = useState<string>();
     const [viewModal, setViewModal] = useState<boolean>(false);
-    const queryClient = useQueryClient();
     const tasksGroupState = useAppSelector(state => state.taskGroup).taskGroups as ITaskGroup[]
-    const [projectDetails, setProjectDetails] = useState<IProject|undefined>()
-    const [taskGroupSelected, setTaskGroupSelected] = useState<number|undefined>()
-    const [phaseSelected, setPhaseSelected] = useState<number|undefined>();
-    const [currentPage, setCurrentPage] = useState<number>(fecthTasksPagination?.current_page ?? 1);
-      
-      useEffect(() => {
-          if (id && typeof id  === 'string') {
-            setProjectDetails(queryClient.getQueryData(['projectDetails', id]) as IProject)
-          }
-        }, [id]);
-        
-       useMemo(() => {
-            if (fecthTasksPagination?.current_page) {
-                setCurrentPage(fecthTasksPagination?.current_page);
-            }
-       }, [fecthTasksPagination?.current_page])
-        
-        
-        
-        useEffect(() => {
-            if (id && typeof id === 'string') {
-                FetchAllTasks(parseInt(id),collaboratorId, taskGroupSelected, phaseSelected, currentPage);
-            }
-        }, [id,currentPage, collaboratorId, taskGroupSelected, phaseSelected])
-
-
-        useEffect(() => {
-            if (currentPage>=2) {
-                setCurrentPage(1);
-            }
-        }, [id, collaboratorId, taskGroupSelected, phaseSelected])
-
-
-    const { data, error, isLoading } = useQuery({
-        queryKey: ['collaborators', id],
-        queryFn: fetchCollaborators,
-        staleTime: 10*(60*1000), // 10 mins
-      });
     
-    const collaborators  = data as ICollaborator[];
-
-    useEffect(() => {
-        if (!assignModal) {
-            setAssignTask(undefined);
-        }
-    }, [assignModal])
-   
+    
+    const  {
+        setAssignTask,
+        setPhaseSelected,
+        setCollaboratorId,
+        setAssignModal,
+        collaboratorId,
+        assignTask,
+        setTaskGroupSelected,
+        collaborators,
+        fecthTasksPagination,
+        currentPage,
+        setCurrentPage, 
+        assignModal
+    
+      } = FetchTasksPresenter(id)
+      
     
   return (
     <div className='flex justify-between lg:flex-row md:flex-col'>

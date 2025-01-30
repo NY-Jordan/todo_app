@@ -11,6 +11,7 @@ type ItemType = {
 export default function SectionTaskCard({key, item, position, color} :  {key : string, item : ItemType, position : number, color : string}) {
     const top = (position * 50);
     const [showViewMoreButton, setShowViewMoreButton] = useState(false);
+
     const animation = {
         height: "100%",
         scale : 1,
@@ -27,6 +28,7 @@ export default function SectionTaskCard({key, item, position, color} :  {key : s
              onMouseLeave={() => setShowViewMoreButton(false)}
              whileHover={animation }
              whileFocus={animation}
+           
             className={"card my-2 overflow-hidden dark:bg-slate-800  dark:hover:bg-slate-900 dark:shadow-slate-700  dark:border-slate-800 dark:text-white  h-40 border-2 bg-base-100 shadow-md "} style={{ bottom  : top }}>
             <div className='card-title m-0 p-0 justify-between'>
                 <span  style={{ backgroundColor : color }} className=" ml-4 rounded-sm mt-2 p-2"></span>

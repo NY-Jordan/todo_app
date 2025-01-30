@@ -1,6 +1,6 @@
 import { faDownload, faEdit, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import CreateTaskGroupModal from '../Projects/CreateTaskGroupModal'
 import { fecthTaskGroupsProject } from '@/Infrastructure/Services/TaskGroup/TaskGroupService';
 import { useRouter } from 'next/router';
@@ -10,10 +10,14 @@ import { updateTaskGroup } from '../../../Infrastructure/Services/TaskGroup/Task
 import UpdateTaskGroupModal from '../Projects/UpdateTaskGroupModal';
 import DeleteTaskGroupModal from '../Projects/DeleteTaskGroupModal ';
 import Pagination from '../Pagination/Pagination';
+import { StatusStateEnum } from '@/domain/enum/StatusStateEnum';
 
 export default function TaskGroups() {
     const [createModal, setCreateModal]  = useState<boolean>(false);
     const fetchTaskGroupState = useAppSelector(state  => state.taskGroup)
+    const updateTaskGroupState = useAppSelector(state  => state.taskGroup).update
+    const deleteTaskGroupState = useAppSelector(state  => state.taskGroup).delete
+    const createTaskGroupState = useAppSelector(state  => state.taskGroup).create
     const router  = useRouter();
     const [taskGroupToUpdate, setTaskGroupToUpdate]   = useState<ITaskGroup|undefined>();
     const [taskGroupToDelete, setTaskGroupToDelete]   = useState<ITaskGroup|undefined>();
@@ -26,6 +30,20 @@ export default function TaskGroups() {
             fecthTaskGroupsProject(parseInt(id), currentPage)
         }
     }, [id, currentPage]);
+
+
+    useMemo(() => {
+        if ((id && typeof id === 'string')) {
+            if ((createTaskGroupState.status && createTaskGroupState.status === StatusStateEnum.success )) {
+                fecthTaskGroupsProject(parseInt(id), currentPage);
+            }
+            if ((deleteTaskGroupState.status && deleteTaskGroupState.status === StatusStateEnum.success )) {
+                const page = fetchTaskGroupState.taskGroups.length === 0 && currentPage !== 1 ? currentPage - 1  : currentPage
+                setCurrentPage(page);
+                fecthTaskGroupsProject(parseInt(id), page);
+            }
+        }
+    }, [id,deleteTaskGroupState.status, createTaskGroupState.status])
     
   return (
   <>

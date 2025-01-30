@@ -8,6 +8,7 @@ import {useResponsive} from "@/Infrastructure/hooks/useResponsive";
 import { useEffect } from "react";
 import { FetchAllProjects } from "@/Infrastructure/Services/projects/ProjectsService";
 import { FetchAllDailyTasks } from "@/Infrastructure/Services/Task/DailyTaskService";
+import CustomDatePicker from "@/presentation/components/Calendar/CustomDatePicker";
 
 export default function index() {
   const { isSM} = useResponsive();

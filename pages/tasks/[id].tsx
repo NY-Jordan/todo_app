@@ -6,20 +6,24 @@ import SectionTask from "@/presentation/components/SectionTask/SectionTask";
 import AddTask from "@/presentation/components/SectionTask/AddTask";
 import { mdiMagnify } from "@mdi/js";
 import Icon from "@mdi/react";
-import { tasks } from "@/Infrastructure/data/task";
+import { AllTasks, tasks } from "@/Infrastructure/data/task";
 import Dropdown from "@/presentation/components/Dropdown";
 import { data } from "@/Infrastructure/data/data";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { Reorder } from "framer-motion";
+import { useState } from "react";
 
 export default function index() {
   const {isTabletOrMobile, isSM} = useResponsive();
   const handleSelect = (id: string) => {
     console.log(`Selected item with id ${id}`);
   };
+
+  const [items, setItems] = useState(AllTasks);
   
   return (
-  <Layout pageTitle="Tasks">
+  <Layout pageTitle="Manage Your Tasks">
     <div className='pt-4 px-4 dark:text-white'>
           
           <div className='flex justify-between items-center mb-3'>
@@ -34,7 +38,7 @@ export default function index() {
                   style="bg-white"
                  /*  style='bg-white border-gray-300' */
                   /* selectedId='3' */
-                  onSelect={handleSelect}
+                  onSelect={(e) => e ? handleSelect(e) : {}}
                 />
               </div>
 
@@ -64,10 +68,13 @@ export default function index() {
 
 
           <div className={'flex   overflow-y-auto   space-x-8  '+(isSM ? 'flex-col' : 'flex-row')} > 
-                <SectionTask showMoreButton={true} name='Backlog'  data={tasks.backlog} />
+            
+            <Reorder.Group axis="x" style={{ marginTop : isSM ? '0%': "10%",  }} onReorder={(e) => setItems(e)} values={AllTasks}>
+                <SectionTask  name='Backlog'  data={tasks.backlog} />
                 <SectionTask name='Started' data={tasks.started} />
                 <SectionTask  name='In Review'  data={tasks.progress} />
                 <SectionTask  name='Done' data={tasks.done}/>
+            </Reorder.Group>
           
         </div>
       </div>

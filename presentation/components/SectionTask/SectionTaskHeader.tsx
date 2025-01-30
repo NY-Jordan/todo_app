@@ -35,7 +35,6 @@ export default function SectionTaskHeader({showMoreButton, name, count}  : props
              </a>
         </div>
       </div>
-      <AddTask active={showAddTask} />
     </div>
   )
 }

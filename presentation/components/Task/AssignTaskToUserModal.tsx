@@ -18,6 +18,7 @@ import useAuth from "@/Infrastructure/hooks/useAuth";
 import { ITask } from "@/domain/entities/task.entities";
 import { assignTaskToUsers, fetchCollaborators } from "@/Infrastructure/Services/Task/TaskService";
 import { initAssignTaskToUser, resetAssignTaskToUserState } from "@/app/Actions/TaskActions";
+import { StatusStateEnum } from "@/domain/enum/StatusStateEnum";
 
 export default function AssignTaskToUserModal({active, setActive, task} : {active : boolean, setActive : React.Dispatch<React.SetStateAction<boolean>> , task : ITask}) {
 
@@ -51,12 +52,12 @@ export default function AssignTaskToUserModal({active, setActive, task} : {activ
     }
   }
   useEffect(() => {
-    if (assignTaskState.status === 'success') {
+    if (assignTaskState.status === StatusStateEnum.success) {
       toast.success('Task Successfully Assigned');
       dispatch(resetAssignTaskToUserState());
       setActive(false);
     }
-    if (assignTaskState.status === 'failure') {
+    if (assignTaskState.status === StatusStateEnum.failure) {
       toast.error('Process Failed');
       dispatch(resetAssignTaskToUserState());
     }
@@ -95,7 +96,7 @@ export default function AssignTaskToUserModal({active, setActive, task} : {activ
               }
             </div>
             <div className="modal-action">
-              <CustomButton onClick={handleAssignTaskAction}  loader={assignTaskState.status === 'loading'} form="create-task-group-form" type="submit" btnClassName="w-1/4" isDisabled={userSelected.length ==0} text={`Assign  (${userSelected.length})` } size='lg'  variant='primary'  />
+              <CustomButton onClick={handleAssignTaskAction}  loader={assignTaskState.status === StatusStateEnum.loading} form="create-task-group-form" type="submit" btnClassName="w-1/4" isDisabled={userSelected.length ==0} text={`Assign  (${userSelected.length})` } size='lg'  variant='primary'  />
             </div>
         </div>
         </div>

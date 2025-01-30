@@ -27,9 +27,8 @@ export const createTaskGroup = async (option  : { name : string, project_id : nu
                 Authorization : await getBearerAuthToken()
             }
         });
-        const data = reponse.data.task_groups;
-        const pagination = reponse.data.pagination;
-        store.dispatch(createTaskGroupSuccess(data, pagination));
+       
+        store.dispatch(createTaskGroupSuccess());
     } catch (e) {
         store.dispatch(createTaskGroupFailure(e))
     }

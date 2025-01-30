@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from '../../../../app/store/hook';
 import { createDailyTaskInit, editDailyTaskInit, resetCreateDailyTask, resetEditDailyTask } from '@/app/Actions/DailyTaskActions';
 import toast from 'react-hot-toast';
 import { ITask } from '@/domain/entities/task.entities';
+import { StatusStateEnum } from '@/domain/enum/StatusStateEnum';
 
 export default function UpdateDailyTaskModal({active, setActive, task} : {active : boolean, setActive : React.Dispatch<React.SetStateAction<boolean>>, task : ITask}) {
     const { handleSubmit, register, watch , reset} = useForm();
@@ -38,14 +39,14 @@ export default function UpdateDailyTaskModal({active, setActive, task} : {active
 
     useEffect(() => {
       if (updateDailyTaskState.taskId === task.id) {
-        if (updateDailyTaskState.status === "success") {
+        if (updateDailyTaskState.status ===  StatusStateEnum.success) {
           toast.success('Task updated successfully.')
           setActive(false);
           dispatch(resetEditDailyTask());
           reset();
   
         }
-        if (updateDailyTaskState.status === "failure") {
+        if (updateDailyTaskState.status ===  StatusStateEnum.failure) {
           toast.error('Process Failed');
           dispatch(resetCreateDailyTask());
         }
@@ -90,7 +91,7 @@ export default function UpdateDailyTaskModal({active, setActive, task} : {active
                  </div>
       
                   <div className="modal-action">
-                    <CustomButton loader={updateDailyTaskState.status === 'loading'} form={`update-daily-task-form${task.id}`} type="submit" btnClassName="w-1/4"  text="Update" size='lg'  variant='primary'  />
+                    <CustomButton loader={updateDailyTaskState.status === StatusStateEnum.loading} form={`update-daily-task-form${task.id}`} type="submit" btnClassName="w-1/4"  text="Update" size='lg'  variant='primary'  />
                   </div>
               </div>
               </div>

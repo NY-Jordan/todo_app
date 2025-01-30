@@ -71,3 +71,56 @@ export const tasks  = {
         ]
     }
 }
+
+
+export const AllTasks  = [
+    {
+        title : "task a",
+        description : 'description 2'
+    },
+    {
+        title : "task 1",
+        description : 'description 2'
+    },
+    {
+        title : "task 1",
+        description : 'description 2'
+    },
+    {
+        title : "task 1",
+        description : 'description 2'
+    },
+    {
+        title : "task 1",
+        description : 'description 2'
+    },
+    {
+        title : "task 1",
+        description : 'description 2'
+    },
+    {
+        title : "task 1",
+        description : 'description 2'
+    },
+    {
+        title : "task 1",
+        description : 'description 2'
+    },
+    {
+        title : "task 1",
+        description : 'description 2'
+    },
+    {
+        title : "task 1",
+        description : 'description 2'
+    },
+    {
+        title : "task 1",
+        description : 'description 2'
+    },
+    {
+        title : "task 1",
+        description : 'description 2'
+    },
+    
+ ]

@@ -7,6 +7,7 @@ import { FieldValues, useForm } from "react-hook-form";
 import CustomButton from "../button/CustomButton";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
+import { StatusStateEnum } from "@/domain/enum/StatusStateEnum";
 
 export default function CreateProjectsModal({active, setActive} : {active : boolean, setActive : React.Dispatch<React.SetStateAction<boolean>> }) {
 
@@ -29,7 +30,7 @@ export default function CreateProjectsModal({active, setActive} : {active : bool
 
   
   useEffect(() => {
-    if (createProjectState.status === "success") {
+    if (createProjectState.status ===  StatusStateEnum.success) {
         toast.success('Project created successfully 🎉🎉')
         setActive(false);
         FetchAllProjects();
@@ -37,7 +38,7 @@ export default function CreateProjectsModal({active, setActive} : {active : bool
         reset();
 
     }
-    if (createProjectState.status === "failure") {
+    if (createProjectState.status === StatusStateEnum.failure) {
       toast.error('Process Failed');
       dispatch(resetCreateProjectState());
     }
@@ -79,7 +80,7 @@ export default function CreateProjectsModal({active, setActive} : {active : bool
            </div>
 
             <div className="modal-action">
-              <CustomButton form="create-project-form" type="submit" btnClassName="w-1/4" loader={createProjectState.status === "loading" ? true : false} text="Submit" size='lg'  variant='primary'  />
+              <CustomButton form="create-project-form" type="submit" btnClassName="w-1/4" loader={createProjectState.status === StatusStateEnum.loading ? true : false} text="Submit" size='lg'  variant='primary'  />
             </div>
         </div>
         </div>

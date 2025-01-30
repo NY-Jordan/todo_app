@@ -1,3 +1,4 @@
+import { StatusStateEnum } from "@/domain/enum/StatusStateEnum";
 import { ProjectsActions } from "../Actions/ProjectsActions";
 
 const initialState = {
@@ -34,19 +35,19 @@ export const ProjectsReducer = (state = initialState, action : ActionType) => {
     case ProjectsActions.CREATE_PROJECT_INIT:
       return {
         ...state,
-        create: { ...state.create, status: "loading", error: null },
+        create: { ...state.create, status:  StatusStateEnum.loading, error: null },
       };
 
     case ProjectsActions.CREATE_PROJECT_SUCCESS:
       return {
         ...state,
-        create: { ...state.create, status: "success", error: null },
+        create: { ...state.create, status:  StatusStateEnum.success, error: null },
       };
 
     case ProjectsActions.CREATE_PROJECT_FAILURE:
       return {
         ...state,
-        create: { ...state.create, status: "failure", error: action.payload.error },
+        create: { ...state.create, status:  StatusStateEnum.failure, error: action.payload.error },
       };
 
     case ProjectsActions.RESET_CREATE_PROJECT_STATE:
@@ -58,7 +59,7 @@ export const ProjectsReducer = (state = initialState, action : ActionType) => {
     case ProjectsActions.FETCH_PROJECTS_INIT:
       return {
         ...state,
-        fetch: { ...state.fetch, status: "loading", error: null },
+        fetch: { ...state.fetch, status:  StatusStateEnum.loading, error: null },
       };
 
     case ProjectsActions.FETCH_PROJECTS_SUCCESS:
@@ -66,7 +67,7 @@ export const ProjectsReducer = (state = initialState, action : ActionType) => {
         ...state,
         fetch: {
           ...state.fetch,
-          status: "success",
+          status:  StatusStateEnum.success,
           data: action.payload.projects,
           error: null,
         },
@@ -75,43 +76,43 @@ export const ProjectsReducer = (state = initialState, action : ActionType) => {
     case ProjectsActions.FETCH_PROJECTS_FAILURE:
       return {
         ...state,
-        fetch: { ...state.fetch, status: "failure", error: action.payload.error },
+        fetch: { ...state.fetch, status:  StatusStateEnum.failure, error: action.payload.error },
       };
 
     case ProjectsActions.UPDATE_PROJECT_INIT:
       return {
         ...state,
-        update: { ...state.update, status: "loading", error: null },
+        update: { ...state.update, status:  StatusStateEnum.loading, error: null },
       };
 
     case ProjectsActions.UPDATE_PROJECT_SUCCESS:
       return {
         ...state,
-        update: { ...state.update, status: "success", error: null },
+        update: { ...state.update, status:  StatusStateEnum.success, error: null },
       };
 
     case ProjectsActions.UPDATE_PROJECT_FAILURE:
       return {
         ...state,
-        update: { ...state.update, status: "failure", error: action.payload.error },
+        update: { ...state.update, status:  StatusStateEnum.failure, error: action.payload.error },
       };
 
     case ProjectsActions.DELETE_PROJECT_INIT:
       return {
         ...state,
-        delete: { ...state.delete, status: "loading", error: null },
+        delete: { ...state.delete, status: StatusStateEnum.loading, error: null },
       };
 
     case ProjectsActions.DELETE_PROJECT_SUCCESS:
       return {
         ...state,
-        delete: { ...state.delete, status: "success", error: null },
+        delete: { ...state.delete, status: StatusStateEnum.success, error: null },
       };
 
     case ProjectsActions.DELETE_PROJECT_FAILURE:
       return {
         ...state,
-        delete: { ...state.delete, status: "failure", error: action.payload.error },
+        delete: { ...state.delete, status: StatusStateEnum.failure, error: action.payload.error },
       };
     case ProjectsActions.RESET_DELETE_PROJECT_STATE:
       return {
@@ -125,19 +126,19 @@ export const ProjectsReducer = (state = initialState, action : ActionType) => {
       case ProjectsActions.LEFT_PROJECT_INIT:
         return {
           ...state,
-          delete: { ...state.leave, status: "loading", error: null },
+          delete: { ...state.leave, status: StatusStateEnum.loading, error: null },
         };
   
       case ProjectsActions.LEFT_PROJECT_SUCCESS:
         return {
           ...state,
-          delete: { ...state.leave, status: "success", error: null },
+          delete: { ...state.leave, status: StatusStateEnum.success, error: null },
         };
   
       case ProjectsActions.LEFT_PROJECT_FAILURE:
         return {
           ...state,
-          delete: { ...state.leave, status: "failure", error: action.payload.error },
+          delete: { ...state.leave, status: StatusStateEnum.failure, error: action.payload.error },
         };
       case ProjectsActions.RESET_LEFT_PROJECT_STATE:
         return {
@@ -184,14 +185,14 @@ export const ProjectsReducer = (state = initialState, action : ActionType) => {
         case ProjectsActions.INIT_GET_INVITATIONS : 
         return {
           ...state,
-          invitations: { ...state.invitations, status: "loading", error: null },
+          invitations: { ...state.invitations, status: StatusStateEnum.loading, error: null },
          }
 
         case ProjectsActions.GET_INVITATIONS_SUCESS : 
-            return {...state, invitations: { ...state.invitations, invitations : action.payload.invitations, status: "success", error: null },
+            return {...state, invitations: { ...state.invitations, invitations : action.payload.invitations, status: StatusStateEnum.success, error: null },
             }
         case ProjectsActions.GET_INVITATIONS_FAILED : 
-          return {...state, invitations: { ...state.invitations, invitations : [], status: "failure", error: action.payload.error },
+          return {...state, invitations: { ...state.invitations, invitations : [], status: StatusStateEnum.failure, error: action.payload.error },
         }
             
         case ProjectsActions.RESET_GET_INVITATIONS_STATE : 
@@ -202,14 +203,14 @@ export const ProjectsReducer = (state = initialState, action : ActionType) => {
         case ProjectsActions.INIT_CANCEL_PROJECT_INVITATION_STATUS : 
           return {
             ...state,
-            cancel_invitation: { ...state.cancel_invitation, status: "loading", error: null },
+            cancel_invitation: { ...state.cancel_invitation, status: StatusStateEnum.loading, error: null },
           }
 
         case ProjectsActions.CANCEL_PROJECT_INVITATION_SUCESS : 
-            return {...state, cancel_invitation: { ...state.cancel_invitation, uuid : action.payload.uuid, status: "success", error: null },
+            return {...state, cancel_invitation: { ...state.cancel_invitation, uuid : action.payload.uuid, status: StatusStateEnum.success, error: null },
             }
         case ProjectsActions.CANCEL_PROJECT_INVITATION_FAILED : 
-          return {...state, cancel_invitation: { ...state.cancel_invitation,  status: "failure", error: action.payload.error },
+          return {...state, cancel_invitation: { ...state.cancel_invitation,  status: StatusStateEnum.failure, error: action.payload.error },
         }
             
         case ProjectsActions.RESET_CANCEL_PROJECT_PROJECT_INVITATION_STATE : 
@@ -219,14 +220,14 @@ export const ProjectsReducer = (state = initialState, action : ActionType) => {
         case ProjectsActions.INIT_REMOVE_USER_FROM_PROJECT : 
         return {
           ...state,
-          remove_user: { ...state.remove_user, status: "loading", error: null },
+          remove_user: { ...state.remove_user, status: StatusStateEnum.loading, error: null },
         }
 
       case ProjectsActions.REMOVE_USER_FROM_PROJECT_SUCESS : 
-          return {...state, remove_user: { ...state.remove_user, userId : action.payload.userId, status: "success", error: null },
+          return {...state, remove_user: { ...state.remove_user, userId : action.payload.userId, status: StatusStateEnum.success, error: null },
           }
       case ProjectsActions.REMOVE_USER_FROM_PROJECT_FAILED : 
-        return {...state, remove_user: { ...state.remove_user,  status: "failure", error: action.payload.error },
+        return {...state, remove_user: { ...state.remove_user,  status: StatusStateEnum.failure, error: action.payload.error },
       }
           
       case ProjectsActions.RESET_REMOVE_USER_FROM_PROJECT_STATE : 

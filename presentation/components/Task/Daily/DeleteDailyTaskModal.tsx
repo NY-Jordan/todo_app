@@ -9,6 +9,7 @@ import toast from 'react-hot-toast'
 import { tasks } from '../../../../Infrastructure/data/task';
 import { deleteDailyTaskInit, resetDeleteDailyTask } from '@/app/Actions/DailyTaskActions'
 import { deleteDailyTask } from '@/Infrastructure/Services/Task/DailyTaskService'
+import { StatusStateEnum } from '@/domain/enum/StatusStateEnum'
 
 export default function DeleteDailyTaskModal({active, setActive, taskId} : {active : boolean, setActive : React.Dispatch<React.SetStateAction<boolean>>, taskId : number }) {
   const dispatch = useAppDispatch();
@@ -25,17 +26,17 @@ export default function DeleteDailyTaskModal({active, setActive, taskId} : {acti
 
   useEffect(() => {
       if (processedTaskId &&  deleteTaskState.taskId === processedTaskId) {
-        if (deleteTaskState.status === 'success') {
+        if (deleteTaskState.status === StatusStateEnum.success) {
           toast.success('The Task has been deleted successfully.');
           dispatch(resetDeleteDailyTask());
           setActive(false);
         }
-        if (deleteTaskState.status === 'failure') {
+        if (deleteTaskState.status === StatusStateEnum.failure) {
           toast.error('Task deletion failed. Please try again.');
           setActive(false)
         }
       }
-      if (deleteTaskState.status === 'idle') {
+      if (deleteTaskState.status === StatusStateEnum.idle) {
         setProcessedTaskId(undefined);
       }
   }, [deleteTaskState.status])
@@ -56,7 +57,7 @@ export default function DeleteDailyTaskModal({active, setActive, taskId} : {acti
       
                   <div className="modal-action justify-between">
                     <CustomButton  type="submit" btnClassName="w-1/4"  text="Cancel" onClick={() => setActive(false)} size='lg'  variant='dark'  />
-                    <CustomButton  type="submit" btnClassName="w-1/4"onClick={() => handleTaskDeleteAction()}  loader={deleteTaskState.status === 'loading'}  text="Yes" size='lg'  variant='primary'  />
+                    <CustomButton  type="submit" btnClassName="w-1/4"onClick={() => handleTaskDeleteAction()}  loader={deleteTaskState.status === StatusStateEnum.loading}  text="Yes" size='lg'  variant='primary'  />
                   </div>
               </div>
               </div>

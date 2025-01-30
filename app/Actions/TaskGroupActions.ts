@@ -29,9 +29,8 @@ export const createTaskGroupInit = () => ({
   type: TaskGroupActions.CREATE_TASKGROUP_INIT,
 });
 
-export const createTaskGroupSuccess = (taskGroups : ITaskGroup[], pagination : IPagination) => ({
+export const createTaskGroupSuccess = () => ({
   type: TaskGroupActions.CREATE_TASKGROUP_SUCCESS,
-  payload: {taskGroups : taskGroups, pagination : pagination},
 });
 
 export const createTaskGroupFailure = (error : any) => ({

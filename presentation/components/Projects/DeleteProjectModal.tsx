@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '@/app/store/hook'
 import { deleteProjectInit, resetDeleteProjectState } from '@/app/Actions/ProjectsActions'
 import { deleteProject, FetchAllProjects } from '@/Infrastructure/Services/projects/ProjectsService'
 import toast from 'react-hot-toast'
+import { StatusStateEnum } from '@/domain/enum/StatusStateEnum'
 
 export default function DeleteProjectModal({active, setActive, projectId} : {active : boolean, setActive : React.Dispatch<React.SetStateAction<boolean>>, projectId : number }) {
   const dispatch = useAppDispatch();
@@ -16,13 +17,13 @@ export default function DeleteProjectModal({active, setActive, projectId} : {act
   }
 
   useEffect(() => {
-    if (deleteProjectState.status === 'success') {
+    if (deleteProjectState.status === StatusStateEnum.success) {
       toast.success('The project has been deleted successfully.');
       dispatch(resetDeleteProjectState());
       FetchAllProjects();
       setActive(false);
     }
-    if (deleteProjectState.status === 'failure') {
+    if (deleteProjectState.status === StatusStateEnum.failure) {
       toast.error('Project deletion failed. Please try again.');
       setActive(false)
     }
@@ -44,7 +45,7 @@ export default function DeleteProjectModal({active, setActive, projectId} : {act
       
                   <div className="modal-action justify-between">
                     <CustomButton  type="submit" btnClassName="w-1/4"  text="Cancel" onClick={() => setActive(false)} size='lg'  variant='dark'  />
-                    <CustomButton  type="submit" btnClassName="w-1/4"onClick={() => handleProjectDeleteAction()}  loader={deleteProjectState.status === 'loading'}  text="Yes" size='lg'  variant='primary'  />
+                    <CustomButton  type="submit" btnClassName="w-1/4"onClick={() => handleProjectDeleteAction()}  loader={deleteProjectState.status === StatusStateEnum.loading}  text="Yes" size='lg'  variant='primary'  />
                   </div>
               </div>
               </div>

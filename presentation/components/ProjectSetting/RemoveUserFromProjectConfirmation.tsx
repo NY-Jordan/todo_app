@@ -20,7 +20,7 @@ export default function RemoveUserFromProjectConfirmation({active, setActive, us
 
   
     useEffect(() => {
-      if (removeUserFromProjectState.status === 'success') {
+      if (removeUserFromProjectState.status === StatusStateEnum.success) {
         toast.success('operation sucess ');
         setActive(false);
         dispatch(resetRemoveUserFromProjectState())
@@ -47,7 +47,7 @@ export default function RemoveUserFromProjectConfirmation({active, setActive, us
       
                   <div className="modal-action justify-between">
                     <CustomButton  type="submit" btnClassName="w-1/4"  text="Cancel" onClick={() => setActive(false)} size='lg'  variant='dark'  />
-                    <CustomButton  type="submit" btnClassName="w-1/4"onClick={() => handleRemoveUserFromProjectAction()}  loader={removeUserFromProjectState.status === 'loading'}  text="Yes" size='lg'  variant='primary'  />
+                    <CustomButton  type="submit" btnClassName="w-1/4"onClick={() => handleRemoveUserFromProjectAction()}  loader={removeUserFromProjectState.status === StatusStateEnum.loading}  text="Yes" size='lg'  variant='primary'  />
                   </div>
               </div>
               </div>

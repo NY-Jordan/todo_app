@@ -19,7 +19,7 @@ export default function CancelProjectInvitationConfirmation({active, setActive, 
 
   
     useEffect(() => {
-      if (cancelInvitationsState.status === 'success') {
+      if (cancelInvitationsState.status === StatusStateEnum.success) {
         toast.success('operation sucess ');
         if (projectId) {
           getInvitations(projectId)
@@ -49,7 +49,7 @@ export default function CancelProjectInvitationConfirmation({active, setActive, 
       
                   <div className="modal-action justify-between">
                     <CustomButton  type="submit" btnClassName="w-1/4"  text="Cancel" onClick={() => setActive(false)} size='lg'  variant='dark'  />
-                    <CustomButton  type="submit" btnClassName="w-1/4"onClick={() => handleCancelProjectInvitationAction()}  loader={cancelInvitationsState.status === 'loading'}  text="Yes" size='lg'  variant='primary'  />
+                    <CustomButton  type="submit" btnClassName="w-1/4"onClick={() => handleCancelProjectInvitationAction()}  loader={cancelInvitationsState.status === StatusStateEnum.loading}  text="Yes" size='lg'  variant='primary'  />
                   </div>
               </div>
               </div>

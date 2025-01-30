@@ -2,10 +2,11 @@ import { error } from "console";
 import { TaskGroupActions } from "../Actions/TaskGroupActions";
 import { ITaskGroup } from '../../domain/entities/task.group.entities';
 import Pagination from "@/presentation/components/Pagination/Pagination";
+import { StatusStateEnum } from "@/domain/enum/StatusStateEnum";
 
 const initialState = {
   taskGroups: [],
-  status: 'idle',
+  status: StatusStateEnum.idle,
   pagination : null,
   error: null,
   create: { status: "idle", error: null }, 
@@ -25,19 +26,17 @@ const taskGroupReducer = (state = initialState, action : ActionType) => {
     case TaskGroupActions.CREATE_TASKGROUP_INIT:
       return {
         ...state,
-        create: {status :  'loading', error : null},
+        create: {status :  StatusStateEnum.loading, error : null},
       };
     case TaskGroupActions.CREATE_TASKGROUP_SUCCESS:
       return {
         ...state,
-        create: {status :  'succeeded', error : null},
-        taskGroups: action.payload.taskGroups,
-        pagination: action.payload.pagination,
+        create: {status :  StatusStateEnum.success, error : null},
       };
     case TaskGroupActions.CREATE_TASKGROUP_FAILURE:
       return {
         ...state,
-        create: {status :  'failure', error : action.payload},
+        create: {status :  StatusStateEnum.failure, error : action.payload},
       };
     case TaskGroupActions.CREATE_TASKGROUP_RESET:
       return {
@@ -50,26 +49,26 @@ const taskGroupReducer = (state = initialState, action : ActionType) => {
     case TaskGroupActions.FETCH_TASKGROUPS_INIT:
       return {
         ...state,
-        status: 'loading',
+        status: StatusStateEnum.loading,
         error: null,
       };
     case TaskGroupActions.FETCH_TASKGROUPS_SUCCESS:
       return {
         ...state,
-        status: 'succeeded',
+        status: StatusStateEnum.success,
         taskGroups: action.payload.taskGroups,
         pagination: action.payload.pagination,
       };
     case TaskGroupActions.FETCH_TASKGROUPS_FAILURE:
       return {
         ...state,
-        status: 'failure',
+        status: StatusStateEnum.failure,
         error: action.payload,
       };
     case TaskGroupActions.FETCH_TASKGROUPS_RESET:
       return {
         ...state,
-        status: 'idle',
+        status: StatusStateEnum.idle,
         error: null,
       };
 
@@ -77,12 +76,12 @@ const taskGroupReducer = (state = initialState, action : ActionType) => {
     case TaskGroupActions.UPDATE_TASKGROUP_INIT:
       return {
         ...state,
-        update: {status :  'loading', error : null},
+        update: {status :  StatusStateEnum.loading, error : null},
       };
     case TaskGroupActions.UPDATE_TASKGROUP_SUCCESS:
       return {
         ...state,
-        update:  {status :  'succeeded', error : null},
+        update:  {status :  StatusStateEnum.success, error : null},
         taskGroups: state.taskGroups.map((group : ITaskGroup) =>
           group.id === action.payload.id ? { ...group, ...action.payload } : group
         ),
@@ -90,36 +89,36 @@ const taskGroupReducer = (state = initialState, action : ActionType) => {
     case TaskGroupActions.UPDATE_TASKGROUP_FAILURE:
       return {
         ...state,
-        update:  {status :  'failure', error : action.payload},
+        update:  {status :  StatusStateEnum.failure, error : action.payload},
       };
     case TaskGroupActions.UPDATE_TASKGROUP_RESET:
       return {
         ...state,
-        update:  {status :  'idle', error : action.payload},
+        update:  {status :  StatusStateEnum.idle, error : action.payload},
       };
 
     // Pour la suppression d'un TaskGroup
     case TaskGroupActions.DELETE_TASKGROUP_INIT:
       return {
         ...state,
-        delete: {status :  'loading', error : null},
+        delete: {status :  StatusStateEnum.loading, error : null},
       };
     case TaskGroupActions.DELETE_TASKGROUP_SUCCESS:
       return {
         ...state,
-        delete: {status :  'succeeded', error : null, taskGroupId : action.payload},
+        delete: {status :  StatusStateEnum.success, error : null, taskGroupId : action.payload},
         taskGroups: state.taskGroups.filter((group : ITaskGroup) => group.id !== action.payload),
       };
     case TaskGroupActions.DELETE_TASKGROUP_FAILURE:
       return {
         ...state,
-        delete: {status :  'failure', error : action.payload, taskGroupId : null},
+        delete: {status :  StatusStateEnum.failure, error : action.payload, taskGroupId : null},
         error: action.payload,
       };
     case TaskGroupActions.DELETE_TASKGROUP_RESET:
       return {
         ...state,
-        delete: {status :  'idle', error : null, taskGroupId : null},
+        delete: {status :  StatusStateEnum.idle, error : null, taskGroupId : null},
       };
 
     default:

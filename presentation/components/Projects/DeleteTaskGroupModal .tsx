@@ -9,6 +9,7 @@ import toast from 'react-hot-toast'
 import { deleteTaskGroupInit, deleteTaskGroupReset } from '@/app/Actions/TaskGroupActions'
 import { deleteTaskGroup } from '@/Infrastructure/Services/TaskGroup/TaskGroupService'
 import { ITaskGroup } from '@/domain/entities/task.group.entities'
+import { StatusStateEnum } from '@/domain/enum/StatusStateEnum'
 
 export default function DeleteTaskGroupModal ({active, setActive, taskGroup} : {active : boolean, setActive : React.Dispatch<React.SetStateAction<boolean>>, taskGroup : ITaskGroup }) {
   const dispatch = useAppDispatch();
@@ -19,12 +20,12 @@ export default function DeleteTaskGroupModal ({active, setActive, taskGroup} : {
   }
 
   useEffect(() => {
-    if (deleteTaskGroupState.status === 'succeeded') {
+    if (deleteTaskGroupState.status === StatusStateEnum.success) {
       toast.success('The task group has been deleted successfully.');
       dispatch(deleteTaskGroupReset());
       setActive(false);
     }
-    if (deleteTaskGroupState.status === 'failure') {
+    if (deleteTaskGroupState.status === StatusStateEnum.failure) {
       toast.error('task group deletion failed. Please try again.');
       setActive(false)
     }
@@ -53,7 +54,7 @@ export default function DeleteTaskGroupModal ({active, setActive, taskGroup} : {
       
                   <div className="modal-action justify-between">
                     <CustomButton  type="submit" btnClassName="w-1/4"  text="Cancel" onClick={() => setActive(false)} size='lg'  variant='dark'  />
-                    <CustomButton  type="submit" btnClassName="w-1/4"onClick={() => handleProjectDeleteAction()}  loader={deleteTaskGroupState.status === 'loading'}  text="Yes" size='lg'  variant='primary'  />
+                    <CustomButton  type="submit" btnClassName="w-1/4"onClick={() => handleProjectDeleteAction()}  loader={deleteTaskGroupState.status === StatusStateEnum.loading}  text="Yes" size='lg'  variant='primary'  />
                   </div>
               </div>
               </div>

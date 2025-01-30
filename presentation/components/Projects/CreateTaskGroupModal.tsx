@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import { createTaskGroup, fecthTaskGroupsProject } from "@/Infrastructure/Services/TaskGroup/TaskGroupService";
 import { useRouter } from "next/router";
 import { createTaskGroupInit, createTaskGroupReset } from "@/app/Actions/TaskGroupActions";
+import { StatusStateEnum } from "@/domain/enum/StatusStateEnum";
 
 export default function CreateTaskGroupModal({active, setActive} : {active : boolean, setActive : React.Dispatch<React.SetStateAction<boolean>> }) {
 
@@ -32,13 +33,13 @@ export default function CreateTaskGroupModal({active, setActive} : {active : boo
 
 
   useEffect(() => {
-    if (createTaskGroupState.status === "succeeded") {
+    if (createTaskGroupState.status === StatusStateEnum.success) {
         toast.success('Task Group created successfully.')
         setActive(false);
-        dispatch(createTaskGroupInit());
+        dispatch(createTaskGroupReset());
         reset();
     }
-    if (createTaskGroupState.status === "failure") {
+    if (createTaskGroupState.status ===  StatusStateEnum.failure) {
       toast.error('Process Failed');
       dispatch(createTaskGroupReset());
     }
@@ -74,7 +75,7 @@ export default function CreateTaskGroupModal({active, setActive} : {active : boo
            </div>
 
             <div className="modal-action">
-              <CustomButton form="create-task-group-form" type="submit" btnClassName="w-1/4" loader={createTaskGroupState.status === "loading" ? true : false} text="Submit" size='lg'  variant='primary'  />
+              <CustomButton form="create-task-group-form" type="submit" btnClassName="w-1/4" loader={createTaskGroupState.status ===  StatusStateEnum.loading ? true : false} text="Submit" size='lg'  variant='primary'  />
             </div>
         </div>
         </div>

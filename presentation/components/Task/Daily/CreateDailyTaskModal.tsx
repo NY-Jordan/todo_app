@@ -7,6 +7,7 @@ import { createDailyTaskInit, resetCreateDailyTask } from '@/app/Actions/DailyTa
 import toast from 'react-hot-toast';
 import { useAppDispatch, useAppSelector } from '@/app/store/hook';
 import CustomButton from '../../button/CustomButton';
+import { StatusStateEnum } from '@/domain/enum/StatusStateEnum';
 
 export default function CreateDailyTaskModal({active, setActive} : {active : boolean, setActive : React.Dispatch<React.SetStateAction<boolean>>}) {
     const { handleSubmit, register, watch , reset} = useForm();
@@ -22,14 +23,14 @@ export default function CreateDailyTaskModal({active, setActive} : {active : boo
     }
 
     useEffect(() => {
-      if (createDailyTaskState.status === "success") {
+      if (createDailyTaskState.status ===  StatusStateEnum.success) {
           toast.success('task created successfully 🎉🎉')
           setActive(false);
           dispatch(resetCreateDailyTask());
           reset();
   
       }
-      if (createDailyTaskState.status === "failure") {
+      if (createDailyTaskState.status ===  StatusStateEnum.failure) {
         toast.error('Process Failed');
         dispatch(resetCreateDailyTask());
       }
@@ -73,7 +74,7 @@ export default function CreateDailyTaskModal({active, setActive} : {active : boo
                  </div>
       
                   <div className="modal-action">
-                    <CustomButton loader={createDailyTaskState.status === 'loading'} form='create-daily-task-form' type="submit" btnClassName="w-1/4"  text="Submit" size='lg'  variant='primary'  />
+                    <CustomButton loader={createDailyTaskState.status === StatusStateEnum.loading} form='create-daily-task-form' type="submit" btnClassName="w-1/4"  text="Submit" size='lg'  variant='primary'  />
                   </div>
               </div>
               </div>

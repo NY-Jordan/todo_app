@@ -1,6 +1,7 @@
 import { IPagination, ITask } from "@/domain/entities/task.entities";
 import { TaskActions } from "../Actions/TaskActions";
 import Pagination from "@/presentation/components/Pagination/Pagination";
+import { StatusStateEnum } from "@/domain/enum/StatusStateEnum";
 
 // État initial
 const initialState  : {
@@ -11,11 +12,11 @@ const initialState  : {
   assign: { status: string, error: null|any },
   assign_task : { status: string, error: null|any, task : null|ITask },
 } ={
-  create: { status: 'idle', error: null },
-  fetch: { status: 'idle', error: null, data: {tasks : [], pagination : null} },
-  update: { status: 'idle', error: null },
-  delete: { status: 'idle', error: null },
-  assign: { status: 'idle', error: null },
+  create: { status: StatusStateEnum.idle, error: null },
+  fetch: { status: StatusStateEnum.idle, error: null, data: {tasks : [], pagination : null} },
+  update: { status: StatusStateEnum.idle, error: null },
+  delete: { status: StatusStateEnum.idle, error: null },
+  assign: { status: StatusStateEnum.idle, error: null },
   assign_task : { status: "idle", error: null, task : null },
 
 };
@@ -30,61 +31,48 @@ const TaskReducer = (state = initialState, action : ActionType) => {
   switch (action.type) {
     // CREATE
     case TaskActions.CREATE_TASK_INIT:
-      return { ...state, create: { status: 'loading', error: null } };
+      return { ...state, create: { status: StatusStateEnum.loading, error: null } };
 
     case TaskActions.CREATE_TASK_SUCCESS:
       const task  = action.payload.task
       const tasksLenght = state.fetch.data.tasks.length  === 10 ?  1 :  state.fetch.data.tasks.length;
-     
+      
       return {
         ...state,
-        create: { status: 'succeeded', error: null },
-        fetch: {
-          ...state.fetch,
-          data: {
-            tasks : {...state.fetch.data.tasks, task},
-             pagination : {
-              current_page: state.fetch.data.pagination?.current_page,
-              total_pages:  (tasksLenght  === 1 ? 
-                (state.fetch.data.pagination?.total_pages ? state.fetch.data.pagination?.total_pages + 1 : undefined) : state.fetch.data.pagination?.total_pages ),   
-              total_items: tasksLenght,  
-              per_page: state.fetch.data.pagination?.per_page
-             }
-          },
-        }
+        create: { status: StatusStateEnum.success, error: null },
       };
 
     case TaskActions.CREATE_TASK_FAILURE:
-      return { ...state, create: { status: 'failed', error: action.payload } };
+      return { ...state, create: { status: StatusStateEnum.failure, error: action.payload } };
 
     case TaskActions.CREATE_TASK_RESET:
-      return { ...state, create: { status: 'idle', error: null } };
+      return { ...state, create: { status: StatusStateEnum.idle, error: null } };
 
     // FETCH
     case TaskActions.FETCH_TASKS_INIT:
-      return { ...state, fetch: { ...state.fetch, status: 'loading', error: null } };
+      return { ...state, fetch: { ...state.fetch, status: StatusStateEnum.loading, error: null } };
 
     case TaskActions.FETCH_TASKS_SUCCESS:
       return {
         ...state,
-        fetch: { status: 'succeeded', error: null, data: {tasks : action.payload.tasks, pagination : action.payload.pagination} },
+        fetch: { status: StatusStateEnum.success, error: null, data: {tasks : action.payload.tasks, pagination : action.payload.pagination} },
       };
 
     case TaskActions.FETCH_TASKS_FAILURE:
-      return { ...state, fetch: { ...state.fetch, status: 'failed', error: action.payload } };
+      return { ...state, fetch: { ...state.fetch, status: StatusStateEnum.failure, error: action.payload } };
 
     case TaskActions.FETCH_TASKS_RESET:
-      return { ...state, fetch: { status: 'idle', error: null, data: {tasks : [], pagination : null} } };
+      return { ...state, fetch: { status: StatusStateEnum.idle, error: null, data: {tasks : [], pagination : null} } };
 
     // UPDATE
     case TaskActions.UPDATE_TASK_INIT:
-      return { ...state, update: { status: 'loading', error: null } };
+      return { ...state, update: { status: StatusStateEnum.loading, error: null } };
 
     case TaskActions.UPDATE_TASK_SUCCESS:
      
       return {
         ...state,
-        update: { status: 'succeeded', error: null },
+        update: { status: StatusStateEnum.success, error: null },
         fetch: {
           ...state.fetch,
           data : {tasks : state.fetch.data.tasks.map((task : ITask) =>
@@ -94,53 +82,39 @@ const TaskReducer = (state = initialState, action : ActionType) => {
       };
 
     case TaskActions.UPDATE_TASK_FAILURE:
-      return { ...state, update: { status: 'failed', error: action.payload } };
+      return { ...state, update: { status: StatusStateEnum.failure, error: action.payload } };
 
     case TaskActions.UPDATE_TASK_RESET:
-      return { ...state, update: { status: 'idle', error: null } };
+      return { ...state, update: { status: StatusStateEnum.idle, error: null } };
 
     // DELETE
     case TaskActions.DELETE_TASK_INIT:
-      return { ...state, delete: { status: 'loading', error: null } };
+      return { ...state, delete: { status: StatusStateEnum.loading, error: null } };
 
     case TaskActions.DELETE_TASK_SUCCESS:
-      const newTasks = state.fetch.data.tasks.filter((task : ITask) => task.id !== action.payload);
-      console.log(newTasks.length === 0 ? (state.fetch.data.pagination?.current_page ? state.fetch.data.pagination?.current_page- 1 : undefined) : state.fetch.data.pagination?.current_page ,);
-      
+      const newTasks = state.fetch.data.tasks.filter((task : ITask) => task.id !== action.payload);      
       return {
         ...state,
-        delete: { status: 'succeeded', error: null },
-        fetch: {
-          ...state.fetch,
-          data: {
-            tasks : newTasks,
-             pagination : {
-              current_page:  newTasks.length === 0 ? (state.fetch.data.pagination?.current_page ? state.fetch.data.pagination?.current_page- 1 : undefined) : state.fetch.data.pagination?.current_page ,
-              total_pages:  newTasks.length === 0 ? (state.fetch.data.pagination?.total_pages ? state.fetch.data.pagination?.total_pages- 1 : undefined) : state.fetch.data.pagination?.total_pages ,   
-              total_items: newTasks.length,  
-              per_page: state.fetch.data.pagination?.per_page
-             }
-          },
-        },
+        delete: { status: StatusStateEnum.success, error: null },
       };
 
     case TaskActions.DELETE_TASK_FAILURE:
-      return { ...state, delete: { status: 'failed', error: action.payload } };
+      return { ...state, delete: { status: StatusStateEnum.failure, error: action.payload } };
 
     case TaskActions.DELETE_TASK_RESET:
-      return { ...state, delete: { status: 'idle', error: null } };
+      return { ...state, delete: { status: StatusStateEnum.idle, error: null } };
 
     // ASSIGN
       case TaskActions.INIT_ASSIGN_TASK_TO_USERS:
         return {
           ...state,
-          assign_task: { ...state.assign_task, status: "loading", error: null, task : null },
+          assign_task: { ...state.assign_task, status: StatusStateEnum.loading, error: null, task : null },
         };
   
         case TaskActions.ASSIGN_TASK_TO_USERS_SUCESS:
         return {
           ...state,
-          assign_task: { ...state.assign_task, status: "success", error: null, task : action.payload.task  },
+          assign_task: { ...state.assign_task, status: StatusStateEnum.success, error: null, task : action.payload.task  },
           fetch: {
             ...state.fetch,
             data : {tasks : state.fetch.data.tasks.map((task : ITask) =>
@@ -152,7 +126,7 @@ const TaskReducer = (state = initialState, action : ActionType) => {
         case TaskActions.ASSIGN_TASK_TO_USERS_FAILED:
           return {
             ...state,
-            assign_task: { ...state.assign_task, status: "failure", error: action.payload.error, task : null },
+            assign_task: { ...state.assign_task, status: StatusStateEnum.failure, error: action.payload.error, task : null },
           };
   
         case TaskActions.RESET_ASSIGN_TASK_TO_USERS_STATE:

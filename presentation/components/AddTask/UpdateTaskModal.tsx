@@ -6,53 +6,76 @@ import Icon from '@mdi/react'
 import { useAppDispatch, useAppSelector } from '@/app/store/hook'
 import { ITaskGroup } from '@/domain/entities/task.group.entities'
 import { FieldValues, useForm } from 'react-hook-form'
-import { createTaskInit, createTaskReset, fetchTasksSuccess } from '@/app/Actions/TaskActions'
-import { createTask } from '@/Infrastructure/Services/Task/TaskService'
-import { CreateTaskType } from '@/domain/entities/task.entities'
+import { createTaskInit, createTaskReset, updateTaskReset } from '@/app/Actions/TaskActions'
+import { createTask, updateTask } from '@/Infrastructure/Services/Task/TaskService'
+import { CreateTaskType, ITask } from '@/domain/entities/task.entities'
 import CustomButton from '../button/CustomButton'
 import toast from 'react-hot-toast'
 import { StatusStateEnum } from '@/domain/enum/StatusStateEnum'
-export default function AddTaskForm({active, setActive} : {active : boolean, setActive : React.Dispatch<React.SetStateAction<boolean>>}) {
+export default function UpdateTaskModal({active, setActive, task} : {active : boolean, setActive : React.Dispatch<React.SetStateAction<boolean>>, task : ITask}) {
 
     const fetchTaskGroupsState = useAppSelector(state  => state.taskGroup);
     const { handleSubmit, register, watch, reset } = useForm();
     const dispatch  = useAppDispatch();
-    const createTaskState  = useAppSelector(state => state.task).create;
+    const updateTaskState  = useAppSelector(state => state.task).update;
 
-    const handleCreateTask = (data  : FieldValues) => {
+    const handleUpdateTask = (data  : FieldValues) => {
         dispatch(createTaskInit())
         const options  = data as CreateTaskType;
-        createTask(options);
+        updateTask(options, task.id);
     }
 
     useEffect(() => {
-        if (createTaskState.status == StatusStateEnum.success) {
-            toast.success('Task created successfully.')
-            dispatch(createTaskReset());
+        if (updateTaskState.status == StatusStateEnum.success) {
+            toast.success('Task updated successfully.')
+            dispatch(updateTaskReset());
+            setActive(false);
             reset();
         }
-        if (createTaskState.status == StatusStateEnum.failure) {
-            toast.error('Task creation failed.')
-            dispatch(createTaskReset());
+        if (updateTaskState.status == StatusStateEnum.failure) {
+            toast.error('Task update failed.')
+            dispatch(updateTaskReset());
         }
-    }, [createTaskState.status])
+    }, [updateTaskState.status]);
+
+    useEffect(() => {
+        const defaultValues : {
+            task_group_id : number|undefined,
+            title : string|undefined,
+            breifing : string|undefined,
+            details : string|undefined,
+        }  = {
+            task_group_id : undefined,
+            title : undefined,
+            breifing : undefined,
+            details : undefined
+        }   
+
+        defaultValues.task_group_id = task.taskgroup_id ?? undefined;
+        defaultValues.title = task.title;
+        defaultValues.breifing = task.breifing; 
+        defaultValues.details = task.details ? task.details : ''; 
+        
+        reset({...defaultValues})
+    }, [task]);
 
     
   return (
     <>
-       <div className="divider  lg:divider-horizontal"></div>
-            <motion.div animate={{ width : active ? '50%': '0%', display : active ? 'block' : 'none', opacity :  active ? 1 : 0 }} className='w-2/3'>
+           <input type="checkbox" id="my_modal_6" checked={active} className="modal-toggle" />
+              <div className="modal" role="dialog">
+              <div className="modal-box max-w-none w-[40%]">
                 <div className='p-2 dark:bg-black flex flex-row justify-between  items-center rounded-t-xl ' >
                     <div className='flex flex-row  items-center space-x-2 '>
-                        <h5 className='text-lg  font-bold text-indigo-800'>Add a new Task</h5>
+                        <h5 className='text-lg  font-bold text-indigo-800'>Update Task</h5>
                     </div>
                     <button onClick={() => setActive(false)} className='btn text-gray-500 hover:bg-gray-100  bg-white dark:bg-slate-800 dark:hover:bg-slate-600 dark:text-white dark:border-black' >
                         <Icon path={mdiClose} size={1} />
                     </button>
                 </div>
-                <div className=' bg-gray-100/40  dark:bg-slate-800 w-full rounded-b-xl p-2'>
+                <div className=' dark:bg-slate-800 w-full rounded-b-xl p-2'>
                     
-                    <form className='px-4 w-full mt-2' onSubmit={handleSubmit(handleCreateTask)}>
+                    <form className='px-4 w-full mt-2' onSubmit={handleSubmit(handleUpdateTask)}>
                         
                         <label className="form-control w-full ">
                             <div className="label">
@@ -62,10 +85,10 @@ export default function AddTaskForm({active, setActive} : {active : boolean, set
                             <select  {...register('task_group_id', {
                                 required : true
                             })} className="select select-bordered w-full  ">
-                                    <option value={undefined} disabled selected>------</option>
+                                    <option value={undefined} disabled >------</option>
                                     {
                                         fetchTaskGroupsState.taskGroups && fetchTaskGroupsState.taskGroups.map((taskGroup : ITaskGroup) => {
-                                            return <option value={taskGroup.id}>{taskGroup.name}</option>
+                                            return <option value={taskGroup.id} selected={taskGroup.id === task.taskgroup_id}>{taskGroup.name}</option>
                                         })  
                                     }
                             </select>
@@ -98,19 +121,20 @@ export default function AddTaskForm({active, setActive} : {active : boolean, set
                                 <span className="label-text font-bold dark:text-white">Details </span>
                                 <span className="label-text-alt"></span>
                             </div>
-                            <textarea rows={6}  {...register('details', {
-                            })} className="textarea textarea-bordered dark:bg-slate-600" placeholder="more details"></textarea>
+                            <textarea rows={6} {...register('details', {
+                            })}  className="textarea textarea-bordered dark:bg-slate-600" placeholder="more details"></textarea>
                             
                         </label>
 
-                      
+                       
 
-                        <CustomButton variant='submit' type='submit' text='Submit' loader={createTaskState.status === StatusStateEnum.loading} />
+                        <CustomButton variant='submit' type='submit' text='Submit' loader={updateTaskState.status === StatusStateEnum.loading} />
                         {/* end add tools */}
                     </form>
                 
                 </div>
-            </motion.div>
+            </div>
+            </div>
     </>
   )
 }

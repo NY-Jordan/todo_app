@@ -12,6 +12,7 @@ import { useRouter } from "next/router";
 import { createTaskGroupInit, createTaskGroupReset, updateTaskGroupReset } from "@/app/Actions/TaskGroupActions";
 import TaskGroups from '../ProjectSetting/TaskGroups';
 import { ITaskGroup } from "@/domain/entities/task.group.entities";
+import { StatusStateEnum } from "@/domain/enum/StatusStateEnum";
 
 export default function UpdateTaskGroupModal({active, setActive, TaskGroup} : {active : boolean, setActive : React.Dispatch<React.SetStateAction<boolean>>, TaskGroup : ITaskGroup }) {
 
@@ -31,12 +32,12 @@ export default function UpdateTaskGroupModal({active, setActive, TaskGroup} : {a
 
 
   useEffect(() => {
-    if (updateTaskGroupState.status === "succeeded") {
+    if (updateTaskGroupState.status === StatusStateEnum.success) {
         toast.success('Task Group updated successfully.')
         setActive(false);
         dispatch(updateTaskGroupReset());
     }
-    if (updateTaskGroupState.status === "failure") {
+    if (updateTaskGroupState.status ===  StatusStateEnum.failure) {
       toast.error('Process Failed');
       dispatch(updateTaskGroupReset());
     }
@@ -83,7 +84,7 @@ export default function UpdateTaskGroupModal({active, setActive, TaskGroup} : {a
            </div>
 
             <div className="modal-action">
-              <CustomButton form="update-task-group-form" type="submit" btnClassName="w-1/4" loader={updateTaskGroupState.status === "loading" ? true : false} text="Submit" size='lg'  variant='primary'  />
+              <CustomButton form="update-task-group-form" type="submit" btnClassName="w-1/4" loader={updateTaskGroupState.status ===  StatusStateEnum.loading ? true : false} text="Submit" size='lg'  variant='primary'  />
             </div>
         </div>
         </div>

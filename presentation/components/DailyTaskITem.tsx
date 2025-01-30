@@ -12,6 +12,7 @@ import { TaskPhases } from '@/domain/enum/TaskEnum';
 import { useAppDispatch, useAppSelector } from '@/app/store/hook';
 import toast from 'react-hot-toast';
 import { resetUpdateDailyTaskPhase } from '@/app/Actions/DailyTaskActions';
+import { StatusStateEnum } from '@/domain/enum/StatusStateEnum';
 
 export default function DailyTaskITem({task} : {task :ITask}) {
   const dateFormat  = moment(task.updated_at).format('DD, MMMM YYYY');;
@@ -23,11 +24,11 @@ export default function DailyTaskITem({task} : {task :ITask}) {
 
   useEffect(() => {
     if (updateTaskPhaseState.taskId  === task.id) {
-      if (updateTaskPhaseState.status === 'success') {
+      if (updateTaskPhaseState.status === StatusStateEnum.success) {
         toast.success('Your changes have been successfully made!');
         dispatch(resetUpdateDailyTaskPhase());
       }
-      if (updateTaskPhaseState.status === 'failure') {
+      if (updateTaskPhaseState.status === StatusStateEnum.failure) {
         toast.error('Errors, Failed !!!');
         dispatch(resetUpdateDailyTaskPhase());
       }
