@@ -69,6 +69,7 @@ export default function index() {
 
           <div className={'flex   overflow-y-auto   space-x-8  '+(isSM ? 'flex-col' : 'flex-row')} > 
             
+            
             <Reorder.Group axis="x" style={{ marginTop : isSM ? '0%': "10%",  }} onReorder={(e) => setItems(e)} values={AllTasks}>
                 <SectionTask  name='Backlog'  data={tasks.backlog} />
                 <SectionTask name='Started' data={tasks.started} />
