@@ -6,7 +6,7 @@ import SectionTask from "@/presentation/components/SectionTask/SectionTask";
 import AddTask from "@/presentation/components/SectionTask/AddTask";
 import { mdiMagnify } from "@mdi/js";
 import Icon from "@mdi/react";
-import { AllTasks, tasks } from "@/Infrastructure/data/task";
+import {  tasks } from "@/Infrastructure/data/task";
 import Dropdown from "@/presentation/components/Dropdown";
 import { data } from "@/Infrastructure/data/data";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -20,7 +20,6 @@ export default function index() {
     console.log(`Selected item with id ${id}`);
   };
 
-  const [items, setItems] = useState(AllTasks);
   
   return (
   <Layout pageTitle="Manage Your Tasks">
@@ -68,15 +67,10 @@ export default function index() {
 
 
           <div className={'flex   overflow-y-auto   space-x-8  '+(isSM ? 'flex-col' : 'flex-row')} > 
-            
-            
-            <Reorder.Group axis="x" style={{ marginTop : isSM ? '0%': "10%",  }} onReorder={(e) => setItems(e)} values={AllTasks}>
                 <SectionTask  name='Backlog'  data={tasks.backlog} />
                 <SectionTask name='Started' data={tasks.started} />
                 <SectionTask  name='In Review'  data={tasks.progress} />
-                <SectionTask  name='Done' data={tasks.done}/>
-            </Reorder.Group>
-          
+                <SectionTask  name='Done' data={tasks.done}/>          
         </div>
       </div>
        

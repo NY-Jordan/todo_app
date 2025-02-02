@@ -4,18 +4,22 @@ export const tasks  = {
         tasks  :  [
             
             {
+                id : 1,
                 title : "task a",
                 description : 'description 2'
             },
             {
+                id : 2,
                 title : "task 1",
                 description : 'description 2'
             },
             {
+                id : 3,
                 title : "task 1",
                 description : 'description 2'
             },
             {
+                id : 4,
                 title : "task 1",
                 description : 'description 2'
             },
@@ -26,14 +30,17 @@ export const tasks  = {
         color :   "blue",
         tasks  :  [
             {
+                id : 1,
                 title : "task 1",
                 description : 'description 2'
             },
             {
+                id : 2,
                 title : "task 1",
                 description : 'description 2'
             },
             {
+                id : 3,
                 title : "task 1",
                 description : 'description 2'
             },
@@ -43,18 +50,22 @@ export const tasks  = {
         color  :   "orange",
         tasks  :  [
             {
+                id : 1,
                 title : "task 1",
                 description : 'description 2'
             },
             {
+                id : 2,
                 title : "task 1",
                 description : 'description 2'
             },
             {
+                id : 3,
                 title : "task 1",
                 description : 'description 2'
             },
             {
+                id : 4,
                 title : "task 1",
                 description : 'description 2'
             },
@@ -64,6 +75,7 @@ export const tasks  = {
         color  :   "green",
         tasks  :  [
             {
+                id : 1,
                 title : "task 1",
                 description : 'description 2'
             },
@@ -72,55 +84,3 @@ export const tasks  = {
     }
 }
 
-
-export const AllTasks  = [
-    {
-        title : "task a",
-        description : 'description 2'
-    },
-    {
-        title : "task 1",
-        description : 'description 2'
-    },
-    {
-        title : "task 1",
-        description : 'description 2'
-    },
-    {
-        title : "task 1",
-        description : 'description 2'
-    },
-    {
-        title : "task 1",
-        description : 'description 2'
-    },
-    {
-        title : "task 1",
-        description : 'description 2'
-    },
-    {
-        title : "task 1",
-        description : 'description 2'
-    },
-    {
-        title : "task 1",
-        description : 'description 2'
-    },
-    {
-        title : "task 1",
-        description : 'description 2'
-    },
-    {
-        title : "task 1",
-        description : 'description 2'
-    },
-    {
-        title : "task 1",
-        description : 'description 2'
-    },
-    {
-        title : "task 1",
-        description : 'description 2'
-    },
-    
- ]

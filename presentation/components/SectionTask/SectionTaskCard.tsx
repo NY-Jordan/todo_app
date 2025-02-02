@@ -5,10 +5,11 @@ import { mdiBookEdit, mdiChevronLeft, mdiChevronRight, mdiDelete, mdiDotsVertica
 import Icon from '@mdi/react';
 
 type ItemType = {
+    id : number,
     title: string
     description: string
 }
-export default function SectionTaskCard({key, item, position, color} :  {key : string, item : ItemType, position : number, color : string}) {
+export default function SectionTaskCard({ item, position, color} :  { item : ItemType, position : number, color : string}) {
     const top = (position * 50);
     const [showViewMoreButton, setShowViewMoreButton] = useState(false);
 
@@ -22,7 +23,7 @@ export default function SectionTaskCard({key, item, position, color} :  {key : s
 
      
   return (
-    <Reorder.Item value={item} id={key} >
+   
         <motion.div  
              onMouseEnter={() => setShowViewMoreButton(true)}
              onMouseLeave={() => setShowViewMoreButton(false)}
@@ -53,7 +54,7 @@ export default function SectionTaskCard({key, item, position, color} :  {key : s
                 </div>
             </div>
             <div className="card-body pb-0">
-                <h2 className="text-md font-bold">Task title</h2>
+                <h2 className="text-md font-bold">{item.title}</h2>
                 <p className='p-2'>If a dog chews chews chews chews chews chews  ?</p>
                 <div className="card-actions justify-end">
                 <button className={"btn  btn-primary "+(showViewMoreButton ? '' : 'invisible')}>View More</button>
@@ -65,7 +66,6 @@ export default function SectionTaskCard({key, item, position, color} :  {key : s
                     <a href='#' className={showViewMoreButton ? 'hover:bg-gray-200 rounded-full  relative bottom-32 left-2' : 'invisible'}><Icon path={mdiChevronRight} size={1} color={'gray'} /></a>
             </div>  
         </motion.div>
-    </Reorder.Item>
     
   )
 }

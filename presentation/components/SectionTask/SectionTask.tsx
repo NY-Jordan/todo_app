@@ -11,6 +11,7 @@ type props = {
     data : {
       color : string,
       tasks: { 
+        id : number,
         title: string
         description: string
       }[]
@@ -25,9 +26,14 @@ export default function SectionTask({showMoreButton, name, data}  : props) {
   return (
     <div style={{  width : isSM ? "100%" : "25%", maxWidth : isSM ? "100%" : "24%", overflowY : 'hidden'}}>
       <SectionTaskHeader count={data.tasks.length} showMoreButton={showMoreButton}  name={name} />
-        {items.map((item, key) => (
-            <SectionTaskCard key={key.toString()} position={key}  color={data.color}  item={item} />
-        ))}    
+        <Reorder.Group axis="y" style={{ marginTop : isSM ? '0%': "10%",  }} layoutScroll onReorder={setItems} values={items}>
+          {items.map((item, key) => (
+             <Reorder.Item   key={item.id}  dragTransition={{ bounceStiffness: 100, bounceDamping: 10 }} value={item} id={item.id.toString()} >
+                <SectionTaskCard   position={key}  color={data.color}  item={item} />
+             </Reorder.Item>
+          ))} 
+        </Reorder.Group>
+   
     </div>
   )
 }
