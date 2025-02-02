@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useEffect, useState } from 'react'
 import moment from 'moment'
 import DeleteProjectModal from './Projects/DeleteProjectModal';
-import { tasks } from '../../Infrastructure/data/task';
 import { ITask } from '@/domain/entities/task.entities';
 import DeleteDailyTaskModal from './Task/Daily/DeleteDailyTaskModal';
 import UpdateDailyTaskModal from './Task/Daily/UpdateDailyTaskModal';

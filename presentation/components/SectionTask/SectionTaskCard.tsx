@@ -28,9 +28,10 @@ export default function SectionTaskCard({ item, position, color} :  { item : Ite
              onMouseEnter={() => setShowViewMoreButton(true)}
              onMouseLeave={() => setShowViewMoreButton(false)}
              whileHover={animation }
+
              whileFocus={animation}
            
-            className={"card my-2 overflow-hidden dark:bg-slate-800  dark:hover:bg-slate-900 dark:shadow-slate-700  dark:border-slate-800 dark:text-white  h-40 border-2 bg-base-100 shadow-md "} style={{ bottom  : top }}>
+            className={"card my-2 overflow-hidden dark:bg-slate-800 relative  z-1/2  dark:hover:bg-slate-900 dark:shadow-slate-700  dark:border-slate-800 dark:text-white  h-40 border-2 bg-base-100 shadow-md "} style={{ bottom  : top }}>
             <div className='card-title m-0 p-0 justify-between'>
                 <span  style={{ backgroundColor : color }} className=" ml-4 rounded-sm mt-2 p-2"></span>
                 <div className="dropdown">
