@@ -12,36 +12,45 @@ import { data } from "@/Infrastructure/data/data";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { Reorder } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { fetchCollaboratorsTasks } from "@/Infrastructure/Services/Task/TaskService";
+import { useRouter } from "next/router";
+import { getCurrentUser } from "@/Infrastructure/helpers/HelperUtils";
+import { UserDetailsEntitie } from "@/domain/entities/user.entities";
+import { useAppDispatch, useAppSelector } from "@/app/store/hook";
+import { ITaskBoard } from "@/domain/entities/task.entities";
+import { TaskPhasesEnum } from "@/domain/enum/TaskEnum";
+import { fetchCollaboratorsTasksFailure, fetchCollaboratorsTasksInit } from "@/app/Actions/TaskActions";
 
 export default function index() {
   const {isTabletOrMobile, isSM} = useResponsive();
   const handleSelect = (id: string) => {
     console.log(`Selected item with id ${id}`);
   };
+  const router = useRouter();
+  const {id}= router.query;
+  const user = getCurrentUser()  as UserDetailsEntitie
+  const CollaboratorTasksState  = useAppSelector(state => state.task).collaboratorsTasks
+  const tasks = CollaboratorTasksState.data.tasks as  ITaskBoard;
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    if (id && typeof id === 'string' && user) {
+      dispatch(fetchCollaboratorsTasksInit());
+     setTimeout(() => {
+      fetchCollaboratorsTasks(parseInt(id), user.id)
+     }, 1000);
+    }
+  }, [id]);
 
   
-  const [tasks, setTasks]  = useState(items);
+ 
   
   return (
   <Layout pageTitle="Manage Your Tasks">
     <div className='pt-4 px-4 dark:text-white'>
           
-          <div className='flex justify-between items-center mb-3'>
-              {/* filter by user team */}
-              <div>
-             
-                <Dropdown
-                  id='person'
-                  title='--- please select your team mates ---- '
-                  data={data}
-                  hasImage
-                  style="bg-white"
-                 /*  style='bg-white border-gray-300' */
-                  /* selectedId='3' */
-                  onSelect={(e) => e ? handleSelect(e) : {}}
-                />
-              </div>
+          <div className='flex justify-end items-center mb-3'>
+              
 
               {/* research section tasks */}
               <div className='flex flex-row justify-end  mb-4 items-center'>
@@ -69,10 +78,10 @@ export default function index() {
 
 
           <div className={'flex   overflow-y-auto   space-x-8  '+(isSM ? 'flex-col' : 'flex-row')} > 
-                <SectionTask  name='Backlog'  data={tasks.backlog} />
-                <SectionTask name='Started' data={tasks.started} />
-                <SectionTask  name='In Review'  data={tasks.progress} />
-                <SectionTask  name='Done' data={tasks.done}/>          
+          {(tasks && tasks[TaskPhasesEnum.Backlog] ) ? <SectionTask  name='Backlog'  data={tasks[TaskPhasesEnum.Backlog]} /> :  <SectionTask  name='Backlog'  data={[]} /> }
+          {(tasks && tasks[TaskPhasesEnum.Started] ) ? <SectionTask  name='Started'  data={tasks[TaskPhasesEnum.Started]} /> :  <SectionTask  name='Started'  data={[]} /> }
+          {(tasks && tasks[TaskPhasesEnum.InReview] ) ? <SectionTask  name='In Review'  data={tasks[TaskPhasesEnum.InReview]} /> : <SectionTask  name='In Review'  data={[]} /> }
+          {(tasks && tasks[TaskPhasesEnum.Done] ) ? <SectionTask  name='Done'  data={tasks[TaskPhasesEnum.Done]} /> : <SectionTask  name='Done'  data={[]} /> }
         </div>
       </div>
        

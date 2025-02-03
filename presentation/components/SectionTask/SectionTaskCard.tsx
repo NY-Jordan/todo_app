@@ -3,13 +3,10 @@ import React, { useState } from 'react'
 import { motion } from "framer-motion"
 import { mdiBookEdit, mdiChevronLeft, mdiChevronRight, mdiDelete, mdiDotsVertical, mdiTagEdit } from '@mdi/js';
 import Icon from '@mdi/react';
+import { ITask } from '@/domain/entities/task.entities';
 
-type ItemType = {
-    id : number,
-    title: string
-    description: string
-}
-export default function SectionTaskCard({ item, position, color} :  { item : ItemType, position : number, color : string}) {
+
+export default function SectionTaskCard({ item, position, color} :  { item : ITask, position : number, color : string}) {
     const top = (position * 50);
     const [showViewMoreButton, setShowViewMoreButton] = useState(false);
 
@@ -56,7 +53,7 @@ export default function SectionTaskCard({ item, position, color} :  { item : Ite
             </div>
             <div className="card-body pb-0">
                 <h2 className="text-md font-bold">{item.title}</h2>
-                <p className='p-2'>If a dog chews chews chews chews chews chews  ?</p>
+                <p className='p-2'>{item.breifing}</p>
                 <div className="card-actions justify-end">
                 <button className={"btn  btn-primary "+(showViewMoreButton ? '' : 'invisible')}>View More</button>
                

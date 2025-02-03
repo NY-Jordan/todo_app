@@ -20,10 +20,6 @@ export default function SideMenu() {
             <NavItem  to='/team'  title='Team' icon={<FontAwesomeIcon icon={faPeopleGroup} size={'xl'} />} />
             <NavItem title='Chat' icon={<Icon path={mdiWechat} size={3/2} />} />
         </Section>
-
-       
-
-       
     </div>
   )
 }

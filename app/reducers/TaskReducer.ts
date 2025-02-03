@@ -7,6 +7,7 @@ import { StatusStateEnum } from "@/domain/enum/StatusStateEnum";
 const initialState  : {
   create: { status: string, error: null|any },
   fetch: { status: string, error: null|any, data: {tasks : ITask[], pagination : IPagination|null} },
+  collaboratorsTasks: { status: string, error: null|any, data: {tasks : ITask[]} },
   update: { status: string, error: null|any },
   delete: { status: string, error: null|any },
   assign: { status: string, error: null|any },
@@ -14,6 +15,7 @@ const initialState  : {
 } ={
   create: { status: StatusStateEnum.idle, error: null },
   fetch: { status: StatusStateEnum.idle, error: null, data: {tasks : [], pagination : null} },
+  collaboratorsTasks: { status: StatusStateEnum.idle, error: null, data: {tasks : []} },
   update: { status: StatusStateEnum.idle, error: null },
   delete: { status: StatusStateEnum.idle, error: null },
   assign: { status: StatusStateEnum.idle, error: null },
@@ -111,7 +113,7 @@ const TaskReducer = (state = initialState, action : ActionType) => {
           assign_task: { ...state.assign_task, status: StatusStateEnum.loading, error: null, task : null },
         };
   
-        case TaskActions.ASSIGN_TASK_TO_USERS_SUCESS:
+        case TaskActions.ASSIGN_TASK_TO_USERS_SUCCESS:
         return {
           ...state,
           assign_task: { ...state.assign_task, status: StatusStateEnum.success, error: null, task : action.payload.task  },
@@ -135,7 +137,20 @@ const TaskReducer = (state = initialState, action : ActionType) => {
             assign_task: { ...state.assign_task, status: null, error: null, task : null },
           };
   
-  
+    case TaskActions.FETCH_COLLABORATORS_TASKS_INIT:
+      return { ...state, collaboratorsTasks: { ...state.collaboratorsTasks, status: StatusStateEnum.loading, error: null } };
+
+    case TaskActions.FETCH_COLLABORATORS_TASKS_SUCCESS:
+      return {
+        ...state,
+        collaboratorsTasks: { status: StatusStateEnum.success, error: null, data: {tasks : action.payload.tasks} },
+      };
+
+    case TaskActions.FETCH_COLLABORATORS_TASKS_INIT:
+      return { ...state, collaboratorsTasks: { ...state.collaboratorsTasks, status: StatusStateEnum.failure, error: action.payload } };
+
+    case TaskActions.FETCH_COLLABORATORS_TASKS_RESET:
+      return { ...state, collaboratorsTasks: { status: StatusStateEnum.idle, error: null, data: {tasks : []} } };
 
     default:
       return state;

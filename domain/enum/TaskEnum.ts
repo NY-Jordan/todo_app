@@ -13,6 +13,6 @@ export enum TaskTypeEnum {
   export enum TaskPhasesEnum {
     Backlog = 'Backlog',
     Started = 'Started',
-    InProgress = 'InProgress',
+    InReview = 'In Review',
     Done = 'Done',
   }

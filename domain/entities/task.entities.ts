@@ -50,3 +50,7 @@ export interface ITaskType {
     details: string; 
     reminder?: Date; 
   };
+
+  export interface ITaskBoard {
+    [phase: string]: ITask[];
+  }

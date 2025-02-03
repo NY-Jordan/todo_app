@@ -7,13 +7,16 @@ export async function   getBearerAuthToken () {
 }
 
 export  function getCurrentUser() : object|null {
-    const user = localStorage.getItem('user');
-   if (user) {
-    const userDetails  = JSON.parse(user) as UserDetailsEntitie
-    if (typeof userDetails === 'object') {
-       return   userDetails
+    if (typeof window !== "undefined") {
+        const user = localStorage.getItem('user');
+        if (user) {
+            const userDetails  = JSON.parse(user) as UserDetailsEntitie
+            if (typeof userDetails === 'object') {
+                return   userDetails
+            }
+        }
     }
-   }
+   
    return null;
   }
   

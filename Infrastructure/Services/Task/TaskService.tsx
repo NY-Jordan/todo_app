@@ -1,10 +1,11 @@
-import { assignTaskToUserFailed, assignTaskToUserSucess, createTaskFailure, createTaskSuccess, deleteTaskFailure, deleteTaskSuccess, fetchTasksFailure, fetchTasksSuccess, updateTaskFailure, updateTaskSuccess } from "@/app/Actions/TaskActions";
+import { assignTaskToUserFailed, assignTaskToUserSuccess, createTaskFailure, createTaskSuccess, deleteTaskFailure, deleteTaskSuccess, fetchCollaboratorsTasksFailure, fetchTasksFailure, fetchTasksSuccess, updateTaskFailure, updateTaskSuccess } from "@/app/Actions/TaskActions";
 import { store } from "@/app/store/store";
 import { CreateTaskType } from "@/domain/entities/task.entities";
 import ApiClient from "@/Infrastructure/helpers/ApiClient";
 import { getBearerAuthToken } from "@/Infrastructure/helpers/HelperUtils";
 import { getProjectCollaborators } from "../projects/ProjectsService";
 import { QueryKey } from "@tanstack/react-query";
+import { fetchCollaboratorsTasksSuccess } from '../../../app/Actions/TaskActions';
 
 export const FetchAllTasks = async (projectId : number, collaboratorId : undefined|string, taskGroupSelected : undefined|number, phaseId : number|undefined, currentPage : number|undefined) => {
     try {
@@ -77,7 +78,7 @@ export const assignTaskToUsers = async (projectId : number, options : {task_id :
             }
         });
         const data = reponse.data.task;
-        store.dispatch(assignTaskToUserSucess(data))
+        store.dispatch(assignTaskToUserSuccess(data))
     } catch (e) {
         store.dispatch(assignTaskToUserFailed(e))
     }
@@ -89,3 +90,18 @@ export const fetchCollaborators = ({ queryKey } : {queryKey : QueryKey}) => {
       return getProjectCollaborators(parseInt(id));
     }
   };
+
+
+  export const fetchCollaboratorsTasks = async (projectId : number, collaboratorId : number) => {
+    try {
+        const reponse = await ApiClient().get(`project/tasks/fetch/${projectId}/${collaboratorId}`,{
+            headers : {
+                Authorization : await getBearerAuthToken(),
+            }
+        });
+        const data = reponse.data.tasks;
+        store.dispatch(fetchCollaboratorsTasksSuccess(data))
+    } catch (e) {
+        store.dispatch(fetchCollaboratorsTasksFailure(e))
+    }
+}
