@@ -28,9 +28,15 @@ export const TaskActions = {
     DELETE_TASK_RESET: 'DELETE_TASK_RESET',
   
     ASSIGN_TASK_TO_USERS_SUCCESS: 'ASSIGN_TASK_TO_USERS_SUCCESS',
+    UNASSIGN_TASK_TO_USERS_SUCCESS: 'UNASSIGN_TASK_TO_USERS_SUCCESS',
     ASSIGN_TASK_TO_USERS_FAILED: 'ASSIGN_TASK_TO_USERS_FAILED',
     INIT_ASSIGN_TASK_TO_USERS: 'INIT_ASSIGN_TASK_TO_USERS',
     RESET_ASSIGN_TASK_TO_USERS_STATE: 'RESET_ASSIGN_TASK_TO_USERS_STATE',
+
+    RESCHEDULE_TASK_INIT: 'RESCHEDULE_TASK_INIT',
+    RESCHEDULE_TASK_SUCESS: 'RESCHEDULE_TASK_SUCESS',
+    RESCHEDULE_TASK_FAILURE: 'RESCHEDULE_TASK_FAILURE',
+    RESCHEDULE_TASK_RESET: 'RESCHEDULE_TASK_RESET',
 };
 
 // Action Creators
@@ -132,6 +138,11 @@ export const assignTaskToUserSuccess = (task: ITask) => ({
     payload: { task },
 });
 
+export const unAssignTaskToUserSuccess = (task: ITask) => ({
+    type: TaskActions.UNASSIGN_TASK_TO_USERS_SUCCESS,
+    payload: { task },
+});
+
 export const assignTaskToUserFailed = (error: any) => ({
     type: TaskActions.ASSIGN_TASK_TO_USERS_FAILED,
     payload: { error },
@@ -143,4 +154,27 @@ export const initAssignTaskToUser = () => ({
 
 export const resetAssignTaskToUserState = () => ({
     type: TaskActions.RESET_ASSIGN_TASK_TO_USERS_STATE,
+});
+
+
+// RESCHEDULE
+
+export const rescheduleTaskInit = () => ({
+    type: TaskActions.RESCHEDULE_TASK_INIT,
+});
+
+export const rescheduleTaskSucess = (task: ITask) => ({
+    type: TaskActions.RESCHEDULE_TASK_SUCESS,
+    payload: { task },
+});
+
+export const rescheduleTaskFailure = (error: any) => ({
+    type: TaskActions.RESCHEDULE_TASK_FAILURE,
+    payload: { error },
+});
+
+
+
+export const ResetRescheduleTask = () => ({
+    type: TaskActions.RESCHEDULE_TASK_RESET
 });

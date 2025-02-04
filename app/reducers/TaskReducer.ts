@@ -2,12 +2,14 @@ import { IPagination, ITask } from "@/domain/entities/task.entities";
 import { TaskActions } from "../Actions/TaskActions";
 import Pagination from "@/presentation/components/Pagination/Pagination";
 import { StatusStateEnum } from "@/domain/enum/StatusStateEnum";
+import { type } from 'node:os';
 
 // État initial
 const initialState  : {
   create: { status: string, error: null|any },
   fetch: { status: string, error: null|any, data: {tasks : ITask[], pagination : IPagination|null} },
   collaboratorsTasks: { status: string, error: null|any, data: {tasks : ITask[]} },
+  reschedule: { status: string, error: null|any, task : ITask|null },
   update: { status: string, error: null|any },
   delete: { status: string, error: null|any },
   assign: { status: string, error: null|any },
@@ -16,6 +18,7 @@ const initialState  : {
   create: { status: StatusStateEnum.idle, error: null },
   fetch: { status: StatusStateEnum.idle, error: null, data: {tasks : [], pagination : null} },
   collaboratorsTasks: { status: StatusStateEnum.idle, error: null, data: {tasks : []} },
+  reschedule: { status: StatusStateEnum.idle, error: null ,  task : null },
   update: { status: StatusStateEnum.idle, error: null },
   delete: { status: StatusStateEnum.idle, error: null },
   assign: { status: StatusStateEnum.idle, error: null },
@@ -112,8 +115,20 @@ const TaskReducer = (state = initialState, action : ActionType) => {
           ...state,
           assign_task: { ...state.assign_task, status: StatusStateEnum.loading, error: null, task : null },
         };
-  
-        case TaskActions.ASSIGN_TASK_TO_USERS_SUCCESS:
+        
+        case TaskActions.ASSIGN_TASK_TO_USERS_SUCCESS :
+        return {
+          ...state,
+          assign_task: { ...state.assign_task, status: StatusStateEnum.success, error: null, task : action.payload.task  },
+          fetch: {
+            ...state.fetch,
+            data : {tasks : state.fetch.data.tasks.map((task : ITask) =>
+              task.id === action.payload.task.id ? action.payload.task : task
+            ), pagination : state.fetch.data.pagination} ,
+          },
+        };
+
+        case  TaskActions.UNASSIGN_TASK_TO_USERS_SUCCESS :
         return {
           ...state,
           assign_task: { ...state.assign_task, status: StatusStateEnum.success, error: null, task : action.payload.task  },
@@ -151,6 +166,39 @@ const TaskReducer = (state = initialState, action : ActionType) => {
 
     case TaskActions.FETCH_COLLABORATORS_TASKS_RESET:
       return { ...state, collaboratorsTasks: { status: StatusStateEnum.idle, error: null, data: {tasks : []} } };
+
+
+    // RESCHEDULE
+
+    case TaskActions.RESCHEDULE_TASK_INIT:
+      return {
+        ...state,
+        reschedule: { ...state.reschedule, status: StatusStateEnum.loading, error: null, task : null },
+      };
+        
+    case TaskActions.RESCHEDULE_TASK_SUCESS :
+      return {
+        ...state,
+        reschedule: { ...state.reschedule, status: StatusStateEnum.success, error: null, task : action.payload.task  },
+        fetch: {
+          ...state.fetch,
+          data : {tasks : state.fetch.data.tasks.map((task : ITask) =>
+            task.id === action.payload.task.id ? action.payload.task : task
+          ), pagination : state.fetch.data.pagination} ,
+        },
+      };
+
+    case TaskActions.RESCHEDULE_TASK_FAILURE:
+      return {
+        ...state,
+        reschedule: { ...state.reschedule, status: StatusStateEnum.failure, error: action.payload.error, task : null },
+      };
+  
+    case TaskActions.RESCHEDULE_TASK_RESET:
+      return {
+        ...state,
+        reschedule: { ...state.reschedule, status: null, error: null, task : null },
+      };
 
     default:
       return state;

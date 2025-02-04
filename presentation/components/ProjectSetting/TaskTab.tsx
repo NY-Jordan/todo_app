@@ -1,4 +1,4 @@
-import { faCheck, faClose, faDownload, faEdit, faEye, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faArrowTrendUp, faCheck, faClose, faDownload, faEdit, faEye, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useEffect, useMemo, useState } from 'react'
 import { mdiClose, mdiFileEdit } from '@mdi/js'
@@ -28,15 +28,22 @@ import UpdateTaskModal from '../AddTask/UpdateTaskModal'
 import Pagination from '../Pagination/Pagination'
 import { StatusStateEnum } from '@/domain/enum/StatusStateEnum'
 import FetchTasksPresenter from '@/Infrastructure/presenter/FetchTasksPresenter'
-import { initAssignTaskToUser } from '@/app/Actions/TaskActions'
+import { initAssignTaskToUser, resetAssignTaskToUserState } from '@/app/Actions/TaskActions'
+import toast from 'react-hot-toast'
+import AssignTaskPresenter from '@/Infrastructure/presenter/AssignTaskPresenter'
+import RescheduleTask from '../Task/RescheduleTaskModal'
+import RescheduleTaskModal from '../Task/RescheduleTaskModal'
+import { convertToLocalDate } from '@/Infrastructure/helpers/utils'
 
 
 export default function TaskTab() {
     const [showAddTask, setShowAddTask] = useState(false);
     const [deleteModal, setDeleteModal] = useState(false);
     const [updateModal, setUpdateModal] = useState(false);
+    const [RescheduleModal, setRescheduleModal] = useState(false);
     const [deleteTaskId, setDeleteTaskId] = useState<number>();
     const [viewTask, setViewTask] = useState<ITask|undefined>(undefined);
+    const [RescheduleTask, setRescheduleTask] = useState<ITask|undefined>(undefined);
     const [updateTask, setUpdateTask] = useState<ITask|undefined>(undefined);
     const router = useRouter();
     const {id} = router.query;
@@ -44,6 +51,8 @@ export default function TaskTab() {
     const [viewModal, setViewModal] = useState<boolean>(false);
     const tasksGroupState = useAppSelector(state => state.taskGroup).taskGroups as ITaskGroup[]
     const dispatch = useAppDispatch();
+    const assignTaskState = useAppSelector(state => state.task).assign_task
+
     
     const  {
         setAssignTask,
@@ -62,16 +71,13 @@ export default function TaskTab() {
       } = FetchTasksPresenter(id)
 
 
-      const handleAssignTaskAction = (taskId : number) => {
-          if (id && typeof id === 'string' ) {
-            dispatch(initAssignTaskToUser())
-            assignTaskToUsers(parseInt(id), {
-              task_id : taskId,
-              users : []
-            })
+      const { handleAssignTaskAction } = AssignTaskPresenter();
+
+    useEffect(() => {
+        if (assignTaskState.status === StatusStateEnum.success && !assignTaskState.task.assigned_user.length) {
+            toast.success('Task Successfully Unassigned');
           }
-        }
-      
+    }, [assignTaskState.status])
     
   return (
     <div className='flex justify-between lg:flex-row md:flex-col'>
@@ -116,7 +122,7 @@ export default function TaskTab() {
                     <tr>
                         <th>Task Name</th>
                         <th>Assignee</th>
-                        <th>Created At</th>
+                        <th>Schedule at</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
@@ -145,10 +151,15 @@ export default function TaskTab() {
 
 
                         </div>
-                        {(task.assigned_user && task.assigned_user.length) ? <a onClick={() => handleAssignTaskAction(task.id)} data-tip='Unassign this task' className=' hover:cursor-pointer tooltip tooltip-right invisible group-hover:visible '><FontAwesomeIcon icon={faClose} size='sm' /></a> :<></>}
+                        {(task.assigned_user && task.assigned_user.length) ? <a onClick={() => {
+                            if (id && typeof id === 'string') {
+                                handleAssignTaskAction(task.id, parseInt(id), [])
+                            }
+                        }} data-tip='Unassign this task' className=' hover:cursor-pointer tooltip tooltip-right invisible group-hover:visible '><FontAwesomeIcon icon={faClose} size='sm' /></a> :<></>}
 
                     </td>
-                    <td className='text-sm'>{moment(task.created_at).format('DD MMMM YYYY ')}</td>
+                    <td className='text-sm'>{task.assigned_user.length ?  convertToLocalDate(task.assigned_user[0].schedule_at, 'DD MMMM  YYYY, hh:mm a') : '-'}</td>
+
                   {task.phase.name === TaskPhasesEnum.Backlog ?  <td className='text-sm'><span className='bg-gray-600 px-3 py-1 text-white rounded-full'>{task.phase.name}</span> </td> :
                     (task.phase.name === TaskPhasesEnum.Started  ?<td className='text-sm'><span className='bg-blue-600 px-3 py-1 text-white rounded-full'>{task.phase.name}</span> </td> :
                     (task.phase.name === TaskPhasesEnum.Done ?<td className='text-sm'><span className='bg-green-600 px-3 py-1 text-white rounded-full'>{task.phase.name}</span> </td> :
@@ -157,15 +168,18 @@ export default function TaskTab() {
                         <a href='#' onClick={() => {
                             setDeleteTaskId(task.id);
                             setDeleteModal(true)
-                        }} className='text-red-500 tooltip' data-tip='delete'>
+                        }} className='text-red-500 tooltip' data-tip='Delete'>
                             <FontAwesomeIcon icon={faTrash} size='lg' />
                         </a>
-                        <a href='#' onClick={() => {setShowAddTask(false);setUpdateTask(task); setUpdateModal(true)}}  className='text-black tooltip' data-tip='edit'>
+                        <a href='#' onClick={() => {setShowAddTask(false);setUpdateTask(task); setUpdateModal(true)}}  className='text-black tooltip' data-tip='Edit'>
                             <FontAwesomeIcon icon={faEdit} size='lg'/>
                         </a>
-                        <a href='#'  onClick={() => {setViewTask(task); setViewModal(true)}} className='text-indigo-600 tooltip' data-tip='view'>
+                        <a href='#'  onClick={() => {setViewTask(task); setViewModal(true)}} className='text-indigo-600 tooltip' data-tip='View'>
                             <FontAwesomeIcon icon={faEye} size='lg'/>
                         </a>
+                       {task.assigned_user.length ? <a href='#'  onClick={() => {setRescheduleTask(task); setRescheduleModal(true)}} className='text-black tooltip' data-tip='Reschedule'>
+                            <FontAwesomeIcon icon={faArrowTrendUp} size='lg'/>
+                        </a> : <></>}
                         
                     </td>
                 </tr>
@@ -191,6 +205,7 @@ export default function TaskTab() {
     {assignTask ? <AssignTaskToUserModal task={assignTask} active={assignModal} setActive={setAssignModal} /> : <></>}
      {deleteTaskId && <DeleteTaskModal taskId={deleteTaskId} active={deleteModal} setActive={setDeleteModal} />}
      {viewTask && <ViewTaskModal task={viewTask} active={viewModal} setActive={setViewModal} />}
+     {RescheduleTask && <RescheduleTaskModal task={RescheduleTask} active={RescheduleModal} setActive={setRescheduleModal} />}
     </div>
   )
 }

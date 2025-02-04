@@ -1,5 +1,5 @@
 import { TaskPhasesEnum, TaskTypeEnum } from "../enum/TaskEnum";
-import { IUser } from "./user.entities";
+import { IUser, IUserAssigned } from "./user.entities";
 
 
 export interface INewDailyTaskPayload {
@@ -31,7 +31,7 @@ export interface ITaskType {
     id: number;
     taskgroup_id: number | null;
     user_id: number;
-    assigned_user : IUser[];
+    assigned_user : IUserAssigned[];
     title: string;
     breifing: string;
     details: string | null;

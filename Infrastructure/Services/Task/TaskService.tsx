@@ -1,4 +1,4 @@
-import { assignTaskToUserFailed, assignTaskToUserSuccess, createTaskFailure, createTaskSuccess, deleteTaskFailure, deleteTaskSuccess, fetchCollaboratorsTasksFailure, fetchTasksFailure, fetchTasksSuccess, updateTaskFailure, updateTaskSuccess } from "@/app/Actions/TaskActions";
+import { assignTaskToUserFailed, assignTaskToUserSuccess, createTaskFailure, createTaskSuccess, deleteTaskFailure, deleteTaskSuccess, fetchCollaboratorsTasksFailure, fetchTasksFailure, fetchTasksSuccess, rescheduleTaskFailure, rescheduleTaskSucess, unAssignTaskToUserSuccess, updateTaskFailure, updateTaskSuccess } from "@/app/Actions/TaskActions";
 import { store } from "@/app/store/store";
 import { CreateTaskType } from "@/domain/entities/task.entities";
 import ApiClient from "@/Infrastructure/helpers/ApiClient";
@@ -78,7 +78,12 @@ export const assignTaskToUsers = async (projectId : number, options : {task_id :
             }
         });
         const data = reponse.data.task;
-        store.dispatch(assignTaskToUserSuccess(data))
+        if (!options.users.length) {
+           
+            store.dispatch(unAssignTaskToUserSuccess(data));
+        } else {
+            store.dispatch(assignTaskToUserSuccess(data))
+        }
     } catch (e) {
         store.dispatch(assignTaskToUserFailed(e))
     }
@@ -103,5 +108,24 @@ export const fetchCollaborators = ({ queryKey } : {queryKey : QueryKey}) => {
         store.dispatch(fetchCollaboratorsTasksSuccess(data))
     } catch (e) {
         store.dispatch(fetchCollaboratorsTasksFailure(e))
+    }
+}
+
+
+
+
+export const reScheduleTaskAssignment = async (projectId : number, taskId : number, date : string) => {
+    try {
+        const reponse = await ApiClient().post(`project/tasks/reschedule/${projectId}/${taskId}`, {
+            date : date
+        },{
+            headers : {
+                Authorization : await getBearerAuthToken(),
+            }
+        });
+        const data = reponse.data.task;
+        store.dispatch(rescheduleTaskSucess(data))
+    } catch (e) {
+        store.dispatch(rescheduleTaskFailure(e))
     }
 }

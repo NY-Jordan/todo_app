@@ -19,6 +19,7 @@ import { ITask } from "@/domain/entities/task.entities";
 import { assignTaskToUsers, fetchCollaborators } from "@/Infrastructure/Services/Task/TaskService";
 import { initAssignTaskToUser, resetAssignTaskToUserState } from "@/app/Actions/TaskActions";
 import { StatusStateEnum } from "@/domain/enum/StatusStateEnum";
+import AssignTaskPresenter from "@/Infrastructure/presenter/AssignTaskPresenter";
 
 export default function AssignTaskToUserModal({active, setActive, task} : {active : boolean, setActive : React.Dispatch<React.SetStateAction<boolean>> , task : ITask}) {
 
@@ -39,27 +40,20 @@ export default function AssignTaskToUserModal({active, setActive, task} : {activ
     staleTime: 10*(60*1000), // 10 mins
   });
 
+   const { handleAssignTaskAction } = AssignTaskPresenter();
+
   const collaborators  = data as ICollaborator[];
 
-
-  const handleAssignTaskAction = () => {
-    if (id && typeof id === 'string'  && userSelected.length) {
-      dispatch(initAssignTaskToUser())
-      assignTaskToUsers(parseInt(id), {
-        task_id : task.id,
-        users : userSelected
-      })
+  const handleSubmitAction  = () => {
+    if (id && typeof id === 'string' && userSelected.length) {
+      handleAssignTaskAction(task.id,parseInt(id), userSelected)
     }
   }
+
   useEffect(() => {
     if (assignTaskState.status === StatusStateEnum.success) {
       toast.success('Task Successfully Assigned');
-      dispatch(resetAssignTaskToUserState());
       setActive(false);
-    }
-    if (assignTaskState.status === StatusStateEnum.failure) {
-      toast.error('Process Failed');
-      dispatch(resetAssignTaskToUserState());
     }
   }, [assignTaskState.status])
 
@@ -96,7 +90,7 @@ export default function AssignTaskToUserModal({active, setActive, task} : {activ
               }
             </div>
             <div className="modal-action">
-              <CustomButton onClick={handleAssignTaskAction}  loader={assignTaskState.status === StatusStateEnum.loading} form="create-task-group-form" type="submit" btnClassName="w-1/4" isDisabled={userSelected.length ==0} text={`Assign  (${userSelected.length})` } size='lg'  variant='primary'  />
+              <CustomButton onClick={handleSubmitAction}  loader={assignTaskState.status === StatusStateEnum.loading} form="create-task-group-form" type="submit" btnClassName="w-1/4" isDisabled={userSelected.length ==0} text={`Assign  (${userSelected.length})` } size='lg'  variant='primary'  />
             </div>
         </div>
         </div>
