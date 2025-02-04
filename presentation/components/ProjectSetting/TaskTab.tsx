@@ -1,4 +1,4 @@
-import { faCheck, faDownload, faEdit, faEye, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faCheck, faClose, faDownload, faEdit, faEye, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useEffect, useMemo, useState } from 'react'
 import { mdiClose, mdiFileEdit } from '@mdi/js'
@@ -7,9 +7,9 @@ import Tag from '../Tag'
 import { motion } from "framer-motion"
 import AddTaskForm from '../AddTask/AddTaskForm'
 import AssignTaskToUserModal from '../Task/AssignTaskToUserModal'
-import { FetchAllTasks, fetchCollaborators } from '@/Infrastructure/Services/Task/TaskService'
+import { assignTaskToUsers, FetchAllTasks, fetchCollaborators } from '@/Infrastructure/Services/Task/TaskService'
 import { useRouter } from 'next/router'
-import { useAppSelector } from '@/app/store/hook'
+import { useAppDispatch, useAppSelector } from '@/app/store/hook'
 import { IPagination, ITask } from '@/domain/entities/task.entities'
 import { TaskPhases, TaskPhasesEnum } from '@/domain/enum/TaskEnum'
 import moment, { now } from 'moment'
@@ -28,6 +28,7 @@ import UpdateTaskModal from '../AddTask/UpdateTaskModal'
 import Pagination from '../Pagination/Pagination'
 import { StatusStateEnum } from '@/domain/enum/StatusStateEnum'
 import FetchTasksPresenter from '@/Infrastructure/presenter/FetchTasksPresenter'
+import { initAssignTaskToUser } from '@/app/Actions/TaskActions'
 
 
 export default function TaskTab() {
@@ -42,7 +43,7 @@ export default function TaskTab() {
     const fecthTasksState = useAppSelector(state => state.task).fetch.data;
     const [viewModal, setViewModal] = useState<boolean>(false);
     const tasksGroupState = useAppSelector(state => state.taskGroup).taskGroups as ITaskGroup[]
-    
+    const dispatch = useAppDispatch();
     
     const  {
         setAssignTask,
@@ -59,6 +60,17 @@ export default function TaskTab() {
         assignModal
     
       } = FetchTasksPresenter(id)
+
+
+      const handleAssignTaskAction = (taskId : number) => {
+          if (id && typeof id === 'string' ) {
+            dispatch(initAssignTaskToUser())
+            assignTaskToUsers(parseInt(id), {
+              task_id : taskId,
+              users : []
+            })
+          }
+        }
       
     
   return (
@@ -116,8 +128,8 @@ export default function TaskTab() {
                         <span className='border border-gray-500 p-2 text-gray-500 rounded-full'>{((fecthTasksPagination?.current_page - 1) * fecthTasksPagination?.per_page + (key + 1)).toString().padStart(2, '0')}</span>
                         <span className='text-[16px]'>{task.title}</span>
                     </td>
-                    <td className='text-sm'> 
-                        <div className=" -space-x-4 rtl:space-x-reverse">
+                    <td className='text-sm flex group items-center space-x-5'> 
+                        <div className=" -space-x-4   rtl:space-x-reverse ">
 
                             {(task.assigned_user && task.assigned_user.length) ? task.assigned_user.map((user : IUser, key : number) => {
                                 return <a onClick={() =>{ setAssignModal(true); setAssignTask(task)}}  href='#'  className={`avatar tooltip  tooltip-top`} data-tip={user.name}>
@@ -130,7 +142,11 @@ export default function TaskTab() {
                                     <img src={"/images/Default_pfp.svg.png"} />
                                 </div>
                             </a>}
+
+
                         </div>
+                        {(task.assigned_user && task.assigned_user.length) ? <a onClick={() => handleAssignTaskAction(task.id)} data-tip='Unassign this task' className=' hover:cursor-pointer tooltip tooltip-right invisible group-hover:visible '><FontAwesomeIcon icon={faClose} size='sm' /></a> :<></>}
+
                     </td>
                     <td className='text-sm'>{moment(task.created_at).format('DD MMMM YYYY ')}</td>
                   {task.phase.name === TaskPhasesEnum.Backlog ?  <td className='text-sm'><span className='bg-gray-600 px-3 py-1 text-white rounded-full'>{task.phase.name}</span> </td> :

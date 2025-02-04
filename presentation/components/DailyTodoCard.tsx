@@ -33,13 +33,15 @@ export default function DailyTodoCard() {
       FetchAllDailyTasks(debouncedSearch, selectedDate?.toISOString());
     }, [debouncedSearch, selectedDate]);
 
+    
+
   return (
     <>
-           <div className=' mb-4 w-2/3 bg-white border rounded-sm px-5 pb-2 pt-4  '>
+    <div className=' mb-4 w-full h-full bg-white border rounded-sm px-5 pb-2 pt-4  '>
       <div className='  max-h-[10%]  w-full flex items-center justify-between'>
 
         <div>
-          <h4 className='text-2xl font-bold'>Daily Todo</h4>
+          <h4 className='text-xl font-bold'>Daily Todo</h4>
           <div>
             <span className='text-gray-500'>Task assigned to me</span>
           </div>

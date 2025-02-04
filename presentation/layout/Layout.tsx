@@ -9,8 +9,7 @@ export default function Layout({children, pageTitle} : {children : React.ReactNo
             <SideMenu />
             <div className='lg:w-[87%]  overflow-y-auto overflow-x-hidden  w-full  pt-4  h-full your-scroll-container'>
                 <Menu pageTitle={pageTitle} />
-                <div className="bg-gray-50 divider mb-0 pb-0"></div>
-                <div className='bg-gray-50 p-4 h-full'>{children}</div>
+                <div className='bg-gray-50 p-4 h-full border-t-2'>{children}</div>
             </div>
       </div>
     </div>
