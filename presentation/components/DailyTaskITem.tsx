@@ -1,4 +1,4 @@
-import { faEdit , faTrash} from '@fortawesome/free-solid-svg-icons'
+import { faArrowTrendUp, faEdit , faEye, faTrash} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useEffect, useState } from 'react'
 import moment from 'moment'
@@ -12,12 +12,19 @@ import { useAppDispatch, useAppSelector } from '@/app/store/hook';
 import toast from 'react-hot-toast';
 import { resetUpdateDailyTaskPhase } from '@/app/Actions/DailyTaskActions';
 import { StatusStateEnum } from '@/domain/enum/StatusStateEnum';
+import ViewTaskModal from './Task/ViewTaskModal';
+import RescheduleDailyTaskModal from './Task/Daily/RescheduleDailyTaskModal';
 
 export default function DailyTaskITem({task} : {task :ITask}) {
   const dateFormat  = moment(task.updated_at).format('DD, MMMM YYYY');;
-  const dateTime  = moment(task.updated_at).format('hh::mm');
+  const dateTime  = moment(task.updated_at).format('HH::mm');
   const [deleteTaskModal, setDeleteTaskModal] = useState<boolean>(false); 
   const [updateTaskModal, setUpdateTaskModal] = useState<boolean>(false); 
+  const [viewTask, setViewTask] = useState<ITask|undefined>(undefined);
+  const [redescheduleTask, setRescheduleTask] = useState<ITask|undefined>(undefined);
+  const [viewModal, setViewModal] = useState<boolean>(false);
+  const [redescheduleModal, setRescheduleModal] = useState<boolean>(false);
+  
   const updateTaskPhaseState = useAppSelector(state => state.dailyTask).updatePhase
   const dispatch = useAppDispatch();
 
@@ -52,6 +59,12 @@ export default function DailyTaskITem({task} : {task :ITask}) {
         <div className="border-l w-1  border-gray-500 mx-4 h-[50%]  group-hover:hidden"></div>
         <span className='text-xs font-bold group-hover:hidden '>{dateTime}</span>
         <div className='space-x-1 mx-2 hidden group-hover:flex relative left-2 justify-end'>
+            <a data-tip='Reschedule' onClick={() => {setRescheduleTask(task); setRescheduleModal(true)}} className='bg-slate-100 hover:cursor-pointer tooltip px-2 border rounded-md border-gray-300  text-gray-700 py-1/2'>
+                <FontAwesomeIcon icon={faArrowTrendUp} size='xs' />
+            </a>
+            <a data-tip='View' onClick={() => {setViewTask(task); setViewModal(true)}} className='bg-slate-100 hover:cursor-pointer tooltip px-2 border rounded-md border-gray-300  text-gray-700 py-1/2'>
+                <FontAwesomeIcon icon={faEye} size='xs' />
+            </a>
             <a data-tip='Edit' onClick={() => setUpdateTaskModal(true)} className='bg-slate-100 hover:cursor-pointer tooltip px-2 border rounded-md border-gray-300  text-gray-700 py-1/2'>
                 <FontAwesomeIcon icon={faEdit} size='xs' />
             </a>
@@ -63,6 +76,8 @@ export default function DailyTaskITem({task} : {task :ITask}) {
     </div>
      <DeleteDailyTaskModal taskId={task.id}  active={deleteTaskModal} setActive={setDeleteTaskModal}/>
      <UpdateDailyTaskModal task={task}  active={updateTaskModal} setActive={setUpdateTaskModal}/>
+     {viewTask && <ViewTaskModal task={viewTask} active={viewModal} setActive={setViewModal} />}
+     {redescheduleTask && <RescheduleDailyTaskModal task={redescheduleTask} active={redescheduleModal} setActive={setRescheduleModal} />}
     </>
   )
 }

@@ -1,3 +1,6 @@
+import { ITask, ITaskBoard, ITasksByDate } from "@/domain/entities/task.entities";
+import { StatusStateEnum } from "@/domain/enum/StatusStateEnum";
+import { TaskTypeEnum } from "@/domain/enum/TaskEnum";
 import moment from "moment";
 
 export const getMonthsOfYear = () => {
@@ -54,3 +57,15 @@ export   const getDaysOfYear = (year : number) => {
   }
   
     
+export function getColorActivities(tasks: ITask[]) : string {
+  let color = 0;
+
+  if (tasks.every(task => task.type.name === TaskTypeEnum.OWN)) {
+    color = 1;
+  } else if (tasks.every(task => task.type.name === TaskTypeEnum.ASSIGN)) {
+    color = 2;
+  } else {
+    color = 3;
+  }
+  return color === 1 ? 'bg-yellow-400' : (color === 2  ? 'bg-blue-400' : 'bg-green-400')
+}

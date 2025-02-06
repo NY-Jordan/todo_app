@@ -6,6 +6,7 @@ const initialState = {
   create: { status: StatusStateEnum.idle, error: null },
   fetch: { status: StatusStateEnum.idle, error: null, data: [] },
   edit: { status: StatusStateEnum.idle, error: null , taskId : null},
+  reschedule: { status: StatusStateEnum.idle, error: null , taskId : null},
   delete: { status: StatusStateEnum.idle, error: null, taskId : null },
   updatePhase: { status: StatusStateEnum.idle, error: null, taskId: null },
 };
@@ -116,6 +117,29 @@ const DailyTaskReducer = (state = initialState, action: ActionType) => {
     case DailyTaskActions.RESET_UPDATE_DAILY_TASK_PHASE:
       return { ...state, updatePhase: { status: StatusStateEnum.idle, error: null, taskId: null } };
 
+    
+    // RESCHEDULE
+
+    case DailyTaskActions.RESCHEDULE_DAILY_TASK_PHASE_FAILURE:
+      return { ...state, reschedule: { status: StatusStateEnum.failure, error: action.payload.error, taskId :  action.payload.id } };
+
+    case DailyTaskActions.RESET_RESCHEDULE_DAILY_TASK:
+      return { ...state, reschedule: { status: StatusStateEnum.idle, error: null, taskId : null } };
+
+    case DailyTaskActions.RESCHEDULE_DAILY_TASK_PHASE_INIT:
+      return { ...state, reschedule: { status: StatusStateEnum.loading, error: null } };
+
+    case DailyTaskActions.RESCHEDULE_DAILY_TASK_PHASE_SUCCESS:
+      return {
+        ...state,
+        reschedule: { status: StatusStateEnum.success, error: null , taskId : action.payload.taskId},
+        fetch: {
+          ...state.fetch,
+          data: state.fetch.data.map((task: ITask) =>
+            task.id === action.payload.taskId ? action.payload.task : task
+          ),
+        },
+      };
     default:
       return state;
   }

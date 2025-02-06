@@ -54,3 +54,9 @@ export interface ITaskType {
   export interface ITaskBoard {
     [phase: string]: ITask[];
   }
+
+  
+  
+  export interface ITasksByDate {
+    [date: string]: ITask[];
+  }

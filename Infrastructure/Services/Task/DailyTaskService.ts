@@ -1,4 +1,4 @@
-import { createDailyTaskSuccess, deleteDailyTaskFailure, deleteDailyTaskSuccess, editDailyTaskFailure, editDailyTaskSuccess, fetchDailyTasksFailure, fetchDailyTasksSuccess, updateDailyTaskPhaseFailure, updateDailyTaskPhaseSuccess } from "@/app/Actions/DailyTaskActions";
+import { createDailyTaskSuccess, deleteDailyTaskFailure, deleteDailyTaskSuccess, editDailyTaskFailure, editDailyTaskSuccess, fetchDailyTasksFailure, fetchDailyTasksSuccess, rescheduleDailyTaskFailure, rescheduleDailyTaskSuccess, updateDailyTaskPhaseFailure, updateDailyTaskPhaseSuccess } from "@/app/Actions/DailyTaskActions";
 import { store } from "@/app/store/store";
 import { INewDailyTaskPayload } from "@/domain/entities/task.entities";
 import ApiClient from "@/Infrastructure/helpers/ApiClient";
@@ -75,5 +75,25 @@ export const deleteDailyTask = async  (taskId : number) => {
         store.dispatch(deleteDailyTaskSuccess(taskId));
     } catch (e) {
         store.dispatch(deleteDailyTaskFailure(e))
+    }
+}
+
+
+
+
+export const rescheduleDailyTask = async  (taskId : number, date : string) => {
+    try {
+        const reponse = await ApiClient().post(`project/tasks/daily/reschedule/${taskId}`,{
+            date : date
+        },{
+            headers : {
+                Authorization : await getBearerAuthToken(),
+            }
+        });
+        const data = reponse.data.task;
+
+        store.dispatch(rescheduleDailyTaskSuccess(taskId, data));
+    } catch (e) {
+        store.dispatch(rescheduleDailyTaskFailure(e,taskId))
     }
 }

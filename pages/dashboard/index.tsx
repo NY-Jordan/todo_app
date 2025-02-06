@@ -5,46 +5,63 @@ import DailyTodoCard from "@/presentation/components/DailyTodoCard";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faNoteSticky, faPlus, faProcedures} from "@fortawesome/free-solid-svg-icons";
 import {useResponsive} from "@/Infrastructure/hooks/useResponsive";
-import { useEffect, useLayoutEffect } from "react";
+import { useEffect, useLayoutEffect, useMemo } from "react";
 import { FetchAllProjects } from "@/Infrastructure/Services/projects/ProjectsService";
 import { FetchAllDailyTasks } from "@/Infrastructure/Services/Task/DailyTaskService";
 import CustomDatePicker from "@/presentation/components/Calendar/CustomDatePicker";
 import { Chart } from "react-google-charts";
-import { getDaysOfYear, getMonthsOfYear } from "@/Infrastructure/helpers/utils";
+import { getColorActivities, getDaysOfYear, getMonthsOfYear } from "@/Infrastructure/helpers/utils";
 import Day from "react-datepicker/dist/day";
 import { useAppSelector } from "@/app/store/hook";
 import { fetchCollaborators } from "@/Infrastructure/Services/Task/TaskService";
 import { useQuery } from "@tanstack/react-query";
 import { ICollaborator } from "@/domain/entities/project.entities";
-import { fetchStats, fetUserschCollaborators } from "@/Infrastructure/Services/AppService";
+import { fetchStats, fetchTasksActivities, fetUserschCollaborators } from "@/Infrastructure/Services/AppService";
 import { IUserStats } from "@/domain/entities/user.entities";
 import { StatusStateEnum } from "@/domain/enum/StatusStateEnum";
 import CardStats from "@/presentation/components/CardStats";
+import { ITasksByDate } from "@/domain/entities/task.entities";
 
 export default function index() {
   const { isSM} = useResponsive();
     const fecthProjectsState = useAppSelector(state => state.projects).fetch
     const appStatsState = useAppSelector(state => state.app).stats
     const appCollaboratorsState = useAppSelector(state => state.app).collaborators ;
+    const tasksActivitiesState = useAppSelector(state => state.app).tasks_activities;
+    const activities = tasksActivitiesState.data ? tasksActivitiesState.data as ITasksByDate : null
+  const rescheduleUsersTaskState = useAppSelector(state => state.dailyTask).reschedule
 
   useLayoutEffect(() => {
     FetchAllProjects();
+
     fetUserschCollaborators();
   }, [])
+
+  useLayoutEffect(() => {
+    fetchTasksActivities();
+  }, [])
+  
+  useMemo(() => {
+    if (rescheduleUsersTaskState.status === StatusStateEnum.success) {
+      fetchTasksActivities();
+    }
+  }, [rescheduleUsersTaskState.status])
 
 
   const days = getDaysOfYear(2025);
   const months = getMonthsOfYear();
 
+  
+
 
   return (
   <Layout pageTitle="Dashboard">
    
-    <div className='w-full flex gap-3 min-h-[30%] pb-4 max-h-[30%] '>
-      <div className="w-1/2 max-h-[30%] ">
+    <div className='w-full flex lg:flex-row md:flex-col gap-3 lg:min-h-[40%] md:h-fit pb-4 lg:max-h-[40%] '>
+      <div className="w-1/2 md:w-full max-h-[30%] ">
         <DailyTodoCard/>
       </div>
-      <div className="w-1/2 min-h-[30%] border border-stroke bg-white p-3">
+      <div className="w-1/2 md:w-full h-fit border border-stroke bg-white p-3">
         <div className="mb-2">
           <p className="text-lg font-semibold">Tasks Tracking</p>
           <p></p>
@@ -70,41 +87,37 @@ export default function index() {
               }, []).map((column, columnIndex) => (
                 <div key={columnIndex} className="flex flex-col gap-1">
                   {
-                    column.map((day, dayIndex) => (
-                      <div key={dayIndex} className="w-4 h-4 bg-gray-100  border rounded-md tooltip tooltip-top" data-tip={day}>
+                    column.map((day, dayIndex) => {
+                        return  <div key={dayIndex} className={"w-4 h-4 border   border-gray-200 rounded-md tooltip tooltip-top "+( activities && activities[day] ? getColorActivities(activities[day]) : 'bg-gray-100')} data-tip={day}>
                       </div>
-                    ))
+                    }
+                     
+                    )
                   }
                 </div>
               ))
           }
         </div>
         <div className="w-full flex justify-between mt-5">
-          <div className="flex gap-2 items-center">
-            <div  className="w-4 h-4 bg-yellow-400  border rounded-md tooltip tooltip-top" ></div>
-            <span className="text-sm font-semibold">Activities</span>
-          </div>
+          
 
-          <div className="flex items-center gap-2">
-
-              <div className="flex gap-2 items-center">
-                <div  className="w-4 h-4 bg-gray-400  border rounded-md tooltip tooltip-top" ></div>
-                <span className="text-sm font-semibold">Backlog</span>
-              </div>
+          <div className="flex items-center w-full justify-between gap-2">
 
               <div className="flex gap-2 items-center">
                 <div  className="w-4 h-4 bg-blue-400  border rounded-md tooltip tooltip-top" ></div>
-                <span className="text-sm font-semibold">Started</span>
+                <span className="text-sm font-semibold">Only Assigned Tasks</span>
               </div>
 
               <div className="flex gap-2 items-center">
-                <div  className="w-4 h-4 bg-orange-400  border rounded-md tooltip tooltip-top" ></div>
-                <span className="text-sm font-semibold">In Review</span>
+                <div  className="w-4 h-4 bg-yellow-400  border rounded-md tooltip tooltip-top" ></div>
+                <span className="text-sm font-semibold">Only Own Tasks</span>
               </div>
+
+             
 
               <div className="flex gap-2 items-center">
                 <div  className="w-4 h-4 bg-green-400  border rounded-md tooltip tooltip-top" ></div>
-                <span className="text-sm font-semibold">Done</span>
+                <span className="text-sm font-semibold">Both</span>
               </div>
 
 

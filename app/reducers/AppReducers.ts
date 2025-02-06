@@ -8,15 +8,21 @@ import { AppActions } from "../Actions/AppActions";
 
 export const initialState = {
     stats : {
-        status : null,
+        status :  StatusStateEnum.idle,
         errors : null,
         data : null,
     },
     collaborators : {
-        status : null,
+        status :  StatusStateEnum.idle,
         errors : null,
         data : null,
     },
+    tasks_activities : {
+        status :  StatusStateEnum.idle,
+        errors : null,
+        data : null,
+    },
+
 }
 
 const  AppReducers = (state = initialState, action : actionType) => {
@@ -46,6 +52,19 @@ const  AppReducers = (state = initialState, action : actionType) => {
 
         case AppActions.FETCH_USERS_COLLABORATORS_RESET :
             return {...state, collaborators : {status : StatusStateEnum.idle, errors: null, data : null}};
+
+
+        case AppActions.FETCH_USERS_TASKS_ACTIVITIES_INIT :
+            return {...state, tasks_activities : {status : StatusStateEnum.loading, errors: false, data: null}};
+
+        case AppActions.FETCH_USERS_TASKS_ACTIVITIES_SUCCESS :
+            return {...state, tasks_activities : {status : StatusStateEnum.success, errors: action.payload, data : action.payload}};
+
+        case AppActions.FETCH_USERS_COLLABORATORS_FAILURE :
+            return {...state, tasks_activities : {status : StatusStateEnum.failure, errors: action.payload, data : null}};
+    
+        case AppActions.FETCH_USERS_TASKS_ACTIVITIES_RESET :
+            return {...state, tasks_activities : {status : StatusStateEnum.idle, errors: null, data : null}};
     
 
         default:

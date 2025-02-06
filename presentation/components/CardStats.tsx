@@ -1,7 +1,7 @@
 import React, { useLayoutEffect } from 'react'
 import Card from './Card/Card'
 import { useAppSelector } from '@/app/store/hook';
-import { fetchStats } from '@/Infrastructure/Services/AppService';
+import { fetchStats, fetchTasksActivities } from '@/Infrastructure/Services/AppService';
 
 export default function CardStats() {
      const appStatsState = useAppSelector(state => state.app).stats
@@ -9,6 +9,7 @@ export default function CardStats() {
     
       useLayoutEffect(() => {
           fetchStats();
+
        }, [])
   return (
     <>

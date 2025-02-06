@@ -1,8 +1,8 @@
 import { faFilter, faSort , faPlus} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import DailyTaskITem from './DailyTaskITem'
-import { useAppSelector } from '@/app/store/hook'
+import { useAppDispatch, useAppSelector } from '@/app/store/hook'
 import classNames from 'classnames';
 import CustomButton from './button/CustomButton'
 import { ITask } from '@/domain/entities/task.entities'
@@ -11,6 +11,9 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import moment, { now } from 'moment'
 import CreateDailyTaskModal from './Task/Daily/CreateDailyTaskModal'
+import { fetchDailyTasksInit, resetRescheduleDailyTask } from '@/app/Actions/DailyTaskActions'
+import { StatusStateEnum } from '@/domain/enum/StatusStateEnum'
+import toast from 'react-hot-toast'
 
 export default function DailyTodoCard() {
   const [active, setActive] = useState<boolean>(false);
@@ -18,6 +21,9 @@ export default function DailyTodoCard() {
   const [search, setSearch] = useState<string|undefined>('');
   const [debouncedSearch, setDebouncedSearch] = useState<string|undefined>(search);
   const [selectedDate, setSelectedDate] = useState<Date|null>(new Date());
+  const dispatch = useAppDispatch();
+  const rescheduleUsersTaskState = useAppSelector(state => state.dailyTask).reschedule
+
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -29,10 +35,35 @@ export default function DailyTodoCard() {
     };
   }, [search]);
 
+  function fetchTasks() {
+    dispatch(fetchDailyTasksInit());
+      setTimeout(() => {
+        FetchAllDailyTasks(debouncedSearch, selectedDate?.toISOString());
+      }, 2000);
+  }
+
+
     useEffect(() => {
-      FetchAllDailyTasks(debouncedSearch, selectedDate?.toISOString());
+      fetchTasks()
     }, [debouncedSearch, selectedDate]);
 
+    
+    useMemo(() => {
+      if (rescheduleUsersTaskState.status === StatusStateEnum.success) {
+        fetchTasks()
+      }
+    }, [rescheduleUsersTaskState.status])
+
+     useEffect(() => {
+        if (rescheduleUsersTaskState.status === StatusStateEnum.success) {
+          toast.success('Task has been reschedule sucessfully');
+          dispatch(resetRescheduleDailyTask());
+        }
+        if (rescheduleUsersTaskState.status === StatusStateEnum.failure) {
+          toast.error('');
+          dispatch(resetRescheduleDailyTask());
+        }
+      }, [rescheduleUsersTaskState.status]);
     
 
   return (
@@ -71,7 +102,6 @@ export default function DailyTodoCard() {
             <DatePicker
               selected={selectedDate}
               onChange={(date) => setSelectedDate(date)}
-              maxDate={new Date()} // Restrict dates to today and earlier
               className='btn btn-sm'
               dateFormat="yyyy-MM-dd"
               placeholderText="Select a valid date"
@@ -80,17 +110,20 @@ export default function DailyTodoCard() {
         </div>
       </div>
       <div className='h-[75%] scrollbar-rounded scrollbar-hidden hover:scrollbar-hover  overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-white'>
-       {
-        (fetchDailyTasks.data ) && 
-        fetchDailyTasks.data.length ?  fetchDailyTasks.data.map((task : ITask) => { return <DailyTaskITem 
-            task={task}
-           /> }) : 
-        <div className=' flex justify-center items-center w-full h-full'>
-            {selectedDate?.toDateString() === (new Date()).toDateString() ? <div className='flex flex-col items-center space-y-4 justify-center'>
-              <p>Hey there! 👋 It looks like your to-do list is empty. Why not add your first task and get started? 🚀 You've got this! 💪</p>
-              <CustomButton text='Add Task'  btnClassName='w-[20%]' onClick={() => setActive(true)}   />
-            </div> : <div className='text-red-600'>No tasks found</div>}
-        </div>
+       { (fetchDailyTasks.status === StatusStateEnum.success) ? 
+           (fetchDailyTasks.data ) && 
+            fetchDailyTasks.data.length ?  fetchDailyTasks.data.map((task : ITask) => { return <DailyTaskITem 
+                task={task}
+              /> }) : 
+              
+           (  <div className=' flex justify-center items-center w-full h-full'>
+                {selectedDate?.toDateString() === (new Date()).toDateString() ? <div className='flex flex-col items-center space-y-4 justify-center'>
+                  <p>Hey there! 👋 It looks like your to-do list is empty. Why not add your first task and get started? 🚀 You've got this! 💪</p>
+                  <CustomButton text='Add Task'  btnClassName='w-[20%]' onClick={() => setActive(true)}   />
+                </div> : <div className='text-red-600'>No tasks found</div>}
+            </div>)
+            :   <div className='w-full h-full flex justify-center items-center'><span className="loading loading-dots loading-md"></span>
+            </div>
         }
         
       </div>

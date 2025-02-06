@@ -1,7 +1,8 @@
 import { store } from "@/app/store/store";
 import ApiClient from "../helpers/ApiClient";
 import { getBearerAuthToken } from "../helpers/HelperUtils";
-import { fetchUsersCollaboratorsFailure, fetchUsersCollaboratorsSuccess, fetchUsersStatsFailure, fetchUsersStatsSuccess } from "@/app/Actions/AppActions";
+import { fetchUsersCollaboratorsFailure, fetchUsersCollaboratorsSuccess, fetchUsersStatsFailure, fetchUsersStatsSuccess, fetchUserTasksActivitiesSuccess } from "@/app/Actions/AppActions";
+import { fetchUserTasksActivitiesFailure } from '../../app/Actions/AppActions';
 
 export const fetchStats = async () => {
     
@@ -31,6 +32,23 @@ export const fetUserschCollaborators = async () => {
        store.dispatch(fetchUsersCollaboratorsSuccess(data));
     } catch (e) {
         store.dispatch(fetchUsersCollaboratorsFailure(e));
+
+    }
+}
+
+
+export const fetchTasksActivities = async () => {
+    try {
+        const reponse = await ApiClient().get(`/activities`,{
+            headers : {
+                Authorization : await getBearerAuthToken(),
+            }
+        });
+        const data = reponse.data;
+        store.dispatch(fetchUserTasksActivitiesSuccess(data))
+    } catch (e) {
+        store.dispatch(fetchUserTasksActivitiesFailure(e))
+
 
     }
 }
