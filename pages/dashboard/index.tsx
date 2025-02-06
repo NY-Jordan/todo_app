@@ -5,23 +5,37 @@ import DailyTodoCard from "@/presentation/components/DailyTodoCard";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faNoteSticky, faPlus, faProcedures} from "@fortawesome/free-solid-svg-icons";
 import {useResponsive} from "@/Infrastructure/hooks/useResponsive";
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import { FetchAllProjects } from "@/Infrastructure/Services/projects/ProjectsService";
 import { FetchAllDailyTasks } from "@/Infrastructure/Services/Task/DailyTaskService";
 import CustomDatePicker from "@/presentation/components/Calendar/CustomDatePicker";
 import { Chart } from "react-google-charts";
 import { getDaysOfYear, getMonthsOfYear } from "@/Infrastructure/helpers/utils";
 import Day from "react-datepicker/dist/day";
+import { useAppSelector } from "@/app/store/hook";
+import { fetchCollaborators } from "@/Infrastructure/Services/Task/TaskService";
+import { useQuery } from "@tanstack/react-query";
+import { ICollaborator } from "@/domain/entities/project.entities";
+import { fetchStats, fetUserschCollaborators } from "@/Infrastructure/Services/AppService";
+import { IUserStats } from "@/domain/entities/user.entities";
+import { StatusStateEnum } from "@/domain/enum/StatusStateEnum";
+import CardStats from "@/presentation/components/CardStats";
 
 export default function index() {
   const { isSM} = useResponsive();
+    const fecthProjectsState = useAppSelector(state => state.projects).fetch
+    const appStatsState = useAppSelector(state => state.app).stats
+    const appCollaboratorsState = useAppSelector(state => state.app).collaborators ;
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     FetchAllProjects();
+    fetUserschCollaborators();
   }, [])
+
 
   const days = getDaysOfYear(2025);
   const months = getMonthsOfYear();
+
 
   return (
   <Layout pageTitle="Dashboard">
@@ -32,7 +46,7 @@ export default function index() {
       </div>
       <div className="w-1/2 min-h-[30%] border border-stroke bg-white p-3">
         <div className="mb-2">
-          <p className="text-lg font-semibold">Tasks Activities</p>
+          <p className="text-lg font-semibold">Tasks Tracking</p>
           <p></p>
         </div>
         <div className="flex justify-center gap-10">
@@ -99,10 +113,7 @@ export default function index() {
       </div>
     </div>
     <div className='mt-2  flex  space-x-4' style={{ width : '100%',  }}>
-      <Card title='Projects' color="blue" icon={<FontAwesomeIcon icon={faProcedures} size="xl" />}  percent='04' />
-      <Card  title='Tasks' color="red"  percent='40'/>
-      <Card title='Notes' color="orange"  percent='60' />
-      <Card title='links'  color="indigo"  percent='60' />
+      <CardStats />
     </div>
    <div className="flex space-x-4 h-[50%]">
       <ProjectsTable />
@@ -110,6 +121,24 @@ export default function index() {
               <div>
                 <span className="text-xl font-semibold">Collaborators</span>
               </div>
+
+              <div className="flex flex-col  gap-7 mt-6 h-full ">
+                  {(appCollaboratorsState.data?.collaborators  )  ? appCollaboratorsState.data?.collaborators.map((collaborator : ICollaborator) => {
+                    return  <div className="flex items-center gap-3">
+                    <div className="avatar">
+                      <div className="mask mask-squircle h-12 w-12">
+                        <img
+                          src={collaborator.user.picture}
+                          alt="Avatar Tailwind CSS Component" />
+                      </div>
+                    </div>
+                    <div>
+                      <div className="font-bold">{collaborator.user.username}</div>
+                      <div className="text-sm opacity-50">{collaborator.user.email}</div>
+                    </div>
+                  </div>
+                  }) : <></>}
+                </div>
       </div>
    </div>
   </Layout>

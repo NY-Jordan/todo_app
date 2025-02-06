@@ -8,6 +8,7 @@ import toast from 'react-hot-toast';
 import { useAppDispatch, useAppSelector } from '@/app/store/hook';
 import CustomButton from '../../button/CustomButton';
 import { StatusStateEnum } from '@/domain/enum/StatusStateEnum';
+import { fetchStats } from '@/Infrastructure/Services/AppService';
 
 export default function CreateDailyTaskModal({active, setActive} : {active : boolean, setActive : React.Dispatch<React.SetStateAction<boolean>>}) {
     const { handleSubmit, register, watch , reset} = useForm();
@@ -26,6 +27,7 @@ export default function CreateDailyTaskModal({active, setActive} : {active : boo
       if (createDailyTaskState.status ===  StatusStateEnum.success) {
           toast.success('task created successfully 🎉🎉')
           setActive(false);
+          fetchStats();
           dispatch(resetCreateDailyTask());
           reset();
   

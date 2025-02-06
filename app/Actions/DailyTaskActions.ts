@@ -86,9 +86,9 @@ export const deleteDailyTaskInit = () => ({
     type: DailyTaskActions.DELETE_DAILY_TASK_INIT,
 });
 
-export const deleteDailyTaskSuccess = (id : number) => ({
+export const deleteDailyTaskSuccess = (taskId : number) => ({
     type: DailyTaskActions.DELETE_DAILY_TASK_SUCCESS,
-    payload: id,
+    payload: {taskId},
 });
 
 export const deleteDailyTaskFailure = (error : any) => ({

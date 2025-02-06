@@ -76,12 +76,13 @@ const DailyTaskReducer = (state = initialState, action: ActionType) => {
       return { ...state, delete: { status: StatusStateEnum.loading, error: null } };
 
     case DailyTaskActions.DELETE_DAILY_TASK_SUCCESS:
+    
       return {
         ...state,
-        delete: { status: StatusStateEnum.success, error: null , taskId : action.payload},
+        delete: { status: StatusStateEnum.success, error: null , taskId : action.payload.taskId},
         fetch: {
           ...state.fetch,
-          data: state.fetch.data.filter((task : ITask) => task.id !== action.payload),
+          data: state.fetch.data.filter((task : ITask) => task.id !== action.payload.taskId),
         },
       };
 

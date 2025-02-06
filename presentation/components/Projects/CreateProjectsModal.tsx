@@ -8,6 +8,7 @@ import CustomButton from "../button/CustomButton";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { StatusStateEnum } from "@/domain/enum/StatusStateEnum";
+import { fetchStats } from "@/Infrastructure/Services/AppService";
 
 export default function CreateProjectsModal({active, setActive} : {active : boolean, setActive : React.Dispatch<React.SetStateAction<boolean>> }) {
 
@@ -34,6 +35,7 @@ export default function CreateProjectsModal({active, setActive} : {active : bool
         toast.success('Project created successfully 🎉🎉')
         setActive(false);
         FetchAllProjects();
+        fetchStats();
         dispatch(resetCreateProjectState());
         reset();
 

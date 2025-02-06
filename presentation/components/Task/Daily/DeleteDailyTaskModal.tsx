@@ -6,10 +6,10 @@ import { useAppDispatch, useAppSelector } from '@/app/store/hook'
 import { deleteProjectInit, resetDeleteProjectState } from '@/app/Actions/ProjectsActions'
 import { deleteProject, FetchAllProjects } from '@/Infrastructure/Services/projects/ProjectsService'
 import toast from 'react-hot-toast'
-import { tasks } from '../../../../Infrastructure/data/task';
 import { deleteDailyTaskInit, resetDeleteDailyTask } from '@/app/Actions/DailyTaskActions'
 import { deleteDailyTask } from '@/Infrastructure/Services/Task/DailyTaskService'
 import { StatusStateEnum } from '@/domain/enum/StatusStateEnum'
+import { fetchStats } from '@/Infrastructure/Services/AppService'
 
 export default function DeleteDailyTaskModal({active, setActive, taskId} : {active : boolean, setActive : React.Dispatch<React.SetStateAction<boolean>>, taskId : number }) {
   const dispatch = useAppDispatch();
@@ -22,13 +22,19 @@ export default function DeleteDailyTaskModal({active, setActive, taskId} : {acti
     deleteDailyTask(taskId);
   }
 
+  console.log('====================================');
+  console.log(deleteTaskState.taskId);
+  console.log('====================================');
+
  
 
   useEffect(() => {
+   
       if (processedTaskId &&  deleteTaskState.taskId === processedTaskId) {
         if (deleteTaskState.status === StatusStateEnum.success) {
           toast.success('The Task has been deleted successfully.');
           dispatch(resetDeleteDailyTask());
+          fetchStats();
           setActive(false);
         }
         if (deleteTaskState.status === StatusStateEnum.failure) {
@@ -39,7 +45,7 @@ export default function DeleteDailyTaskModal({active, setActive, taskId} : {acti
       if (deleteTaskState.status === StatusStateEnum.idle) {
         setProcessedTaskId(undefined);
       }
-  }, [deleteTaskState.status])
+  }, [deleteTaskState.status, deleteTaskState.taskId])
 
   return (
     <>

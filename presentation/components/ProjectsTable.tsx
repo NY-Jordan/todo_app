@@ -89,7 +89,7 @@ const ProjectsTable = () => {
             </div>
 
             <div className="hidden items-center space-x-6 justify-center p-2.5 sm:flex xl:p-5">
-              <a className="tooltip hover:cursor-pointer" onClick={() => router.push(`/projects/settings/${project.id}`)} data-tip='Settings'>
+              <a className="tooltip hover:cursor-pointer" href={`/projects/settings/${project.id}`} onClick={() => router.push(`/projects/settings/${project.id}`)} data-tip='Settings'>
                 <FontAwesomeIcon icon={faGear} />
               </a>
              {project.is_admin ? <a className="tooltip hover:cursor-pointer" onClick={() => {

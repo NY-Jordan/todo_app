@@ -32,3 +32,11 @@ export interface IUserAssigned {
     updated_at: string;
     schedule_at : string;
 }
+
+
+export interface IUserStats {
+    projects : string,
+    tasks : string,
+    notes : string,
+    links : string
+}
