@@ -24,7 +24,7 @@ export default function SectionTask({showMoreButton, name, data}  : props) {
       setItems(data);
     }, [data])
   return (
-    <div style={{  width : isSM ? "100%" : "25%", maxWidth : isSM ? "100%" : "24%", overflowX : 'hidden', overflowY : 'hidden'}} className='z-10'>
+    <div style={{  width : isSM ? "100%" : "24%", }} >
       <SectionTaskHeader count={data.length} showMoreButton={showMoreButton}  name={name} />
         <Reorder.Group 
         axis="y" 

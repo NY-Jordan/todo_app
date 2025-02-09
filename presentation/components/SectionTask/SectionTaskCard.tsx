@@ -1,15 +1,16 @@
 import { Reorder, delay } from 'framer-motion'
 import React, { useState } from 'react'
 import { motion } from "framer-motion"
-import { mdiBookEdit, mdiChevronLeft, mdiChevronRight, mdiDelete, mdiDotsVertical, mdiTagEdit } from '@mdi/js';
+import { mdiBookEdit, mdiChevronLeft, mdiChevronRight, mdiDelete, mdiDotsVertical, mdiPlus, mdiTagEdit } from '@mdi/js';
 import Icon from '@mdi/react';
 import { ITask } from '@/domain/entities/task.entities';
+import TaskTicketManagement from '../Task/Ticket/TaskTicketManagement';
 
 
 export default function SectionTaskCard({ item, position, color} :  { item : ITask, position : number, color : string}) {
     const top = (position * 50);
     const [showViewMoreButton, setShowViewMoreButton] = useState(false);
-
+    const [ticketsModal, setTicketsModal] = useState(false);
     const animation = {
         height: "100%",
         scale : 1,
@@ -20,15 +21,14 @@ export default function SectionTaskCard({ item, position, color} :  { item : ITa
 
      
   return (
-   
+    <>
         <motion.div  
              onMouseEnter={() => setShowViewMoreButton(true)}
              onMouseLeave={() => setShowViewMoreButton(false)}
              whileHover={animation }
-
              whileFocus={animation}
            
-            className={"card my-2 overflow-hidden dark:bg-slate-800 relative  z-1/2  dark:hover:bg-slate-900 dark:shadow-slate-700  dark:border-slate-800 dark:text-white  h-40 border-2 bg-base-100 shadow-md "} style={{ bottom  : top }}>
+            className={"card my-2  dark:bg-slate-800 relative  z-1/2  dark:hover:bg-slate-900 dark:shadow-slate-700  dark:border-slate-800 dark:text-white  h-40 border-2 bg-base-100 shadow-md "} style={{ bottom  : top }}>
             <div className='card-title m-0 p-0 justify-between'>
                 <span  style={{ backgroundColor : color }} className=" ml-4 rounded-sm mt-2 p-2"></span>
                 <div className="dropdown">
@@ -41,12 +41,12 @@ export default function SectionTaskCard({ item, position, color} :  { item : ITa
                             />
                         </a>
                     </div>
-                    <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                    <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-white rounded-box w-52">
                         <li>
-                            <a href='#'><Icon path={mdiBookEdit} size={3/4} color={'red'} />Edit</a>
+                            <a href='#'><Icon path={mdiPlus} size={3/4} color={'black'} />New Comment</a>
                         </li>
                         <li>
-                            <a href='#'><Icon path={mdiDelete} size={3/4} color={'red'} />Delete</a>
+                            <a href='#' onClick={() => setTicketsModal(true)}><Icon path={mdiPlus} size={3/4} color={'black'}  />Add a ticket</a>
                         </li>
                     </ul>
                 </div>
@@ -64,6 +64,8 @@ export default function SectionTaskCard({ item, position, color} :  { item : ITa
                     <a href='#' className={showViewMoreButton ? 'hover:bg-gray-200 rounded-full  relative bottom-32 left-2' : 'invisible'}><Icon path={mdiChevronRight} size={1} color={'gray'} /></a>
             </div>  
         </motion.div>
+        <TaskTicketManagement active={ticketsModal} setActive={setTicketsModal} task={item} />
+    </>
     
   )
 }
