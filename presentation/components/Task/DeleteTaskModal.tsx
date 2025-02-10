@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react'
 import CustomButton from '../button/CustomButton'
 import { useAppDispatch, useAppSelector } from '@/app/store/hook'
 import toast from 'react-hot-toast'
-import { tasks } from '../../../Infrastructure/data/task';
 import { deleteDailyTaskInit, resetDeleteDailyTask } from '@/app/Actions/DailyTaskActions'
 import { deleteTask } from '@/Infrastructure/Services/Task/TaskService'
 import { deleteTaskInit, deleteTaskReset } from '@/app/Actions/TaskActions'
