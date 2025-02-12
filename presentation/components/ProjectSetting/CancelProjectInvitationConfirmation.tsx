@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '@/app/store/hook'
 import { deleteProjectInit, InitCancelProjectInvitation, resetCancelProjectInvitationState, resetDeleteProjectState } from '@/app/Actions/ProjectsActions'
 import { cancelProjectInvitation, deleteProject, FetchAllProjects, getInvitations } from '@/Infrastructure/Services/projects/ProjectsService'
 import toast from 'react-hot-toast'
+import { StatusStateEnum } from '@/domain/enum/StatusStateEnum'
 
 export default function CancelProjectInvitationConfirmation({active, setActive, uuid, projectId} : {active : boolean, setActive : React.Dispatch<React.SetStateAction<boolean>>, uuid : string, projectId : number|undefined }) {
   const dispatch = useAppDispatch();

@@ -28,14 +28,10 @@ export default function TaskTicketManagement({active, setActive, task} : {active
   const visible = {
     width :  '100%', 
     opacity : 1, 
-    visibility : 'visible'
-
-    
   }
   const hidden = {
     width :  0 , 
     opacity :  0, 
-    visibility : 'hidden',
   }
 
   const animation = {
@@ -58,14 +54,15 @@ export default function TaskTicketManagement({active, setActive, task} : {active
            </div>
             <div className="space-y-6 mt-8">
               <div className="flex ">
-                <motion.div  variants={animation} transition={{ duration : 0.5 }} animate={!switchAction ? 'hidden' : 'visible'} role="tablist" className="tabs tabs-bordered w-fit  ">
+                <motion.div   style={{ visibility: switchAction ? "visible" : "hidden" }}  variants={animation} transition={{ duration : 0.5 }} animate={!switchAction ? 'hidden' : 'visible'} role="tablist" className="tabs tabs-bordered w-fit  ">
                   <input 
                   type="radio" 
                   name="ticket_management" 
                   defaultChecked 
                   role="tab" 
                   className="tab text-lg w-1/2" 
-                  aria-label="Ticket(s) In progress" />
+                  aria-label="Ticket(s) In progress"
+                   />
 
                   <div role="tabpanel" className="tab-content p-3 w-full">
                     <TicketsInProgress setActive={setSwitchAction} active={active} task={task} />
@@ -84,7 +81,7 @@ export default function TaskTicketManagement({active, setActive, task} : {active
 
                 </motion.div>
 
-                <motion.div  variants={animation} animate={switchAction ? 'hidden' : 'visible'} className="w-full  p-1 h-full">
+                <motion.div  style={{ visibility: !switchAction ? "visible" : "hidden" }}  variants={animation} animate={switchAction ? 'hidden' : 'visible'} className="w-full  p-1 h-full">
                     <div>
                       <button onClick={() => setSwitchAction(true)} className=" hover:cursor-pointer"><FontAwesomeIcon size="xl" icon={faArrowLeft} /> </button>
                     </div>

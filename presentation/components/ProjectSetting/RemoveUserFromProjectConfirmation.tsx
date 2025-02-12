@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '@/app/store/hook'
 import { deleteProjectInit, InitCancelProjectInvitation, initRemoveUserFromProject, resetCancelProjectInvitationState, resetDeleteProjectState, resetRemoveUserFromProjectState } from '@/app/Actions/ProjectsActions'
 import { cancelProjectInvitation, deleteProject, FetchAllProjects, getInvitations, removeUserOfProject } from '@/Infrastructure/Services/projects/ProjectsService'
 import toast from 'react-hot-toast'
+import { StatusStateEnum } from '@/domain/enum/StatusStateEnum'
 
 export default function RemoveUserFromProjectConfirmation({active, setActive, userId, projectId, invitationId} : {active : boolean, setActive : React.Dispatch<React.SetStateAction<boolean>>, userId : number, projectId : number|undefined , invitationId : number}) {
   const dispatch = useAppDispatch();

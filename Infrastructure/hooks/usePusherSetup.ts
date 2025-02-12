@@ -5,8 +5,14 @@ import { getCurrentUser } from '../helpers/HelperUtils';
 import { IUser } from '@/domain/entities/user.entities';
 import { handleNotification } from '../Broadcast/Notification';
 
+declare global {
+  interface Window {
+    Pusher: any; 
+  }
+}
+
 const usePusherSetup = () => {
-  const [echo, setEcho] = useState<Echo | null>(null);
+  const [echo, setEcho] = useState<Echo<"pusher"> | null>(null);
     type PusherEchoOptions = {
     broadcaster: 'pusher';
     key: string|undefined;
@@ -21,7 +27,7 @@ const usePusherSetup = () => {
     };
     };
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' ) {
       // Associez Pusher à Laravel Echo\
       Pusher.logToConsole = true;
       window.Pusher = Pusher;
