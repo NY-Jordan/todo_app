@@ -6,6 +6,7 @@ import NotificationReducer from "../reducers/NotificationReducer";
 import taskGroupReducer from "../reducers/TaskGroupReducer";
 import TaskReducer from "../reducers/TaskReducer";
 import AppReducers from "../reducers/AppReducers";
+import TicketsReducer from "../reducers/TicketsReducer";
 
 
  const RootReducer = 
@@ -14,6 +15,7 @@ import AppReducers from "../reducers/AppReducers";
        projects : ProjectsReducer,
        taskGroup : taskGroupReducer,
        dailyTask : DailyTaskReducer,
+       tickets : TicketsReducer,
        task : TaskReducer,
        notifications : NotificationReducer,
        app : AppReducers,

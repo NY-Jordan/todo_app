@@ -1,8 +1,16 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import CustomButton from '../../button/CustomButton'
 import TicketTypeCard from './TicketTypeCard'
+import { ITask } from '@/domain/entities/task.entities'
+import { TicketStatusEnum } from '@/domain/enum/TicketStatusEnum'
+import { fetchTaskTickets } from '@/Infrastructure/Services/Task/TicketService'
 
-export default function TaskTicketDone({setActive}: {setActive : React.Dispatch<React.SetStateAction<boolean>>}) {
+export default function TaskTicketDone({active, setActive, task}: {active : boolean, setActive : React.Dispatch<React.SetStateAction<boolean>>, task : ITask}) {
+    useEffect(() => {
+            if (active) {
+              fetchTaskTickets(task.id, TicketStatusEnum.DONE)
+            }
+          }, [active])
   return (
     <>
        <div className="flex  items-center justify-between">
@@ -30,17 +38,7 @@ export default function TaskTicketDone({setActive}: {setActive : React.Dispatch<
         </div>
         <div className="flex flex-col mt-7 space-y-5">
             
-            <TicketTypeCard text="Sub Task" type="sub" />
-            <TicketTypeCard type="bug" text="Bug ticket" />
-            <TicketTypeCard type="bug" text="Bug ticket" />
-            <TicketTypeCard type="bug" text="Bug ticket" />
-            <TicketTypeCard type="bug" text="Bug ticket" />
-            <TicketTypeCard type="bug" text="Bug ticket" />
-            <TicketTypeCard type="bug" text="Bug ticket" />
-            <TicketTypeCard type="bug" text="Bug ticket" />
-            <TicketTypeCard type="bug" text="Bug ticket" />
-            <TicketTypeCard type='improvement' text="Improvment ticket" />
-            <TicketTypeCard type='story' text="Story ticket" />
+            
         </div>
     </>
   )

@@ -1,7 +1,6 @@
 import { error } from "console";
 import { TaskGroupActions } from "../Actions/TaskGroupActions";
 import { ITaskGroup } from '../../domain/entities/task.group.entities';
-import Pagination from "@/presentation/components/Pagination/Pagination";
 import { StatusStateEnum } from "@/domain/enum/StatusStateEnum";
 
 const initialState = {

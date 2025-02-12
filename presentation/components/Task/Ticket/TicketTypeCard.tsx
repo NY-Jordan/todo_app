@@ -6,12 +6,13 @@ import { type } from 'node:os';
 import { TicketType } from '@/domain/enum/TicketEnum';
 
 type TicketTypeCardProps = {
-    type : 'bug' | 'sub' | 'improvement' | 'story',
+    type : TicketType,
     text : string
 }
 
 export default function TicketTypeCard({type, text} : TicketTypeCardProps) {
     const [moreActions, setMoreActions] = useState(false)
+   
   return (
     <>
       <motion.div whileHover={{ scale: 1.05 }}  transition={{ type: "spring", stiffness: 300, damping: 10 }} className="w-full  flex justify-between  min-h-16  ">

@@ -1,8 +1,23 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import CustomButton from '../../button/CustomButton'
 import TicketTypeCard from './TicketTypeCard'
+import { ITask } from '@/domain/entities/task.entities'
+import { fetchTaskTickets } from '@/Infrastructure/Services/Task/TicketService'
+import { TicketStatusEnum } from '@/domain/enum/TicketStatusEnum'
+import { useAppSelector } from '@/app/store/hook'
+import { ITicket } from '@/domain/entities/ticket.entities'
+import { TicketTypeEnum } from '@/domain/enum/TicketTypeEnum'
+import { TicketType } from '@/domain/enum/TicketEnum'
 
-export default function TicketsInProgress({setActive}: {setActive : React.Dispatch<React.SetStateAction<boolean>>}) {
+export default function TicketsInProgress({active, setActive, task}: {active : boolean, setActive : React.Dispatch<React.SetStateAction<boolean>>, task : ITask}) {
+    const ticketState = useAppSelector(state => state.tickets).fetchTicketsInProgress
+
+    useEffect(() => {
+        if (active) {
+          fetchTaskTickets(task.id, TicketStatusEnum.IN_PROGRESS)
+        }
+      }, [active])
+      
   return (
     <>
        <div className="flex  items-center justify-between">
@@ -29,11 +44,15 @@ export default function TicketsInProgress({setActive}: {setActive : React.Dispat
             <CustomButton text="New Ticket" onClick={() => setActive(false)} />
         </div>
         <div className="flex flex-col mt-7 space-y-5">
-            
-            <TicketTypeCard text="Sub Task" type="sub" />
-            <TicketTypeCard type="bug" text="Bug ticket" />
-            <TicketTypeCard type='improvement' text="Improvment ticket" />
-            <TicketTypeCard type='story' text="Story ticket" />
+            {
+                ticketState.data.tickets ? 
+                (ticketState.data.tickets.length ? 
+                    ticketState.data.tickets.map((ticket : ITicket) => {
+                            return <TicketTypeCard type={ticket.type.name as TicketType} text={ticket.title} />
+                    }) : <></>
+                ) 
+                : <div className='w-full h-full flex justify-center items-center'><span className="loading loading-dots loading-md"></span> </div>
+            }
         </div>
     </>
   )

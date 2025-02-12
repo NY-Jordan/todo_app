@@ -1,6 +1,6 @@
 export enum TicketType {
     BUG = 'bug',
-    SUBTASK = 'sub',
+    SUBTASK = 'sub task',
     IMPROVEMENT = 'improvement',
     STORY = 'story'
   }
