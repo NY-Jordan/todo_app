@@ -22,6 +22,7 @@ export default function TaskTicketManagement({active, setActive, task} : {active
   const {id} = router.query;
   const {user} = useAuth();
   const [switchAction, setSwitchAction] = useState(true);
+  
 
   
 
@@ -43,7 +44,7 @@ export default function TaskTicketManagement({active, setActive, task} : {active
 
   return (
     <>
-        <input type="checkbox" id="my_modal_6" checked={active} className="modal-toggle" />
+        <input type="checkbox" id="my_modal_6"  name="modal-tickets" checked={active} className="modal-toggle" />
         <div className="modal modal-top flex justify-center" role="dialog">
         <div className="modal-box max-w-none w-[60%] mt-[5%] max-h-[80%]  rounded-md overflow-x-hidden">
            <div className="w-full flex justify-between items-center">
@@ -54,17 +55,17 @@ export default function TaskTicketManagement({active, setActive, task} : {active
            </div>
             <div className="space-y-6 mt-8">
               <div className="flex ">
-                <motion.div   style={{ visibility: switchAction ? "visible" : "hidden" }}  variants={animation} transition={{ duration : 0.5 }} animate={!switchAction ? 'hidden' : 'visible'} role="tablist" className="tabs tabs-bordered w-fit  ">
+                <motion.div   style={{ visibility: switchAction ? "visible" : "hidden" }}  variants={animation} transition={{ duration : 0.5 }} animate={!switchAction ? 'hidden' : 'visible'} role="tablist" className="tabs tabs-bordered w-full h-fit  ">
                   <input 
                   type="radio" 
                   name="ticket_management" 
                   defaultChecked 
                   role="tab" 
-                  className="tab text-lg w-1/2" 
+                  className="tab text-lg w-1/2 block" 
                   aria-label="Ticket(s) In progress"
                    />
 
-                  <div role="tabpanel" className="tab-content p-3 w-full">
+                  <div role="tabpanel" className="tab-content p-3 w-full h-fit">
                     <TicketsInProgress setActive={setSwitchAction} active={active} task={task} />
                   </div>
 
@@ -72,10 +73,10 @@ export default function TaskTicketManagement({active, setActive, task} : {active
                     type="radio"
                     name="ticket_management"
                     role="tab"
-                    className="tab text-lg"
+                    className="tab text-lg w-full"
                     aria-label="Ticket(s) Done"
                     />
-                  <div role="tabpanel" className="tab-content p-10 ">
+                  <div role="tabpanel" className="tab-content p-10 h-fit ">
                     <TaskTicketDone setActive={setSwitchAction} active={active} task={task}  />
                   </div>
 

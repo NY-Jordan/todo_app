@@ -9,6 +9,7 @@ import { TicketTypeEnum } from '@/domain/enum/TicketTypeEnum';
 
 export default function CreateTickets({task} : {task : ITask}) {
     const { handleSubmit, control, register, watch , reset} = useForm();
+    const 
     const handleCreateTicket = (data : FieldValues) => {
         const options : CreateTicketTypeInterface = {
             title : data.title,
