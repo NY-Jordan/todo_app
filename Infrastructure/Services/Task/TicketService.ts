@@ -27,9 +27,6 @@ export const createTaskTicket = async (options : CreateTicketTypeInterface) => {
             }
         });
         const data = reponse.data.ticket;
-        console.log('====================================');
-        console.log(data);
-        console.log('====================================');
         store.dispatch(createTicketSuccess(data))
     } catch (e) {
         store.dispatch(createTicketFailure(e))

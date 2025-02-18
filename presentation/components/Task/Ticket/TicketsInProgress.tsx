@@ -20,7 +20,7 @@ export default function TicketsInProgress({active, setActive, task}: {active : b
       
   return (
     <>
-       <div className="flex  items-center justify-between">
+       <div className="flex  items-center justify-between flex-wrap">
             <label className=" flex space-x-3 items-center">
                 <span className="label ">All</span>
                 <input type="radio" name="type" defaultChecked className="radio radio-sm" />
@@ -43,13 +43,13 @@ export default function TicketsInProgress({active, setActive, task}: {active : b
             </label>
             <CustomButton text="New Ticket" onClick={() => setActive(false)} />
         </div>
-        <div className="flex flex-col mt-7 space-y-5">
+        <div className="flex flex-col mt-7 space-y-5 w-fullv h-full">
             {
                 ticketState.data.tickets ? 
                 (ticketState.data.tickets.length ? 
                     ticketState.data.tickets.map((ticket : ITicket) => {
                             return <TicketTypeCard type={ticket.type.name as TicketType} text={ticket.title} />
-                    }) : <></>
+                    }) : <div className='w-full h-full justify-center items-center text-red-700 text-center'>Ticket(s) not found</div>
                 ) 
                 : <div className='w-full h-full flex justify-center items-center'><span className="loading loading-dots loading-md"></span> </div>
             }

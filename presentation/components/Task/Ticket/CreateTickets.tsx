@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import CustomEditor from '../../Editor/CustomEditor'
 import CustomButton from '../../button/CustomButton'
 import { Controller, FieldValue, FieldValues, useForm } from 'react-hook-form';
@@ -6,10 +6,15 @@ import { createTaskTicket } from '@/Infrastructure/Services/Task/TicketService';
 import { ITask } from '@/domain/entities/task.entities';
 import { CreateTicketTypeInterface } from '@/domain/entities/ticket.entities';
 import { TicketTypeEnum } from '@/domain/enum/TicketTypeEnum';
+import { useAppDispatch, useAppSelector } from '@/app/store/hook';
+import { StatusStateEnum } from '@/domain/enum/StatusStateEnum';
+import toast from 'react-hot-toast';
+import { createTicketInit } from '@/app/Actions/TicketsAction';
 
 export default function CreateTickets({task} : {task : ITask}) {
     const { handleSubmit, control, register, watch , reset} = useForm();
-    const 
+    const dispatch = useAppDispatch();
+    const createTicketState = useAppSelector(state => state.tickets).create
     const handleCreateTicket = (data : FieldValues) => {
         const options : CreateTicketTypeInterface = {
             title : data.title,
@@ -17,9 +22,16 @@ export default function CreateTickets({task} : {task : ITask}) {
             ticket_type_id : parseInt(data.ticket_type_id),
             task_id : task.id,
         }
+        dispatch(createTicketInit());
         createTaskTicket(options);
-       
     }
+
+    useEffect(() => {
+        if (createTicketState.status === StatusStateEnum.success) {
+            reset();
+        }
+    }, [createTicketState.status])
+
   return (  
     <form id='create-ticket-form' onSubmit={handleSubmit(handleCreateTicket)}>
       <div>
@@ -59,7 +71,7 @@ export default function CreateTickets({task} : {task : ITask}) {
                
             </label>
         <div className="flex justify-end mt-3">
-            <CustomButton form='create-ticket-form' type='submit' text="Submit" size="lg" />
+            <CustomButton loader={createTicketState.status === StatusStateEnum.loading} form='create-ticket-form' type='submit' text="Submit" size="lg" />
         </div>
         </div>
     </form>
