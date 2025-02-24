@@ -7,10 +7,9 @@ import { ITask } from '@/domain/entities/task.entities';
 import TaskTicketManagement from '../Task/Ticket/TaskTicketManagement';
 
 
-export default function SectionTaskCard({ item, position, color} :  { item : ITask, position : number, color : string}) {
+export default function SectionTaskCard({ item, position, color, setTicketsModal, setTaskTicket} :  { item : ITask, position : number, color : string, setTicketsModal : React.Dispatch<React.SetStateAction<boolean>>, setTaskTicket : React.Dispatch<React.SetStateAction<ITask | undefined>>}) {
     const top = (position * 50);
     const [showViewMoreButton, setShowViewMoreButton] = useState(false);
-    const [ticketsModal, setTicketsModal] = useState(false);
     const animation = {
         height: "100%",
         scale : 1,
@@ -46,7 +45,7 @@ export default function SectionTaskCard({ item, position, color} :  { item : ITa
                             <a href='#'><Icon path={mdiPlus} size={3/4} color={'black'} />New Comment</a>
                         </li>
                         <li>
-                            <a href='#' onClick={() => setTicketsModal(true)}><Icon path={mdiPlus} size={3/4} color={'black'}  />Add a ticket</a>
+                            <a href='#' onClick={() => {setTicketsModal(true) ; setTaskTicket(item)}}><Icon path={mdiPlus} size={3/4} color={'black'}  />Add a ticket</a>
                         </li>
                     </ul>
                 </div>
@@ -64,7 +63,6 @@ export default function SectionTaskCard({ item, position, color} :  { item : ITa
                     <a href='#' className={showViewMoreButton ? 'hover:bg-gray-200 rounded-full  relative bottom-32 left-2' : 'invisible'}><Icon path={mdiChevronRight} size={1} color={'gray'} /></a>
             </div>  
         </motion.div>
-        <TaskTicketManagement active={ticketsModal} setActive={setTicketsModal} task={item} />
     </>
     
   )

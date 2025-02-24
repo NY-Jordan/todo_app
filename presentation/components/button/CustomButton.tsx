@@ -17,9 +17,9 @@ export default function CustomButton({text, onClick, variant='primary', icon, ty
   const variantValue  = `btn-${variant}`;
   return (
     <>
-       <button type={type} disabled={isDisabled || loader} onClick={() => onClick ?onClick() : {}} form={form} className={` ${variantValue} ${btnClassName} disabled:shadow-gray-400 flex items-center`}>
+       <button type={type} disabled={isDisabled || loader} onClick={() => onClick ?onClick() : {}} form={form} className={` ${variantValue} ${btnClassName} disabled:shadow-gray-400 flex items-center `}>
         {loader ? <span className="loading loading-dots loading-xs"></span>
- : <span className='flex items-center gap-2'>{icon}{text}</span>}</button>
+ : <span className='flex items-center gap-2 flex-wrap justify-center'>{icon}{text}</span>}</button>
     </>
   )
 }

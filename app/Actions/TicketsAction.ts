@@ -48,6 +48,8 @@ export const createTicketReset = () => ({
     type: TicketActions.CREATE_TICKET_RESET,
 });
 
+
+//UPDATE TICKET
 export const updateTicketInit = () => ({
     type: TicketActions.UPDATE_TICKET_INIT,
 });
@@ -65,6 +67,9 @@ export const updateTicketFailure = (error: any) => ({
 export const updateTicketReset = () => ({
     type: TicketActions.UPDATE_TICKET_RESET,
 });
+
+
+//change status
 
 export const changeTicketStatusInit = () => ({
     type: TicketActions.CHANGE_TICKET_STATUS_INIT,
@@ -93,17 +98,18 @@ export const deleteTicketSuccess = (ticketId: number) => ({
     payload: ticketId,
 });
 
-export const deleteTicketFailure = (error: any) => ({
+export const deleteTicketFailure = (error: any, ticketId : number) => ({
     type: TicketActions.DELETE_TICKET_FAILURE,
-    payload: error,
+    payload: {error, ticketId},
 });
 
 export const deleteTicketReset = () => ({
     type: TicketActions.DELETE_TICKET_RESET,
 });
 
-export const fetchTicketInit = () => ({
+export const fetchTicketInit = (status : TicketStatusEnum) => ({
     type: TicketActions.FETCH_TICKETS_INIT,
+    payload: { status },
 });
 
 export const fetchTicketSuccess = (tickets: ITicket[], status : TicketStatusEnum) => ({
