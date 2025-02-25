@@ -104,7 +104,7 @@ export default function TaskTicketManagement({active, setActive, task} : {active
                   aria-label="Ticket(s) In progress"
                    />
 
-                  <div role="tabpanel" className="tab-content p-3 w-full h-fit">
+                  <div role="tabpanel" className="tab-content p-10 w-full h-fit">
                     <TaskTicketsInProgress setActive={setSwitchAction} active={active} task={task} />
                   </div>
 

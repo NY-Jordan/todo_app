@@ -21,6 +21,7 @@ import { useAppDispatch, useAppSelector } from "@/app/store/hook";
 import { ITaskBoard } from "@/domain/entities/task.entities";
 import { TaskPhasesEnum } from "@/domain/enum/TaskEnum";
 import { fetchCollaboratorsTasksFailure, fetchCollaboratorsTasksInit } from "@/app/Actions/TaskActions";
+import { convertToISO } from "@/Infrastructure/helpers/utils";
 
 export default function index() {
   const {isTabletOrMobile, isSM} = useResponsive();
@@ -33,17 +34,16 @@ export default function index() {
   const CollaboratorTasksState  = useAppSelector(state => state.task).collaboratorsTasks
   const tasks = CollaboratorTasksState.data.tasks as  ITaskBoard;
   const dispatch = useAppDispatch();
+  const [assingedDate, setAssingedDate] = useState<string|null>(null);
   useEffect(() => {
     if (id && typeof id === 'string' && user) {
       dispatch(fetchCollaboratorsTasksInit());
      setTimeout(() => {
-      fetchCollaboratorsTasks(parseInt(id), user.id)
+      fetchCollaboratorsTasks(parseInt(id), user.id, assingedDate)
      }, 1000);
     }
-  }, [id]);
+  }, [id, assingedDate]);
 
-  
- 
   
   return (
   <Layout pageTitle="Manage Your Tasks">
@@ -61,14 +61,14 @@ export default function index() {
                   </a> 
                 </div>
                 <div className='flex flex-row space-x-2'>
-                  <input type="date" placeholder="Search..." className="input   input-sm input-bordered w-full max-w-xs" />
+                  <input type="date" onChange={(e) => setAssingedDate(e.target.value)} placeholder="Search..." className="input   input-sm input-bordered w-full max-w-xs" />
                 </div>
               </div>
            </div>
 
            <div className="flex justify-end space-x-4">
               
-                <div className="tooltip" data-tip="Previous Page">
+                <div className="tooltip" data-tip="Previous Page" >
                   <button className="btn"><FontAwesomeIcon icon={faChevronLeft} /></button>
                 </div>
                 <div className="tooltip" data-tip="Next Page">
@@ -77,7 +77,7 @@ export default function index() {
            </div>
 
 
-          <div className={'flex   overflow-y-auto   space-x-8  '+(isSM ? 'flex-col' : 'flex-row')} > 
+          <div className={'flex  overflow-x-hidden h-full overflow-y-hidden   space-x-8  '+(isSM ? 'flex-col' : 'flex-row')} > 
           {(tasks && tasks[TaskPhasesEnum.Backlog] ) ? <SectionTask  name='Backlog'  data={tasks[TaskPhasesEnum.Backlog]} /> :  <SectionTask  name='Backlog'  data={[]} /> }
           {(tasks && tasks[TaskPhasesEnum.Started] ) ? <SectionTask  name='Started'  data={tasks[TaskPhasesEnum.Started]} /> :  <SectionTask  name='Started'  data={[]} /> }
           {(tasks && tasks[TaskPhasesEnum.InReview] ) ? <SectionTask  name='In Review'  data={tasks[TaskPhasesEnum.InReview]} /> : <SectionTask  name='In Review'  data={[]} /> }

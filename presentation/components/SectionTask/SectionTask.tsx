@@ -1,7 +1,7 @@
 import React, { SetStateAction, useEffect, useState } from 'react'
 import SectionTaskHeader from './SectionTaskHeader'
 import SectionTaskCard from './SectionTaskCard'
-import { Reorder } from 'framer-motion'
+import { AnimatePresence, Reorder } from 'framer-motion'
 import AddTask from './AddTask'
 import { useResponsive } from '@/Infrastructure/hooks/useResponsive'
 import { TaskPhasesEnum } from '@/domain/enum/TaskEnum'
@@ -41,11 +41,17 @@ export default function SectionTask({showMoreButton, name, data}  : props) {
             <span className="loading loading-spinner loading-xs flex self-center"></span>
           </div>
  :  ( items.length ? items.map((item, key) => (
-             <Reorder.Item  drag  key={item.id}  dragTransition={{ bounceStiffness: 100, bounceDamping: 10 }} value={item} id={item.id.toString()} >
+            <AnimatePresence>
+             <Reorder.Item  initial={{ opacity: 0, y: -15 }} // Animation d'entrée
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -15 }} // Animation de sortie
+          transition={{ duration: 0.2, type: "spring", stiffness: 300, damping: 10 }}  drag  key={item.id}  dragTransition={{ bounceStiffness: 100, bounceDamping: 10 }} value={item} id={item.id.toString()} >
+                
                 <SectionTaskCard setTaskTicket={setTaskTicket} setTicketsModal={setTicketsModal}  position={key}  color={name === TaskPhasesEnum.Backlog ? 'gray' : (
                   name === TaskPhasesEnum.Started ? 'blue' : (name === TaskPhasesEnum.InReview ? 'orange' : 'green' )
                 )}  item={item} />
              </Reorder.Item>
+             </AnimatePresence>
 
           ))  : <div className='text-red-600 text-center text-xs'>--Empty--</div>)} 
         </Reorder.Group>

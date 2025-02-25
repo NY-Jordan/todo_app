@@ -36,7 +36,7 @@ export interface ITaskType {
     breifing: string;
     details: string | null;
     reminder: string | null;
-    phase: ITaskPhase;
+    task_phase: ITaskPhase;
     type: ITaskType;
     status: string;
     created_at: string;

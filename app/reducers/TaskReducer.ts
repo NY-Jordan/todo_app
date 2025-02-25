@@ -1,4 +1,4 @@
-import { IPagination, ITask } from "@/domain/entities/task.entities";
+import { IPagination, ITask, ITaskBoard } from "@/domain/entities/task.entities";
 import { TaskActions } from "../Actions/TaskActions";
 import Pagination from "@/presentation/components/Pagination/Pagination";
 import { StatusStateEnum } from "@/domain/enum/StatusStateEnum";
@@ -8,21 +8,24 @@ import { type } from 'node:os';
 const initialState  : {
   create: { status: string, error: null|any },
   fetch: { status: string, error: null|any, data: {tasks : ITask[], pagination : IPagination|null} },
-  collaboratorsTasks: { status: string, error: null|any, data: {tasks : ITask[]} },
+  collaboratorsTasks: { status: string, error: null|any, data: {tasks : ITaskBoard} },
   reschedule: { status: string, error: null|any, task : ITask|null },
   update: { status: string, error: null|any },
   delete: { status: string, error: null|any },
   assign: { status: string, error: null|any },
   assign_task : { status: string, error: null|any, task : null|ITask },
+  change_status : { status: string, error: null|any, task : null|ITask },
 } ={
   create: { status: StatusStateEnum.idle, error: null },
   fetch: { status: StatusStateEnum.idle, error: null, data: {tasks : [], pagination : null} },
-  collaboratorsTasks: { status: StatusStateEnum.idle, error: null, data: {tasks : []} },
+  collaboratorsTasks: { status: StatusStateEnum.idle, error: null, data: {tasks : {} } },
   reschedule: { status: StatusStateEnum.idle, error: null ,  task : null },
   update: { status: StatusStateEnum.idle, error: null },
   delete: { status: StatusStateEnum.idle, error: null },
   assign: { status: StatusStateEnum.idle, error: null },
-  assign_task : { status: "idle", error: null, task : null },
+  assign_task : { status: StatusStateEnum.idle, error: null, task : null },
+  change_status : { status: StatusStateEnum.idle, error: null, task : null },
+
 
 };
 
@@ -198,6 +201,43 @@ const TaskReducer = (state = initialState, action : ActionType) => {
       return {
         ...state,
         reschedule: { ...state.reschedule, status: null, error: null, task : null },
+      };
+
+    // change status
+    case TaskActions.INIT_CHANGE_TASK_PHASE_STATE:
+      return {
+        ...state,
+        change_status : { ...state.change_status, status: StatusStateEnum.loading, error: null, task : null },
+      };
+        
+    case TaskActions.CHANGE_TASK_PHASE_SUCESS :
+     
+      return {
+        ...state,
+        change_status: { ...state.change_status, status: StatusStateEnum.success, error: null, task : action.payload.task  },
+        collaboratorsTasks: {
+          ...state.collaboratorsTasks,
+          data : {
+            tasks : {
+              ...state.collaboratorsTasks.data.tasks,
+              [action.payload.previousPhase] : state.collaboratorsTasks.data.tasks[action.payload.previousPhase].filter((task : ITask) => task.id !== action.payload.task.id ) ,
+              [action.payload.nextPhase] : state.collaboratorsTasks.data.tasks[action.payload.nextPhase] ? [...state.collaboratorsTasks.data.tasks[action.payload.nextPhase], action.payload.task ]  : [action.payload.task ]  ,
+          } 
+
+            }
+        },
+      };
+
+    case TaskActions.CHANGE_TASK_PHASE_FAILURE:
+      return {
+        ...state,
+        change_status: { ...state.change_status, status: StatusStateEnum.failure, error: action.payload.error, task : null },
+      };
+  
+    case TaskActions.RESET_CHANGE_TASK_PHASE_STATE:
+      return {
+        ...state,
+        change_status: { ...state.change_status, status: null, error: null, task : null },
       };
 
     default:

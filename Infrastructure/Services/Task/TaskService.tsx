@@ -1,11 +1,12 @@
-import { assignTaskToUserFailed, assignTaskToUserSuccess, createTaskFailure, createTaskSuccess, deleteTaskFailure, deleteTaskSuccess, fetchCollaboratorsTasksFailure, fetchTasksFailure, fetchTasksSuccess, rescheduleTaskFailure, rescheduleTaskSucess, unAssignTaskToUserSuccess, updateTaskFailure, updateTaskSuccess } from "@/app/Actions/TaskActions";
+import { assignTaskToUserFailed, assignTaskToUserSuccess, changeTaskPhaseFailed, changeTaskPhaseSucess, createTaskFailure, createTaskSuccess, deleteTaskFailure, deleteTaskSuccess, fetchCollaboratorsTasksFailure, fetchTasksFailure, fetchTasksSuccess, rescheduleTaskFailure, rescheduleTaskSucess, unAssignTaskToUserSuccess, updateTaskFailure, updateTaskSuccess } from "@/app/Actions/TaskActions";
 import { store } from "@/app/store/store";
-import { CreateTaskType } from "@/domain/entities/task.entities";
+import { CreateTaskType, ITask } from "@/domain/entities/task.entities";
 import ApiClient from "@/Infrastructure/helpers/ApiClient";
 import { getBearerAuthToken } from "@/Infrastructure/helpers/HelperUtils";
 import { getProjectCollaborators } from "../projects/ProjectsService";
 import { QueryKey } from "@tanstack/react-query";
 import { fetchCollaboratorsTasksSuccess } from '../../../app/Actions/TaskActions';
+import { TaskPhasesEnum } from "@/domain/enum/TaskEnum";
 
 export const FetchAllTasks = async (projectId : number, collaboratorId : undefined|string, taskGroupSelected : undefined|number, phaseId : number|undefined, currentPage : number|undefined) => {
     try {
@@ -97,11 +98,16 @@ export const fetchCollaborators = ({ queryKey } : {queryKey : QueryKey}) => {
   };
 
 
-  export const fetchCollaboratorsTasks = async (projectId : number, collaboratorId : number) => {
+  export const fetchCollaboratorsTasks = async (projectId : number, collaboratorId : number, assignedDate? : string|null) => {
+    let url = assignedDate !== null ? `project/tasks/fetch/${projectId}/${collaboratorId}?assigned_date=${assignedDate}` : `project/tasks/fetch/${projectId}/${collaboratorId}`;
+    console.log(assignedDate);
+    
     try {
-        const reponse = await ApiClient().get(`project/tasks/fetch/${projectId}/${collaboratorId}`,{
+        const reponse = await ApiClient().get(url,{
             headers : {
                 Authorization : await getBearerAuthToken(),
+                "Content-Type" : 'multipart/form-data'
+
             }
         });
         const data = reponse.data.tasks;
@@ -127,5 +133,22 @@ export const reScheduleTaskAssignment = async (projectId : number, taskId : numb
         store.dispatch(rescheduleTaskSucess(data))
     } catch (e) {
         store.dispatch(rescheduleTaskFailure(e))
+    }
+}
+
+
+export const changeTaskPhase = async ( taskId : number,previousPhase : TaskPhasesEnum,  nextPhase : TaskPhasesEnum) => {
+    try {
+        const reponse = await ApiClient().post(`project/tasks/update/phase/${taskId}`,{
+            phase : nextPhase
+        },{
+            headers : {
+                Authorization : await getBearerAuthToken(),
+            }
+        });
+        const data = reponse.data.task as ITask;
+        store.dispatch(changeTaskPhaseSucess(data, previousPhase, nextPhase))
+    } catch (e) {
+        store.dispatch(changeTaskPhaseFailed(e))
     }
 }

@@ -1,4 +1,5 @@
 import { IPagination, ITask } from "@/domain/entities/task.entities";
+import { TaskPhasesEnum } from "@/domain/enum/TaskEnum";
 
 // Action Types
 export const TaskActions = {
@@ -37,6 +38,11 @@ export const TaskActions = {
     RESCHEDULE_TASK_SUCESS: 'RESCHEDULE_TASK_SUCESS',
     RESCHEDULE_TASK_FAILURE: 'RESCHEDULE_TASK_FAILURE',
     RESCHEDULE_TASK_RESET: 'RESCHEDULE_TASK_RESET',
+
+    CHANGE_TASK_PHASE_SUCESS : 'CHANGE_TASK_PHASE_SUCESS',
+    CHANGE_TASK_PHASE_FAILURE: 'CHANGE_TASK_PHASE_FAILURE',
+    INIT_CHANGE_TASK_PHASE_STATE: 'INIT_CHANGE_TASK_PHASE_STATE',
+    RESET_CHANGE_TASK_PHASE_STATE: 'RESET_CHANGE_TASK_PHASE_STATE',
 };
 
 // Action Creators
@@ -58,7 +64,7 @@ export const createTaskReset = () => ({
     type: TaskActions.CREATE_TASK_RESET,
 });
 
-
+// fetch tasks
 export const fetchTasksInit = () => ({
     type: TaskActions.FETCH_TASKS_INIT,
 });
@@ -77,7 +83,7 @@ export const fetchTasksReset = () => ({
     type: TaskActions.FETCH_TASKS_RESET,
 });
 
-
+// fetch tasks collaborators
 export const fetchCollaboratorsTasksInit = () => ({
     type: TaskActions.FETCH_COLLABORATORS_TASKS_INIT,
 });
@@ -96,7 +102,7 @@ export const fetchCollaboratorsTasksReset = () => ({
     type: TaskActions.FETCH_COLLABORATORS_TASKS_RESET,
 });
 
-
+// update Tasks
 export const updateTaskInit = () => ({
     type: TaskActions.UPDATE_TASK_INIT,
 });
@@ -115,6 +121,7 @@ export const updateTaskReset = () => ({
     type: TaskActions.UPDATE_TASK_RESET,
 });
 
+//delete
 export const deleteTaskInit = () => ({
     type: TaskActions.DELETE_TASK_INIT,
 });
@@ -133,6 +140,8 @@ export const deleteTaskReset = () => ({
     type: TaskActions.DELETE_TASK_RESET,
 });
 
+
+//assign task
 export const assignTaskToUserSuccess = (task: ITask) => ({
     type: TaskActions.ASSIGN_TASK_TO_USERS_SUCCESS,
     payload: { task },
@@ -173,8 +182,26 @@ export const rescheduleTaskFailure = (error: any) => ({
     payload: { error },
 });
 
-
-
 export const ResetRescheduleTask = () => ({
     type: TaskActions.RESCHEDULE_TASK_RESET
+});
+
+// change phase
+
+export const changeTaskPhaseSucess = (task : ITask, previousPhase : TaskPhasesEnum, nextPhase : TaskPhasesEnum) => ({
+    type: TaskActions.CHANGE_TASK_PHASE_SUCESS,
+    payload: { task, previousPhase, nextPhase },
+});
+
+export const changeTaskPhaseFailed = (error: any) => ({
+    type: TaskActions.CHANGE_TASK_PHASE_FAILURE,
+    payload: { error },
+});
+
+export const initChangeTaskPhaseState = () => ({
+    type: TaskActions.INIT_CHANGE_TASK_PHASE_STATE,
+});
+
+export const resetChangeTaskPhaseState = () => ({
+    type: TaskActions.RESET_CHANGE_TASK_PHASE_STATE
 });

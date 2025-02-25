@@ -1,6 +1,6 @@
 import { ITask, ITaskBoard, ITasksByDate } from "@/domain/entities/task.entities";
 import { StatusStateEnum } from "@/domain/enum/StatusStateEnum";
-import { TaskTypeEnum } from "@/domain/enum/TaskEnum";
+import { TaskPhasesEnum, TaskTypeEnum } from "@/domain/enum/TaskEnum";
 import moment from "moment";
 
 export const getMonthsOfYear = () => {
@@ -68,4 +68,30 @@ export function getColorActivities(tasks: ITask[]) : string {
     color = 3;
   }
   return color === 1 ? 'bg-yellow-400' : (color === 2  ? 'bg-blue-400' : 'bg-green-400')
+}
+
+export function getNextTaskPhase (phase : TaskPhasesEnum) : TaskPhasesEnum|null {
+  if (phase === TaskPhasesEnum.Backlog) {
+    return TaskPhasesEnum.Started
+  }
+  if (phase === TaskPhasesEnum.Started) {
+    return TaskPhasesEnum.InReview
+  }
+  if (phase === TaskPhasesEnum.InReview) {
+    return TaskPhasesEnum.Done
+  }
+  return null;
+}
+
+export function getPreviousTaskPhase (phase : TaskPhasesEnum) : TaskPhasesEnum|null {
+  if (phase === TaskPhasesEnum.Done) {
+    return TaskPhasesEnum.InReview
+  }
+  if (phase === TaskPhasesEnum.InReview) {
+    return TaskPhasesEnum.Started
+  }
+  if (phase === TaskPhasesEnum.Started) {
+    return TaskPhasesEnum.Backlog
+  }
+  return null;
 }

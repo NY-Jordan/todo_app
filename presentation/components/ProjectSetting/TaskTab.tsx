@@ -160,10 +160,10 @@ export default function TaskTab() {
                     </td>
                     <td className='text-sm'>{task.assigned_user.length ?  convertToLocalDate(task.assigned_user[0].schedule_at, 'DD MMMM  YYYY, hh:mm a') : '-'}</td>
 
-                  {task.phase.name === TaskPhasesEnum.Backlog ?  <td className='text-sm'><span className='bg-gray-600 px-3 py-1 text-white rounded-full'>{task.phase.name}</span> </td> :
-                    (task.phase.name === TaskPhasesEnum.Started  ?<td className='text-sm'><span className='bg-blue-600 px-3 py-1 text-white rounded-full'>{task.phase.name}</span> </td> :
-                    (task.phase.name === TaskPhasesEnum.Done ?<td className='text-sm'><span className='bg-green-600 px-3 py-1 text-white rounded-full'>{task.phase.name}</span> </td> :
-                    <td className='text-sm'><span className='bg-orange-600 px-3 py-1 text-white rounded-full'>{task.phase.name}</span> </td>))}
+                  {task.task_phase.name === TaskPhasesEnum.Backlog ?  <td className='text-sm'><span className='bg-gray-600 px-3 py-1 text-white rounded-full'>{task.task_phase.name}</span> </td> :
+                    (task.task_phase.name === TaskPhasesEnum.Started  ?<td className='text-sm'><span className='bg-blue-600 px-3 py-1 text-white rounded-full'>{task.task_phase.name}</span> </td> :
+                    (task.task_phase.name === TaskPhasesEnum.Done ?<td className='text-sm'><span className='bg-green-600 px-3 py-1 text-white rounded-full'>{task.task_phase.name}</span> </td> :
+                    <td className='text-sm'><span className='bg-orange-600 px-3 py-1 text-white rounded-full'>{task.task_phase.name}</span> </td>))}
                     <td className='space-x-8 p-3'>
                         <a href='#' onClick={() => {
                             setDeleteTaskId(task.id);
