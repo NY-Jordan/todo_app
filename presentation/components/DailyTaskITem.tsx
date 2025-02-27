@@ -47,7 +47,7 @@ export default function DailyTaskITem({task} : {task :ITask}) {
 
     <div className='flex  h-10 justify-between items-center my-4 group '>
       <div className='flex items-center space-x-3'>
-        <input type="checkbox"  className="checkbox border-indigo-400 checkbox-xs peer" defaultChecked={task.phase.id === TaskPhases.Done} onChange={() => updateDailyTaskPhase(task.phase.id === TaskPhases.Done ? TaskPhases.Started : TaskPhases.Done, task.id )} />
+        <input type="checkbox"  className="checkbox border-indigo-400 checkbox-xs peer" defaultChecked={task.task_phase.id === TaskPhases.Done} onChange={() => updateDailyTaskPhase(task.task_phase.id === TaskPhases.Done ? TaskPhases.Started : TaskPhases.Done, task.id )} />
         <p className='text-sm text-gray-600  peer-checked:text-gray-400 peer-checked:line-through font-semibold'> {task.title}</p>
         <span className=' border border-blue-400 w-fit font-bold  text-blue-600 text-[8px] py-1 px-2'>
             {task.type.name.toUpperCase()}

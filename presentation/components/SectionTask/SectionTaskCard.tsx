@@ -27,6 +27,18 @@ export default function SectionTaskCard({ item, position, color, setTicketsModal
         transition: { duration: 0.5},
     }
 
+    const buttonVariants = {
+        hidden: { 
+            visibility: 'hidden' ,
+            transition: { duration : 0.1 },
+
+        },
+        visible: {
+          visibility: 'visible',
+          transition: { delay: 0.4 },
+        },
+      };
+
     const nextPhase = (phase : TaskPhasesEnum) => {
         const nextPhase = getNextTaskPhase(phase);
         if (!nextPhase) {
@@ -93,7 +105,7 @@ export default function SectionTaskCard({ item, position, color, setTicketsModal
                 <h2 className="text-md font-bold">{item.title}</h2>
                 <p className='p-2'>{item.breifing}</p>
                 <div className="card-actions justify-end">
-                <motion.button initial={{ visibility : 'hidden' }} animate={{ visibility : !showViewMoreButton ? 'hidden' : 'visible' }}  className={"btn  btn-primary "}>View More</motion.button>
+                <motion.button variants={buttonVariants} initial="hidden" animate={showViewMoreButton ? "visible" : "hidden"} className={"btn  btn-primary "}>View More</motion.button>
                
                 </div>
             </div>     

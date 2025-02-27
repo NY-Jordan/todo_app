@@ -12,16 +12,18 @@ import { data } from "@/Infrastructure/data/data";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { Reorder } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { fetchCollaboratorsTasks } from "@/Infrastructure/Services/Task/TaskService";
 import { useRouter } from "next/router";
 import { getCurrentUser } from "@/Infrastructure/helpers/HelperUtils";
 import { UserDetailsEntitie } from "@/domain/entities/user.entities";
 import { useAppDispatch, useAppSelector } from "@/app/store/hook";
+import "react-datepicker/dist/react-datepicker.css";
 import { ITaskBoard } from "@/domain/entities/task.entities";
 import { TaskPhasesEnum } from "@/domain/enum/TaskEnum";
 import { fetchCollaboratorsTasksFailure, fetchCollaboratorsTasksInit } from "@/app/Actions/TaskActions";
 import { convertToISO } from "@/Infrastructure/helpers/utils";
+import DatePicker from "react-datepicker";
 
 export default function index() {
   const {isTabletOrMobile, isSM} = useResponsive();
@@ -34,17 +36,31 @@ export default function index() {
   const CollaboratorTasksState  = useAppSelector(state => state.task).collaboratorsTasks
   const tasks = CollaboratorTasksState.data.tasks as  ITaskBoard;
   const dispatch = useAppDispatch();
-  const [assingedDate, setAssingedDate] = useState<string|null>(null);
-  useEffect(() => {
+  const [assingedDate, setAssingedDate] = useState<Date|null>(new Date());
+  const [keysWord, setKeysWord] = useState<string>();
+  const [debouncedSearch, setDebouncedSearch] = useState<string|undefined>(keysWord);
+
+  useMemo(() => {
     if (id && typeof id === 'string' && user) {
       dispatch(fetchCollaboratorsTasksInit());
      setTimeout(() => {
-      fetchCollaboratorsTasks(parseInt(id), user.id, assingedDate)
+      fetchCollaboratorsTasks(parseInt(id), user.id, assingedDate?.toISOString())
      }, 1000);
     }
   }, [id, assingedDate]);
 
+ /*  useEffect(() => {
+    console.log('ici');
+    
+      const handler = setTimeout(() => {
+        setDebouncedSearch(keysWord);
+      }, 500); 
   
+      return () => {
+        clearTimeout(handler); 
+      };
+    }, [keysWord]);
+   */
   return (
   <Layout pageTitle="Manage Your Tasks">
     <div className='pt-4 px-4 dark:text-white'>
@@ -55,13 +71,21 @@ export default function index() {
               {/* research section tasks */}
               <div className='flex flex-row justify-end  mb-4 items-center'>
                 <div className='flex flex-row items-center '>
-                  <input type="text" placeholder="Search..." className="input   input-sm input-bordered w-full max-w-xs" />
+                  <input type="text" placeholder="Search..." onChange={(e) => setKeysWord(e.target.value)} className="input   input-sm input-bordered rounded-xs w-full max-w-md" />
                   <a href='#' className='bg-white p-1 relative right-8 '>
                       <Icon path={mdiMagnify}  size={4/5}/>
                   </a> 
                 </div>
                 <div className='flex flex-row space-x-2'>
-                  <input type="date" onChange={(e) => setAssingedDate(e.target.value)} placeholder="Search..." className="input   input-sm input-bordered w-full max-w-xs" />
+                   <div className='flex items-center justify-center'>
+                      <DatePicker
+                        selected={assingedDate}
+                        onChange={(date) => setAssingedDate(date)}
+                        className='btn btn-sm'
+                        dateFormat="yyyy-MM-dd"
+                        placeholderText="Select a valid date"
+                      />
+                    </div>
                 </div>
               </div>
            </div>
