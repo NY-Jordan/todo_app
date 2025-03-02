@@ -43,12 +43,13 @@ export default function TaskTab() {
     const [RescheduleModal, setRescheduleModal] = useState(false);
     const [deleteTaskId, setDeleteTaskId] = useState<number>();
     const [viewTask, setViewTask] = useState<ITask|undefined>(undefined);
+    const [viewModal, setViewModal] = useState<boolean>(false);
+
     const [RescheduleTask, setRescheduleTask] = useState<ITask|undefined>(undefined);
     const [updateTask, setUpdateTask] = useState<ITask|undefined>(undefined);
     const router = useRouter();
     const {id} = router.query;
     const fecthTasksState = useAppSelector(state => state.task).fetch.data;
-    const [viewModal, setViewModal] = useState<boolean>(false);
     const tasksGroupState = useAppSelector(state => state.taskGroup).taskGroups as ITaskGroup[]
     const dispatch = useAppDispatch();
     const assignTaskState = useAppSelector(state => state.task).assign_task
@@ -158,7 +159,7 @@ export default function TaskTab() {
                         }} data-tip='Unassign this task' className=' hover:cursor-pointer tooltip tooltip-right invisible group-hover:visible '><FontAwesomeIcon icon={faClose} size='sm' /></a> :<></>}
 
                     </td>
-                    <td className='text-sm'>{task.assigned_user.length ?  convertToLocalDate(task.assigned_user[0].schedule_at, 'DD MMMM  YYYY, hh:mm a') : '-'}</td>
+                    <td className='text-sm'>{task.assigned_user.length ?  convertToLocalDate(task.assigned_user[0].schedule_at, 'DD MMMM  YYYY') : '-'}</td>
 
                   {task.task_phase.name === TaskPhasesEnum.Backlog ?  <td className='text-sm'><span className='bg-gray-600 px-3 py-1 text-white rounded-full'>{task.task_phase.name}</span> </td> :
                     (task.task_phase.name === TaskPhasesEnum.Started  ?<td className='text-sm'><span className='bg-blue-600 px-3 py-1 text-white rounded-full'>{task.task_phase.name}</span> </td> :

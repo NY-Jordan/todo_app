@@ -30,8 +30,8 @@ export default function ViewTaskModal({active, setActive, task} : {active : bool
   return (
     <>
         <input type="checkbox" id="my_modal_6" checked={active} className="modal-toggle" />
-        <div className="modal" role="dialog">
-        <div className="modal-box max-w-none w-[44%] max-h-[50%] rounded-md">
+        <div className="modal modal-top flex justify-center" role="dialog">
+        <div className="modal-box  mt-[7%] max-w-none w-[44%] max-h-[50%] rounded-md">
            <div className="w-full flex justify-between items-center">
               <h3 className="text-lg font-bold">{task.title}</h3>
               <a onClick={() => setActive(false)} className="hover:cursor-pointer">

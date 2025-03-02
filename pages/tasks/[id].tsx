@@ -24,6 +24,7 @@ import { TaskPhasesEnum } from "@/domain/enum/TaskEnum";
 import { fetchCollaboratorsTasksFailure, fetchCollaboratorsTasksInit } from "@/app/Actions/TaskActions";
 import { convertToISO } from "@/Infrastructure/helpers/utils";
 import DatePicker from "react-datepicker";
+import moment from "moment";
 
 export default function index() {
   const {isTabletOrMobile, isSM} = useResponsive();
@@ -40,27 +41,27 @@ export default function index() {
   const [keysWord, setKeysWord] = useState<string>();
   const [debouncedSearch, setDebouncedSearch] = useState<string|undefined>(keysWord);
 
-  useMemo(() => {
+  useEffect(() => {
     if (id && typeof id === 'string' && user) {
       dispatch(fetchCollaboratorsTasksInit());
+      const date = moment(assingedDate?.toString()).format('YYYY-MM-DD');
      setTimeout(() => {
-      fetchCollaboratorsTasks(parseInt(id), user.id, assingedDate?.toISOString())
+      fetchCollaboratorsTasks(parseInt(id), user.id, date, debouncedSearch)
      }, 1000);
     }
-  }, [id, assingedDate]);
+  }, [id, debouncedSearch, assingedDate]);
 
- /*  useEffect(() => {
-    console.log('ici');
+  useEffect(() => {
     
       const handler = setTimeout(() => {
         setDebouncedSearch(keysWord);
-      }, 500); 
+    }, 500); 
   
       return () => {
         clearTimeout(handler); 
       };
     }, [keysWord]);
-   */
+  
   return (
   <Layout pageTitle="Manage Your Tasks">
     <div className='pt-4 px-4 dark:text-white'>
@@ -90,7 +91,7 @@ export default function index() {
               </div>
            </div>
 
-           <div className="flex justify-end space-x-4">
+          {/*  <div className="flex justify-end space-x-4">
               
                 <div className="tooltip" data-tip="Previous Page" >
                   <button className="btn"><FontAwesomeIcon icon={faChevronLeft} /></button>
@@ -98,7 +99,7 @@ export default function index() {
                 <div className="tooltip" data-tip="Next Page">
                   <button className="btn"><FontAwesomeIcon icon={faChevronRight} /></button>
                 </div>
-           </div>
+           </div> */}
 
 
           <div className={'flex  overflow-x-hidden h-full overflow-y-hidden   space-x-8  '+(isSM ? 'flex-col' : 'flex-row')} > 

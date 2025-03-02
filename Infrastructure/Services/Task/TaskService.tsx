@@ -99,9 +99,9 @@ export const fetchCollaborators = ({ queryKey } : {queryKey : QueryKey}) => {
 
 
   export const fetchCollaboratorsTasks = async (projectId : number, collaboratorId : number, assignedDate? : string|null, keysWord? : string | null ) => {
-    
+    const url  = keysWord ?  `project/tasks/fetch/${projectId}/${collaboratorId}?assigned_date=${assignedDate}&keys_word=${keysWord}` :  `project/tasks/fetch/${projectId}/${collaboratorId}?assigned_date=${assignedDate}`; 
     try {
-        const reponse = await ApiClient().get(`project/tasks/fetch/${projectId}/${collaboratorId}?assigned_date=${assignedDate}&keys_word=${keysWord}`,{
+        const reponse = await ApiClient().get(url,{
             headers : {
                 Authorization : await getBearerAuthToken(),
                 "Content-Type" : 'multipart/form-data'

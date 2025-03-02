@@ -45,7 +45,7 @@ export default function TaskTicketManagement({active, setActive, task} : {active
   };
 
   useEffect(() => {
-    if (createTicketState.status === StatusStateEnum.success) {
+    if (createTicketState.status === StatusStateEnum.success && createTicketState.ticket &&  task.id === createTicketState.ticket.task_id) {
       setSwitchAction(true);
       dispatch(createTicketReset());
       toast.success('ticket has been sucessfully created');

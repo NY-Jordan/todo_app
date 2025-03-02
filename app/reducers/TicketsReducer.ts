@@ -5,7 +5,7 @@ import { TicketStatusEnum } from "@/domain/enum/TicketStatusEnum";
 
 // État initial
 const initialState = {
-  create: { status: StatusStateEnum.idle, error: null },
+  create: { status: StatusStateEnum.idle, error: null, ticket : null },
   fetchTicketsInProgress: { status: StatusStateEnum.idle, error: null, data: { tickets: [] } },
   fetchTicketsDone: { status: StatusStateEnum.idle, error: null, data: { tickets: [] } },
   update: { status: StatusStateEnum.idle, error: null },
@@ -23,20 +23,20 @@ const TicketsReducer = (state = initialState, action: ActionType) => {
   switch (action.type) {
     // CREATE
     case TicketActions.CREATE_TICKET_INIT:
-      return { ...state, create: { status: StatusStateEnum.loading, error: null } };
+      return { ...state, create: { status: StatusStateEnum.loading, error: null, ticket : null } };
 
     case TicketActions.CREATE_TICKET_SUCCESS:
       return {
         ...state,
-        create: { status: StatusStateEnum.success, error: null },
+        create: { status: StatusStateEnum.success, error: null,ticket :  action.payload.ticket, },
         fetchTicketsInProgress: { ...state.fetchTicketsInProgress, data: { tickets: [action.payload.ticket, ...state.fetchTicketsInProgress.data.tickets] } },
       };
 
     case TicketActions.CREATE_TICKET_FAILURE:
-      return { ...state, create: { status: StatusStateEnum.failure, error: action.payload } };
+      return { ...state, create: { status: StatusStateEnum.failure, error: action.payload, ticket : null } };
 
     case TicketActions.CREATE_TICKET_RESET:
-      return { ...state, create: { status: StatusStateEnum.idle, error: null } };
+      return { ...state, create: { status: StatusStateEnum.idle, error: null , ticket : null } };
 
     // FETCH
     case TicketActions.FETCH_TICKETS_INIT:

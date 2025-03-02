@@ -15,7 +15,7 @@ export default function SideMenu() {
 {/*           <img src={'/images/logo.png'} className='w-full h-fit' width={'100%'} height={'50%'} />
  */}        </div>
         <Section title='Menu'>
-            <NavItem to='/dashboard' title='Dashboard' icon={<FontAwesomeIcon icon={faDashboard} size={'xl'}  />} />
+            <NavItem to='/dashboard'  title='Dashboard' icon={<FontAwesomeIcon icon={faDashboard} size={'xl'}  />} />
             <NavItem  to='/schedule'  title='Schedule' icon={<FontAwesomeIcon icon={faCalendarDays} size={'xl'} />} />
             <NavItem  to='/team'  title='Team' icon={<FontAwesomeIcon icon={faPeopleGroup} size={'xl'} />} />
             <NavItem title='Chat' icon={<Icon path={mdiWechat} size={3/2} />} />

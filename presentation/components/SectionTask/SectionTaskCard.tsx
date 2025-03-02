@@ -1,5 +1,5 @@
 import { Reorder, delay } from 'framer-motion'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { motion } from "framer-motion"
 import { mdiBookEdit, mdiChevronLeft, mdiChevronRight, mdiDelete, mdiDotsVertical, mdiPlus, mdiTagEdit } from '@mdi/js';
 import Icon from '@mdi/react';
@@ -12,6 +12,7 @@ import { useAppDispatch, useAppSelector } from '@/app/store/hook';
 import { initChangeTaskPhaseState, resetChangeTaskPhaseState } from '@/app/Actions/TaskActions';
 import { changeTaskPhase } from '@/Infrastructure/Services/Task/TaskService';
 import { StatusStateEnum } from '@/domain/enum/StatusStateEnum';
+import ViewTaskModal from '../Task/ViewTaskModal';
 
 
 export default function SectionTaskCard({ item, position, color, setTicketsModal, setTaskTicket} :  { item : ITask, position : number, color : string, setTicketsModal : React.Dispatch<React.SetStateAction<boolean>>, setTaskTicket : React.Dispatch<React.SetStateAction<ITask | undefined>>}) {
@@ -19,9 +20,13 @@ export default function SectionTaskCard({ item, position, color, setTicketsModal
     const [showViewMoreButton, setShowViewMoreButton] = useState(false);
     const dispatch  =  useAppDispatch();
     const changeTaskPhaseState = useAppSelector(state => state.task).change_status;
+    const moreButtonRef = useRef<HTMLAnchorElement|null>(null);
+    const dropdownContentRef = useRef<HTMLDivElement|null>(null);
+    const [viewTask, setViewTask] = useState<ITask|undefined>(undefined);
+    const [viewModal, setViewModal] = useState<boolean>(false);
+    
     const animation = {
         height: "100%",
-        scale : 1,
         bottom : top +20,
         cursor : "pointer",
         transition: { duration: 0.5},
@@ -69,6 +74,35 @@ export default function SectionTaskCard({ item, position, color, setTicketsModal
             dispatch(resetChangeTaskPhaseState())
         }
     }, [changeTaskPhaseState.task]);
+
+    useEffect(() => {
+        const handleClick = () => {
+          if (moreButtonRef.current && dropdownContentRef.current) {
+            const buttonRect = moreButtonRef.current.getBoundingClientRect();
+            const dropdownRect = dropdownContentRef.current.getBoundingClientRect();
+            const windowWidth = (window.innerWidth * 87) / 100 ;
+    
+            dropdownContentRef.current.classList.remove('dropdown-right');
+            console.log(buttonRect.right + dropdownRect.width , windowWidth);
+            
+            if (buttonRect.left + dropdownRect.width > windowWidth) {
+                console.log('ici');
+                dropdownContentRef.current.classList.remove('dropdown-right');
+              dropdownContentRef.current.classList.add('dropdown-left');
+            }
+          }
+        };
+    
+        if (moreButtonRef.current) {
+          moreButtonRef.current.addEventListener('click', handleClick);
+        }
+    
+        return () => {
+          if (moreButtonRef.current) {
+            moreButtonRef.current.removeEventListener('click', handleClick);
+          }
+        };
+      }, []);
      
   return (
     <>
@@ -78,12 +112,12 @@ export default function SectionTaskCard({ item, position, color, setTicketsModal
              whileHover={animation }
              whileFocus={animation}
            
-            className={"card my-2  dark:bg-slate-800 relative  z-1/2  dark:hover:bg-slate-900 dark:shadow-slate-700  dark:border-slate-800 dark:text-white  h-40 border-2 bg-base-100 shadow-md "} style={{ bottom  : top }}>
+            className={"card my-2  dark:bg-slate-800 relative  z-1  dark:hover:bg-slate-900 dark:shadow-slate-700  dark:border-slate-800 dark:text-white  h-40 border-2 bg-base-100 shadow-md "} style={{ bottom  : top }}>
             <div className='card-title m-0 p-0 justify-between'>
                 <span  style={{ backgroundColor : color }} className=" ml-4 rounded-sm mt-2 p-2"></span>
-                <div className="dropdown">
+                <div className="dropdown " ref={dropdownContentRef}>
                     <div tabIndex={0} role="button" className=" m-1">
-                        <a href='#' className='hover:bg-gray-200 rounded'>
+                        <a href='#' className='hover:bg-gray-200 rounded' ref={moreButtonRef}>
                             <Icon 
                             path={mdiDotsVertical}
                             size={3/4}
@@ -91,7 +125,7 @@ export default function SectionTaskCard({ item, position, color, setTicketsModal
                             />
                         </a>
                     </div>
-                    <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-white rounded-box w-52">
+                    <ul tabIndex={0} className="dropdown-content shadow-xl  z-[40] menu p-2  bg-white rounded-box w-52">
                         <li>
                             <a href='#'><Icon path={mdiPlus} size={3/4} color={'black'} />New Comment</a>
                         </li>
@@ -105,7 +139,7 @@ export default function SectionTaskCard({ item, position, color, setTicketsModal
                 <h2 className="text-md font-bold">{item.title}</h2>
                 <p className='p-2'>{item.breifing}</p>
                 <div className="card-actions justify-end">
-                <motion.button variants={buttonVariants} initial="hidden" animate={showViewMoreButton ? "visible" : "hidden"} className={"btn  btn-primary "}>View More</motion.button>
+                <motion.button  onClick={() => {setViewTask(item); setViewModal(true)}} variants={buttonVariants} initial="hidden" animate={showViewMoreButton ? "visible" : "hidden"} className={"btn  btn-primary "}>View More</motion.button>
                
                 </div>
             </div>     
@@ -114,6 +148,8 @@ export default function SectionTaskCard({ item, position, color, setTicketsModal
                     <a href='#' onClick={() => nextPhase(item.task_phase.name)} className={showViewMoreButton ? 'hover:bg-gray-200 rounded-full  relative bottom-32 left-2' : 'invisible'}><Icon path={mdiChevronRight} size={1} color={'gray'} /></a>
             </div>  
         </motion.div>
+        {viewTask && <ViewTaskModal task={viewTask} active={viewModal} setActive={setViewModal} />}
+        
     </>
     
   )

@@ -22,6 +22,7 @@ export  interface ITicketStatus {
   
 export  interface ITicket {
     id : number,
+    task_id : number,
     title: string;
     description: string;
     type: ITicketType;
