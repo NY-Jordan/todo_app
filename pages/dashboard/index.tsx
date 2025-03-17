@@ -61,7 +61,7 @@ export default function index() {
       <div className="w-1/2 md:w-full max-h-[30%] ">
         <DailyTodoCard/>
       </div>
-      <div className="w-1/2 md:w-full h-fit border border-stroke bg-white p-3">
+      <div className="w-1/2 md:w-full h-fit border border-stroke dark:bg-slate-800 dark:border-slate-800 dark:text-white bg-white p-3">
         <div className="mb-2">
           <p className="text-lg font-semibold">Tasks Tracking</p>
           <p></p>
@@ -73,7 +73,7 @@ export default function index() {
             })
           }
         </div>
-        <div className="w-full   flex  gap-1 justify-center">
+        <div className="w-full    flex  gap-1 justify-center">
           {
             days.reduce((acc : Array<Array<string>>, day : string, index : number) => {
               const columnIndex = Math.floor(index / 10);
@@ -88,7 +88,7 @@ export default function index() {
                 <div key={columnIndex} className="flex flex-col gap-1">
                   {
                     column.map((day, dayIndex) => {
-                        return  <div key={dayIndex} className={"w-4 h-4 border   border-gray-200 rounded-md tooltip tooltip-top "+( activities && activities[day] ? getColorActivities(activities[day]) : 'bg-gray-100')} data-tip={day}>
+                        return  <div key={dayIndex} className={"w-4 h-4 border   dark:border-gray-700 border-gray-200 rounded-md tooltip tooltip-top "+( activities && activities[day] ? getColorActivities(activities[day]) : 'bg-gray-100 dark:bg-gray-700')} data-tip={day}>
                       </div>
                     }
                      
@@ -128,9 +128,9 @@ export default function index() {
     <div className='mt-2  flex  space-x-4' style={{ width : '100%',  }}>
       <CardStats />
     </div>
-   <div className="flex space-x-4 h-[50%]">
+   <div className="flex mt-2 space-x-4 h-[50%] dark:bg-black">
       <ProjectsTable />
-      <div className="w-[50%] p-5 bg-white shadow-lg border border-stroke rounded-sm">
+      <div className="w-[50%] p-5 bg-white dark:bg-slate-800 dark:border-slate-800 dark:text-white shadow-lg border border-stroke rounded-sm">
               <div>
                 <span className="text-xl font-semibold">Collaborators</span>
               </div>

@@ -6,7 +6,7 @@ export default function FileTab() {
   return (
     <div>
       <div className='mb-4'>
-        <button className='btn bg-indigo-500 hover:bg-indigo-700 text-white'><FontAwesomeIcon icon={faPlus} />  Add File</button>
+        <button className='btn bg-indigo-500 hover:bg-indigo-700 text-white dark:bg-slate-600 dark:border-slate-600 dark:hover:bg-slate-600'><FontAwesomeIcon icon={faPlus} />  Add File</button>
       </div>
       <div className="overflow-x-auto">
         <table className="table table-xs">

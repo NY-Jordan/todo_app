@@ -21,4 +21,3 @@ export  function getCurrentUser() : object|null {
   }
   
 
-  

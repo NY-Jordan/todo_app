@@ -1,7 +1,7 @@
-import { faArrowTrendUp, faCheck, faClose, faDownload, faEdit, faEye, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faArrowTrendUp, faCheck, faClose, faDownload, faEdit, faEye, faLayerGroup, faList, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useEffect, useMemo, useState } from 'react'
-import { mdiClose, mdiFileEdit } from '@mdi/js'
+import { mdiClose, mdiFileEdit, mdiGrid } from '@mdi/js'
 import Icon from '@mdi/react'
 import Tag from '../Tag'
 import { motion } from "framer-motion"
@@ -34,6 +34,10 @@ import AssignTaskPresenter from '@/Infrastructure/presenter/AssignTaskPresenter'
 import RescheduleTask from '../Task/RescheduleTaskModal'
 import RescheduleTaskModal from '../Task/RescheduleTaskModal'
 import { convertToLocalDate } from '@/Infrastructure/helpers/utils'
+import TasksGraph from '../Task/TasksGraph'
+
+import _ from 'lodash';
+import { ITaskBoard } from '../../../domain/entities/task.entities';
 
 
 export default function TaskTab() {
@@ -53,7 +57,7 @@ export default function TaskTab() {
     const tasksGroupState = useAppSelector(state => state.taskGroup).taskGroups as ITaskGroup[]
     const dispatch = useAppDispatch();
     const assignTaskState = useAppSelector(state => state.task).assign_task
-
+    const [isGraphTasksFormat, setIsGraphTasksFormat] = useState(false);
     
     const  {
         setAssignTask,
@@ -78,22 +82,26 @@ export default function TaskTab() {
         if (assignTaskState.status === StatusStateEnum.success && !assignTaskState.task.assigned_user.length) {
             toast.success('Task Successfully Unassigned');
           }
-    }, [assignTaskState.status])
-    
+    }, [assignTaskState.status]);
+    const tasks = fecthTasksState.tasks;
+
+    const tasksGrouped = _.groupBy(tasks, 'task_phase.name') as ITaskBoard
+
+   
   return (
     <div className='flex justify-between lg:flex-row md:flex-col'>
       <div className='w-full'>
             <div className='mb-7 flex justify-between '>
-                <button onClick={() => {setShowAddTask(true); setUpdateModal(false)}} className='btn  bg-indigo-500 hover:bg-indigo-700 text-white'><FontAwesomeIcon icon={faPlus} />  New Task</button>
+                <button onClick={() => {setShowAddTask(true); setUpdateModal(false)}} className='btn  bg-indigo-500 hover:bg-indigo-700 text-white dark:bg-slate-600 dark:border-slate-600 dark:hover:bg-slate-600'><FontAwesomeIcon icon={faPlus} />  New Task</button>
                <div className='flex w-[80%] gap-4 flex-wrap justify-end space-x-3'>
-                    <select onChange={(e) => setPhaseSelected(parseInt(e.target.value))} className="select select-bordered w-full max-w-xs">
+                    <select onChange={(e) => setPhaseSelected(parseInt(e.target.value))} className=" dark:bg-gray-600 select select-bordered w-full max-w-xs">
                         <option  value={undefined} selected>All</option>
                         <option  value={TaskPhases.Backlog}>Backlog</option>
                         <option value={TaskPhases.Started}>Started</option>
                         <option value={TaskPhases.InProgress}>In Review</option>
                         <option value={TaskPhases.Done}>Done</option>
                     </select>
-                    <select onChange={(e) => setTaskGroupSelected(parseInt(e.target.value))} className="select select-bordered w-full max-w-xs">
+                    <select onChange={(e) => setTaskGroupSelected(parseInt(e.target.value))} className="select dark:bg-gray-600 select-bordered w-full max-w-xs">
                         <option  value={undefined}selected>All</option>
                         {tasksGroupState && tasksGroupState.map((taskGroup) => {
                             return <option value={taskGroup.id} >{taskGroup.name}</option>
@@ -103,6 +111,8 @@ export default function TaskTab() {
                     id='person'
                     title='-- Choose a team mate --'
                     data={collaborators.map((collaborator : ICollaborator) => {
+                        console.log(collaborator);
+                        
                         return {
                             id: collaborator.user.id.toString(),
                             name: collaborator.user.username,
@@ -113,12 +123,21 @@ export default function TaskTab() {
                     style="bg-white"
                     /*  style='bg-white border-gray-300' */
                     selectedId={collaboratorId}
-                    onSelect={(e) => { setCollaboratorId(e ? e : undefined) }}
+                    onSelect={(e) => {console.log(e);
+                     setCollaboratorId(e ? e : undefined) }}
                     />}
                </div>
             </div>
-            <div className="overflow-x-auto">
-                <table className="table table-xs">
+            <div className='flex items-center space-x-6 my-3'>
+                <a onClick={() => setIsGraphTasksFormat(false)} className={'hover:bg-gray-200  p-2 rounded-md hover:cursor-pointer '+(!isGraphTasksFormat && 'bg-gray-200 dark:bg-slate-700')}>
+                    <FontAwesomeIcon icon={faList} size='lg' />
+                </a>
+                <a  onClick={() => setIsGraphTasksFormat(true)}  className={'hover:bg-gray-200 p-2 dark:hover:bg-slate-700 rounded-md hover:cursor-pointer '+(isGraphTasksFormat && 'bg-gray-200 dark:bg-slate-700')}>
+                    <FontAwesomeIcon icon={faLayerGroup} size='lg' />
+                </a>
+            </div>
+            <div className="overflow-x-auto dark:text-white">
+               {!isGraphTasksFormat && <table className="table table-xs">
                     <thead>
                     <tr>
                         <th>Task Name</th>
@@ -129,7 +148,7 @@ export default function TaskTab() {
                     </tr>
                     </thead>
                     <tbody>
-                   {fecthTasksState.tasks && fecthTasksState.tasks.length ? fecthTasksState.tasks.map((task : ITask, key : number) => {
+                   {tasks ? tasks.map((task : ITask, key : number) => {
                     return  <tr className=''>
                     <td className='text-sm space-x-3 py-5 '>
                         <span className='border border-gray-500 p-2 text-gray-500 rounded-full'>{((fecthTasksPagination?.current_page - 1) * fecthTasksPagination?.per_page + (key + 1)).toString().padStart(2, '0')}</span>
@@ -191,7 +210,8 @@ export default function TaskTab() {
                    <td></td>
                  </tr>}
                     </tbody>
-                </table>
+                </table> }
+                {(isGraphTasksFormat && tasksGrouped) && <TasksGraph showTaskFooter tasks={tasksGrouped} />}
             </div>
 
             {fecthTasksPagination && fecthTasksPagination?.total_pages >1 && <Pagination 

@@ -67,7 +67,7 @@ export function getColorActivities(tasks: ITask[]) : string {
   } else {
     color = 3;
   }
-  return color === 1 ? 'bg-yellow-400' : (color === 2  ? 'bg-blue-400' : 'bg-green-400')
+  return color === 1 ? 'bg-yellow-400 dark:bg-yellow-400' : (color === 2  ? 'bg-blue-400 dark:bg-blue-400' : 'bg-green-400 dark:bg-green-400')
 }
 
 export function getNextTaskPhase (phase : TaskPhasesEnum) : TaskPhasesEnum|null {

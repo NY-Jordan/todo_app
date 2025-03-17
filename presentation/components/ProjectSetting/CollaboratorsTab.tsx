@@ -32,22 +32,27 @@ export default function CollaboratorsTab() {
 
   useEffect(() => {
     if (id && typeof id  === 'string') {
+      console.log(queryClient.getQueryData(['projectDetails', id]));
       getInvitations(parseInt(id))
-      setProjectDetails(queryClient.getQueryData(['projectDetails', id]) as IProject)
+      setProjectDetails(queryClient.getQueryData(['projectDetails', id]) as IProject);
     }
   }, [id]);
+
+
+ 
+  
 
  
  
   return (
-    <div>
+    <div className='dark:text-white'>
       <div>
 {     (projectDetails && projectDetails.is_admin) &&   <button onClick={() => setSearchModal(true)} className='btn bg-indigo-500 hover:bg-indigo-700 text-white'><FontAwesomeIcon icon={faPlus} />  New Colaborator</button>
 }      </div>
-      <div className="overflow-x-auto">
-        <table className="table">
+      <div className="overflow-x-auto dark:text-white">
+        <table className="table dark:text-white">
           {/* head */}
-          <thead>
+          <thead >
             <tr>
               <th></th>
               <th>Name</th>

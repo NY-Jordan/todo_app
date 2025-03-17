@@ -68,7 +68,7 @@ export default function DailyTodoCard() {
 
   return (
     <>
-    <div className=' mb-4 w-full h-full bg-white border rounded-sm px-5 pb-2 pt-4  '>
+    <div className=' mb-4 w-full h-full bg-white dark:bg-slate-800 dark:text-white dark:border-slate-800 border rounded-sm px-5 pb-2 pt-4  '>
       <div className='  max-h-[10%]  w-full flex items-center justify-between'>
 
         <div>
@@ -79,8 +79,8 @@ export default function DailyTodoCard() {
         </div>
 
         <div className='flex items-center'>
-          <label className="input input-bordered  flex items-center h-10 rounded-md">
-            <input type="text" onChange={(e) => setSearch(e.target.value)} className="grow rounded-full" placeholder="Search tasks" />
+          <label className="input input-bordered dark:border-gray-600 dark:bg-gray-600   flex items-center h-10 rounded-md">
+            <input type="text" onChange={(e) => setSearch(e.target.value)} className="grow  rounded-full" placeholder="Search tasks" />
             <svg
                 height={30}
                 width={30}
@@ -94,7 +94,7 @@ export default function DailyTodoCard() {
                 clipRule="evenodd" />
             </svg>
           </label>
-          <div className='flex  items-center mx-3'>
+          <div className='flex  items-center mx-3 dark:text-black'>
             <FontAwesomeIcon icon={faFilter} size='xs' />
             <h5 className='text-gray-600 text-sm ml-1'>{fetchDailyTasks.data.length} task(s)</h5>
           </div>
@@ -102,7 +102,7 @@ export default function DailyTodoCard() {
             <DatePicker
               selected={selectedDate}
               onChange={(date) => setSelectedDate(date)}
-              className='btn btn-sm'
+              className='btn btn-sm dark:bg-gray-600 dark:border-gray-600'
               dateFormat="yyyy-MM-dd"
               placeholderText="Select a valid date"
             />

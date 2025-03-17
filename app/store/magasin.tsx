@@ -7,6 +7,7 @@ import taskGroupReducer from "../reducers/TaskGroupReducer";
 import TaskReducer from "../reducers/TaskReducer";
 import AppReducers from "../reducers/AppReducers";
 import TicketsReducer from "../reducers/TicketsReducer";
+import themeSlice from '../reducers/ThemeReducer';
 
 
  const RootReducer = 
@@ -18,6 +19,7 @@ import TicketsReducer from "../reducers/TicketsReducer";
        tickets : TicketsReducer,
        task : TaskReducer,
        notifications : NotificationReducer,
+       theme : themeSlice,
        app : AppReducers,
 });
 

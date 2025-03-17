@@ -12,10 +12,11 @@ import TaskTicketManagement from '../Task/Ticket/TaskTicketManagement'
 type props = {
     showMoreButton? : boolean,
     name: string,
+    showTaskFooter? : boolean
     data : ITask[]    
 }
 
-export default function SectionTask({showMoreButton, name, data}  : props) {
+export default function SectionTask({showMoreButton, name, data, showTaskFooter}  : props) {
  
   const initialItems  =  data;
     const [items, setItems] = useState(initialItems);
@@ -29,7 +30,7 @@ export default function SectionTask({showMoreButton, name, data}  : props) {
 
 
   return (
-    <div style={{  width : isSM ? "100%" : "24%", }} >
+    <div style={{  width :  "100%" }} >
       <SectionTaskHeader count={data.length} showMoreButton={showMoreButton}  name={name} />
         <Reorder.Group 
         axis="y" 
@@ -42,12 +43,11 @@ export default function SectionTask({showMoreButton, name, data}  : props) {
           </div>
  :  ( items.length ? items.map((item, key) => (
             <AnimatePresence>
-             <Reorder.Item  initial={{ opacity: 0, y: -15 }} // Animation d'entrée
+             <Reorder.Item  initial={{ opacity: 0, y: -15 }} 
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -15 }} // Animation de sortie
           transition={{ duration: 0.2, type: "spring", stiffness: 300, damping: 10 }}  drag  key={item.id}  dragTransition={{ bounceStiffness: 100, bounceDamping: 10 }} value={item} id={item.id.toString()} >
                 
-                <SectionTaskCard setTaskTicket={setTaskTicket} setTicketsModal={setTicketsModal}  position={key}  color={name === TaskPhasesEnum.Backlog ? 'gray' : (
+                <SectionTaskCard showFooter={showTaskFooter} setTaskTicket={setTaskTicket} setTicketsModal={setTicketsModal}  position={key}  color={name === TaskPhasesEnum.Backlog ? 'gray' : (
                   name === TaskPhasesEnum.Started ? 'blue' : (name === TaskPhasesEnum.InReview ? 'orange' : 'green' )
                 )}  item={item} />
              </Reorder.Item>

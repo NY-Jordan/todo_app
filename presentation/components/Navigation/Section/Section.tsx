@@ -6,7 +6,7 @@ export default function Section({title, children} : {title : string, children : 
     return (
       <div>
         <div>
-          <span className='text-gray-600'>{title}</span>
+          <span className='text-gray-600 dark:text-white'>{title}</span>
         </div>
         <div className=' py-5'>
           {children}

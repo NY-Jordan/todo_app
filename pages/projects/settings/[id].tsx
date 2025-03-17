@@ -38,25 +38,24 @@ export default function index() {
   return (
   <Layout pageTitle={`${projectDetails?.name} Settings`}>
     
-   {!fecthProjectDetails.isLoading ? <div role="tablist" className="tabs tabs-bordered items-center">
+   {!fecthProjectDetails.isLoading ? <div role="tablist" className="tabs tabs-bordered items-center dark:text-white">
        
-        <input type="radio" name="my_tabs_1" role="tab" className="tab w-full" defaultChecked aria-label="Colaborators" />
+        <input type="radio" name="my_tabs_1" role="tab" className="tab w-full dark:text-white" defaultChecked aria-label="Colaborators" />
         <div role="tabpanel" className="tab-content p-10">
             <CollaboratorsTab />
         </div>
-        <input type="radio" name="my_tabs_1"  role="tab"  className="tab w-full"  aria-label="Project Document(s)"  />
+        <input type="radio" name="my_tabs_1"  role="tab"  className="tab w-full dark:text-white"  aria-label="Project Document(s)"  />
         <div role="tabpanel" className="tab-content p-10">
             <FileTab />
         </div>
-        <input type="radio" name="my_tabs_1"  role="tab"  className="tab w-full"  aria-label="Task Groups"  />
+        <input type="radio" name="my_tabs_1"  role="tab"  className="tab w-full dark:text-white"  aria-label="Task Groups"  />
         <div role="tabpanel" className="tab-content p-10">
             <TaskGroups />
         </div>
-        <input type="radio" name="my_tabs_1"  role="tab"  className="tab w-full"  aria-label="Tasks"  />
+        <input type="radio" name="my_tabs_1"  role="tab"  className="tab w-full dark:text-white"  aria-label="Tasks"  />
         <div role="tabpanel" className="tab-content p-10">
             <TaskTab />
         </div>
-
     </div> :
     <ProjectSettingLoader active={fecthProjectDetails.isLoading} />}
 

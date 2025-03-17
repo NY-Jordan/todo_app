@@ -63,7 +63,7 @@ const Dropdown = ({
   });
 
   const dropdownClass = classNames(
-    'absolute bg-white w-full max-h-52 overflow-y-auto py-3 rounded shadow-md z-10',
+    'absolute bg-white w-full max-h-52 overflow-y-auto py-3 rounded shadow-md z-10 dark:bg-gray-600 dark:border-gray-600 dark:hover:bg-gray-700',
     {
       'top-full right-0 mt-2': position === 'bottom-right',
       'top-full left-0 mt-2': position === 'bottom-left',
@@ -73,7 +73,7 @@ const Dropdown = ({
   );
 
   return (
-    <div ref={dropdownRef} className='relative'>
+    <div ref={dropdownRef} className='relative dark:bg-gray-600'>
       <button
         id={id}
         aria-label='Toggle dropdown'
@@ -82,7 +82,7 @@ const Dropdown = ({
         type='button'
         onClick={() => setIsOpen(!isOpen)}
         className={classNames(
-          'flex justify-between items-center gap-5 w-full rounded-md  h-12 px-4 border  border-gray-300  text-black',
+          'flex justify-between items-center gap-5 w-full rounded-md  h-12 px-4 border  dark:bg-gray-600 dark:border-gray-600 dark:text-white border-gray-300  text-black',
           style
         )}
       >
@@ -126,7 +126,7 @@ const Dropdown = ({
                 key={item.id}
                 onClick={() => handleChange(item)}
                 className={classNames(
-                  'flex items-center cursor-pointer hover:bg-gray-200 px-3',
+                  'flex items-center cursor-pointer dark:hover:bg-gray-700 hover:bg-gray-200 px-3',
                   { 'bg-gray-300': selectedItem?.id === item.id }
                 )}
               >

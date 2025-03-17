@@ -10,10 +10,10 @@ import { mdiCommentAccountOutline, mdiCommentOutline, mdiGrid, mdiMessage, mdiMe
 export default function SideMenu() {
 
   return (
-    <div className='bg-indigo-100 hidden lg:block h-full p-4 w-[16%]'>
-        <div className='flex justify-center items-center'>
-{/*           <img src={'/images/logo.png'} className='w-full h-fit' width={'100%'} height={'50%'} />
- */}        </div>
+    <div className='bg-indigo-100 dark:bg-slate-800 hidden lg:block h-full p-4 w-[16%]'>
+        <div className='flex justify-center items-center mb-10 mt-10'>
+          <img src={'/images/logo.png'} className='w-full h-fit' width={'10%'} height={'10%'} />
+        </div>
         <Section title='Menu'>
             <NavItem to='/dashboard'  title='Dashboard' icon={<FontAwesomeIcon icon={faDashboard} size={'xl'}  />} />
             <NavItem  to='/schedule'  title='Schedule' icon={<FontAwesomeIcon icon={faCalendarDays} size={'xl'} />} />

@@ -16,9 +16,10 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
+import { useAppSelector } from "@/app/store/hook";
+import { useEffect } from "react";
 
 export default function App({ Component, pageProps }: AppProps) {
-  const echo = usePusherSetup();
 
    // Créer un QueryClient
    const queryClient = new QueryClient({
@@ -29,18 +30,7 @@ export default function App({ Component, pageProps }: AppProps) {
     },
   });
 
-  if (typeof window !== "undefined") {
-    const persister = createSyncStoragePersister({
-      storage: window.localStorage,
-    });
- 
-  
-  // Persister le cache
-  persistQueryClient({
-    queryClient,
-    persister,
-  });
-}
+
   
 
   return <QueryClientProvider client={queryClient}> 

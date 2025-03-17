@@ -25,6 +25,7 @@ import { fetchCollaboratorsTasksFailure, fetchCollaboratorsTasksInit } from "@/a
 import { convertToISO } from "@/Infrastructure/helpers/utils";
 import DatePicker from "react-datepicker";
 import moment from "moment";
+import TasksGraph from "@/presentation/components/Task/TasksGraph";
 
 export default function index() {
   const {isTabletOrMobile, isSM} = useResponsive();
@@ -52,7 +53,6 @@ export default function index() {
   }, [id, debouncedSearch, assingedDate]);
 
   useEffect(() => {
-    
       const handler = setTimeout(() => {
         setDebouncedSearch(keysWord);
     }, 500); 
@@ -102,12 +102,7 @@ export default function index() {
            </div> */}
 
 
-          <div className={'flex  overflow-x-hidden h-full overflow-y-hidden   space-x-8  '+(isSM ? 'flex-col' : 'flex-row')} > 
-          {(tasks && tasks[TaskPhasesEnum.Backlog] ) ? <SectionTask  name='Backlog'  data={tasks[TaskPhasesEnum.Backlog]} /> :  <SectionTask  name='Backlog'  data={[]} /> }
-          {(tasks && tasks[TaskPhasesEnum.Started] ) ? <SectionTask  name='Started'  data={tasks[TaskPhasesEnum.Started]} /> :  <SectionTask  name='Started'  data={[]} /> }
-          {(tasks && tasks[TaskPhasesEnum.InReview] ) ? <SectionTask  name='In Review'  data={tasks[TaskPhasesEnum.InReview]} /> : <SectionTask  name='In Review'  data={[]} /> }
-          {(tasks && tasks[TaskPhasesEnum.Done] ) ? <SectionTask  name='Done'  data={tasks[TaskPhasesEnum.Done]} /> : <SectionTask  name='Done'  data={[]} /> }
-        </div>
+         {tasks && <TasksGraph tasks={tasks} />}
       </div>
        
   </Layout>

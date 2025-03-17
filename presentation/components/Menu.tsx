@@ -8,7 +8,9 @@ import { useRouter } from 'next/router'
 import { UserDetailsEntitie } from '@/domain/entities/user.entities'
 import Notification from './Notification/Notification'
 import Icon from '@mdi/react'
-import { mdiBellOutline, mdiCogOutline } from '@mdi/js'
+import { mdiBellOutline, mdiCogOutline, mdiMoonFirstQuarter, mdiMoonFull, mdiMoonWaningCrescent, mdiSunWireless, mdiWhiteBalanceSunny } from '@mdi/js'
+import { useAppDispatch, useAppSelector } from '@/app/store/hook'
+import { toggleTheme } from '@/app/reducers/ThemeReducer'
 
 export default function Menu({pageTitle} : {pageTitle? : string}) {
     const router  = useRouter();
@@ -30,16 +32,19 @@ export default function Menu({pageTitle} : {pageTitle? : string}) {
 
     }, []);
 
+    const dispatch = useAppDispatch();
+    const ThemeState = useAppSelector(state => state.theme);
+
     
   return (
    <>
-    <div className='lg:px-6  xs:px-2 flex flex-col lg:flex-row justify-between lg:items-center '>
+    <div className='lg:px-6  xs:px-2 flex  flex-col lg:flex-row justify-between lg:items-center dark:border-l-2 dark:border-l-neutral-900 dark:border-slate-400 '>
         <div className='mb-5 space-x-4 flex items-center'>
             
             <div className="drawer drawer-start w-fit z-200 lg:hidden xs:block ">
                 <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
                 <div className="drawer-content w-fit">
-                    <label htmlFor="my-drawer-4" className="drawer-button hover:cursor-pointer"> <FontAwesomeIcon icon={faBars} size='xl' /></label>
+                    <label htmlFor="my-drawer-4" className="drawer-button hover:cursor-pointer "> <FontAwesomeIcon icon={faBars} size='xl' /></label>
                 </div>
                 <div className="drawer-side">
                     <label htmlFor="my-drawer-4" aria-label="close sidebar" className="drawer-overlay"></label>
@@ -66,21 +71,23 @@ export default function Menu({pageTitle} : {pageTitle? : string}) {
                     </ul>
                 </div>
             </div>
-            <span className='text-3xl text-indigo-900 font-semibold '>{pageTitle}</span>
+            <span className='text-3xl  font-semibold ' style={{ color : '#3577c2' }}>{pageTitle}</span>
         </div>
        
         <div className='flex items-center space-x-8 w-fit'>
-                <div className='border flex items-center  h-1/2 p-2 rounded-full'>
+                <div className='border flex items-center dark:text-white  h-1/2 p-2 rounded-full'>
                     <a href='#' onClick={() => setActiveNotification(!activeNotification)}>
                         <Icon path={mdiBellOutline} size={1} />
                     </a>
                 </div>
-                <div className='border flex items-center h-1/2 p-2 rounded-full'>
-                    <a href='#'>
-                        <Icon path={mdiCogOutline} size={1} />
+                <div className='border flex items-center  dark:text-white h-1/2 p-2 rounded-full'>
+                    <a onClick={() => dispatch(toggleTheme())} href='#'>
+                    {ThemeState.darkMode ?    <Icon path={mdiWhiteBalanceSunny} size={1} /> : <Icon path={mdiMoonWaningCrescent} size={1} /> }
                     </a>
+                      
+                    
                 </div>
-                <div>
+                <div className='dark:text-white'>
                     <div className="dropdown dropdown-bottom dropdown-end hover:cursor-pointer">
                         <div tabIndex={0}  className="m-1 flex items-center">
                             <div className="avatar online">
