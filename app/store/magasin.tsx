@@ -8,6 +8,7 @@ import TaskReducer from "../reducers/TaskReducer";
 import AppReducers from "../reducers/AppReducers";
 import TicketsReducer from "../reducers/TicketsReducer";
 import themeSlice from '../reducers/ThemeReducer';
+import { googleCalendarReducer } from "../reducers/GoogleCalendarReducer";
 
 
  const RootReducer = 
@@ -21,7 +22,9 @@ import themeSlice from '../reducers/ThemeReducer';
        notifications : NotificationReducer,
        theme : themeSlice,
        app : AppReducers,
+       googleCalendar : googleCalendarReducer
 });
+
 
 
 export default RootReducer;

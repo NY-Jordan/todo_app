@@ -45,6 +45,11 @@
   }
 }
 
+.fc .fc-timegrid-slot {
+  border-bottom: 0px;
+  height: 1.5em;
+  height: 50px;
+}
 
 @layer base {
   html {

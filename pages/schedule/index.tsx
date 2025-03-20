@@ -2,12 +2,34 @@ import Image from "next/image";
 import localFont from "next/font/local";
 import Layout from "@/presentation/layout/Layout";
 import FullCalendar from "@fullcalendar/react";
-import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
+import dayGridPlugin from '@fullcalendar/daygrid'
 import { EventContentArg } from "@fullcalendar/core/index.js";
+import { fetchGoogleEvents } from "@/Infrastructure/Services/GoogleCalendarService";
+import React, { useEffect, useState } from "react";
+import timeGridPlugin from '@fullcalendar/timegrid'; 
+import { useAppSelector } from "@/app/store/hook";
+import { GoogleEventInterface } from "@/domain/entities/events.entities";
+import moment from "moment";
 
 
 
 export default function index() {
+
+  useEffect(() => {
+    fetchGoogleEvents()
+  }, [])
+
+  const googleCalendarEventsState : GoogleEventInterface[] = useAppSelector(state  => state.googleCalendar).events
+  const events = googleCalendarEventsState ? googleCalendarEventsState.map((item) => {
+    return  { title: item.summary,
+      start  : moment(item.start.dateTime).format('YYYY-MM-DD hh:mm'),
+      end  : moment(item.end.dateTime).format('YYYY-MM-DD hh:mm') , 
+      description: item.description,
+    }            
+  }) : [];
+
+  
+ 
   return (
   <Layout pageTitle="Schedule">
     <div className="flex items-center space-x-6 ml-10">
@@ -22,28 +44,22 @@ export default function index() {
       </div>
     </div>
     <div className="divider"></div>
-        <FullCalendar
-          plugins={[ dayGridPlugin ]}
-          initialView="dayGridMonth"
-          height={'75%'}
-          fixedWeekCount={false}
-          eventContent={renderEventContent}
-          eventClassNames={'bg-white border-white h-[50%]'}
-          eventMinHeight={50}
-          events={[
-            { title: 'Marketing Happy hour',
-              start  : '2024-09-17 10:09',
-              end  : '2024-09-19 15:13', 
-              description: 'second description',
-            },
-            { title: 'Meet with the marketing Team',
-              start  : '2024-09-22 10:09',
-              end  : '2024-09-25 15:13', 
-              description: 'second description',
-
-            },
-          ]}
-        />
+    <FullCalendar
+      plugins={[ dayGridPlugin, timeGridPlugin ]}
+      initialView="timeGridWeek" // Affiche la vue semaine avec les horaires
+      height={'75%'}
+      fixedWeekCount={false}
+      eventContent={renderEventContent}
+      eventClassNames={'bg-white border-white h-[50%]'}
+      eventMinHeight={300}
+      events={events}
+      slotLabelFormat={{
+        hour: '2-digit', // Affiche l'heure
+        minute: '2-digit', // Affiche les minutes
+        meridiem: 'short', // Affiche AM/PM si tu veux en format 12h
+      }}
+      allDaySlot={false} // Optionnel: Si tu ne veux pas de créneau "journée complète"
+    />
   </Layout>
   );
 }
@@ -51,30 +67,10 @@ export default function index() {
 
 function renderEventContent(eventInfo : EventContentArg) {
   return(
-    <div className="bg-blue-200  border-blue-200 lg:h-1/2 h-fit rounded-full ">
+    <div className="  border-blue-200 lg:h-full h-full  hover:cursor-pointer ">
       <div className="w-1/3"></div>
-      <div className="max-w-2/3 py-3 w-2/3 bg-blue-600 rounded-full h-1/2 px-2 flex justify-start items-center space-x-2">
+      <div className=" py-3 w-full  bg-blue-600  h-full px-2 flex justify-start items-center space-x-2">
               <div className="avatar-group -space-x-4 rtl:space-x-reverse">
-                    <div className="avatar">
-                      <div className="w-8">
-                        <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
-                      </div>
-                    </div>
-                    <div className="avatar">
-                      <div className="w-8">
-                        <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
-                      </div>
-                    </div>
-                    <div className="avatar">
-                      <div className="w-8">
-                        <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
-                      </div>
-                    </div>
-                    <div className="avatar">
-                      <div className="w-8">
-                        <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
-                      </div>
-                    </div>
                 </div>
                <div className=" flex flex-col">
                     <span className="">{eventInfo.event.title}</span>

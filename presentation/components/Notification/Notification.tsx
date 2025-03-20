@@ -25,7 +25,7 @@ export default function Notification({active, setActive} : {active : boolean, se
             <input type="checkbox" id="my_modal_6" checked={active} className="modal-toggle" />
             <div className="modal modal-top backdrop-blur-sm " role="dialog">
             <div className=" mt-10 w-full flex    justify-center">
-              <div className="modal-box dark:bg-black dark:text-white w-[50%] h-fit rounded-md ">
+              <div className="modal-box dark:bg-black dark:border-2 dark:border-gray-700 dark:text-white w-[50%] h-fit rounded-md ">
               <div className="w-full flex justify-between items-center">
                   <h3 className="text-lg font-bold">{'Notifications'}</h3>
                   <a className="hover:cursor-pointer" onClick={() => setActive(false)}>
