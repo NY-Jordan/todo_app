@@ -44,7 +44,9 @@ export default function DailyTodoCard() {
 
 
     useEffect(() => {
-      fetchTasks()
+      if (!fetchDailyTasks.data?.length) {
+        fetchTasks()
+      }
     }, [debouncedSearch, selectedDate]);
 
     

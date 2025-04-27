@@ -13,6 +13,7 @@ import { initChangeTaskPhaseState, resetChangeTaskPhaseState } from '@/app/Actio
 import { changeTaskPhase } from '@/Infrastructure/Services/Task/TaskService';
 import { StatusStateEnum } from '@/domain/enum/StatusStateEnum';
 import ViewTaskModal from '../Task/ViewTaskModal';
+import { useDraggable } from '@dnd-kit/core';
 
 
 export default function SectionTaskCard({ item, position, color, setTicketsModal, setTaskTicket, showFooter  = false} :  {showFooter? : boolean,  item : ITask, position : number, color : string, setTicketsModal : React.Dispatch<React.SetStateAction<boolean>>, setTaskTicket : React.Dispatch<React.SetStateAction<ITask | undefined>>}) {
@@ -64,55 +65,47 @@ export default function SectionTaskCard({ item, position, color, setTicketsModal
         changeTaskPhase(item.id,phase, nextPhase);
     }
 
+    console.log(changeTaskPhaseState);
+    
     useEffect(() => {
         if (changeTaskPhaseState.status === StatusStateEnum.success && changeTaskPhaseState.task.id === item.id) {
             toast.success('Change phase action  completed')
             dispatch(resetChangeTaskPhaseState())
         }
-        if (changeTaskPhaseState.status === StatusStateEnum.failure && changeTaskPhaseState.task.id === item.id) {
+        if (changeTaskPhaseState.status === StatusStateEnum.failure && changeTaskPhaseState.task?.id === item.id) {
             toast.success('Change phase action  failed')
             dispatch(resetChangeTaskPhaseState())
         }
     }, [changeTaskPhaseState.task]);
 
-    useEffect(() => {
-        const handleClick = () => {
-          if (moreButtonRef.current && dropdownContentRef.current) {
-            const buttonRect = moreButtonRef.current.getBoundingClientRect();
-            const dropdownRect = dropdownContentRef.current.getBoundingClientRect();
-            const windowWidth = (window.innerWidth * 87) / 100 ;
+
+    const {
+        attributes, listeners, setNodeRef, transform
+    } = useDraggable({
+        id : item.id,
+        data  : {
+            previousPhase : item.task_phase.name
+        },
+    });
     
-            dropdownContentRef.current.classList.remove('dropdown-right');
-            console.log(buttonRect.right + dropdownRect.width , windowWidth);
-            
-            if (buttonRect.left + dropdownRect.width > windowWidth) {
-                console.log('ici');
-                dropdownContentRef.current.classList.remove('dropdown-right');
-              dropdownContentRef.current.classList.add('dropdown-left');
-            }
-          }
-        };
     
-        if (moreButtonRef.current) {
-          moreButtonRef.current.addEventListener('click', handleClick);
-        }
-    
-        return () => {
-          if (moreButtonRef.current) {
-            moreButtonRef.current.removeEventListener('click', handleClick);
-          }
-        };
-      }, []);
-     
+    const style = transform ? {
+        transform : `translate(${transform.x}px, ${transform.y}px)`
+    } : undefined
+
   return (
     <>
         <motion.div  
+                ref={setNodeRef}
+                {...listeners}
+                {...attributes}
+                
              onMouseEnter={() => setShowViewMoreButton(true)}
              onMouseLeave={() => setShowViewMoreButton(false)}
              whileHover={animation }
              whileFocus={animation}
-           
-            className={"card my-2  dark:bg-slate-800 relative overflow-hidden   z-1  dark:hover:bg-slate-900 dark:shadow-slate-700  dark:border-slate-800 dark:text-white  h-40 border-2 bg-base-100 shadow-md "} style={{ bottom  : top }}>
+            className={"card my-2  dark:bg-slate-800 relative overflow-hidden   z-1  dark:hover:bg-slate-900 dark:shadow-slate-700  dark:border-slate-800 dark:text-white  h-40 border-2 bg-base-100 shadow-md "} 
+            style={{ bottom  : top , ...style}}>
             <div className='card-title m-0 p-0 justify-between'>
                 <div className='flex items-center space-x-2'>
                 <span  style={{ backgroundColor : color }} className=" ml-4 rounded-sm mt-2 p-2"></span>

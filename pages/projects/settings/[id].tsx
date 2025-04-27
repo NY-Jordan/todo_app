@@ -13,53 +13,48 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { type } from "node:os";
 import { IProject } from "@/domain/entities/project.entities";
-import ProjectSettingLoader from "@/presentation/components/ProjectSettingLoader";
 import { useEffect } from "react";
+import PageDataLoader from "@/presentation/components/PageDataLoader";
 
 export default function index() {
     const {isTabletOrMobile, isSM} = useResponsive();
     const router  = useRouter();
     const {id} = router.query;
-
     const fecthProjectDetails = useQuery({
-        queryKey: ['projectDetails', id], 
-        queryFn: ({ queryKey }) => {
-        const [, id] = queryKey;
-        if (typeof id === 'string') {
-            return getProjectDetails(parseInt(id));
-        }
-        },
-        staleTime: Infinity,
-    });
+        queryKey: ['projectDetails', id],
+        queryFn: () => getProjectDetails(Number(id)),
+        enabled: !!id, 
+        staleTime: Infinity, 
+      });
 
     const projectDetails = fecthProjectDetails.data as IProject 
      
    
   return (
-  <Layout pageTitle={`${projectDetails?.name} Settings`}>
-    
-   {!fecthProjectDetails.isLoading ? <div role="tablist" className="tabs tabs-bordered items-center dark:text-white">
-       
-        <input type="radio" name="my_tabs_1" role="tab" className="tab w-full dark:text-white" defaultChecked aria-label="Colaborators" />
-        <div role="tabpanel" className="tab-content p-10">
-            <CollaboratorsTab />
-        </div>
-        <input type="radio" name="my_tabs_1"  role="tab"  className="tab w-full dark:text-white"  aria-label="Project Document(s)"  />
-        <div role="tabpanel" className="tab-content p-10">
-            <FileTab />
-        </div>
-        <input type="radio" name="my_tabs_1"  role="tab"  className="tab w-full dark:text-white"  aria-label="Task Groups"  />
-        <div role="tabpanel" className="tab-content p-10">
-            <TaskGroups />
-        </div>
-        <input type="radio" name="my_tabs_1"  role="tab"  className="tab w-full dark:text-white"  aria-label="Tasks"  />
-        <div role="tabpanel" className="tab-content p-10">
-            <TaskTab />
-        </div>
-    </div> :
-    <ProjectSettingLoader active={fecthProjectDetails.isLoading} />}
+    <Layout pageTitle={`${projectDetails?.name} Settings`}>
+        
+    {!fecthProjectDetails.isLoading ? <div role="tablist" className="tabs tabs-bordered items-center dark:text-white">
+        
+            <input type="radio" name="my_tabs_1" role="tab" className="tab w-full dark:text-white" defaultChecked aria-label="Colaborators" />
+            <div role="tabpanel" className="tab-content p-10">
+                <CollaboratorsTab />
+            </div>
+            <input type="radio" name="my_tabs_1"  role="tab"  className="tab w-full dark:text-white"  aria-label="Project Document(s)"  />
+            <div role="tabpanel" className="tab-content p-10">
+                <FileTab />
+            </div>
+            <input type="radio" name="my_tabs_1"  role="tab"  className="tab w-full dark:text-white"  aria-label="Task Groups"  />
+            <div role="tabpanel" className="tab-content p-10">
+                <TaskGroups />
+            </div>
+            <input type="radio" name="my_tabs_1"  role="tab"  className="tab w-full dark:text-white"  aria-label="Tasks"  />
+            <div role="tabpanel" className="tab-content p-10">
+                <TaskTab />
+            </div>
+        </div> :
+        <PageDataLoader active={fecthProjectDetails.isLoading} />}
 
-  </Layout>
+    </Layout>
   );
 }
 

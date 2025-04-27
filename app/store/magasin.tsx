@@ -9,6 +9,7 @@ import AppReducers from "../reducers/AppReducers";
 import TicketsReducer from "../reducers/TicketsReducer";
 import themeSlice from '../reducers/ThemeReducer';
 import { googleCalendarReducer } from "../reducers/GoogleCalendarReducer";
+import { NotesReducer } from "../reducers/NoteReducer";
 
 
  const RootReducer = 
@@ -22,9 +23,11 @@ import { googleCalendarReducer } from "../reducers/GoogleCalendarReducer";
        notifications : NotificationReducer,
        theme : themeSlice,
        app : AppReducers,
-       googleCalendar : googleCalendarReducer
+       googleCalendar : googleCalendarReducer,
+       note : NotesReducer
 });
 
+export type RootState = ReturnType<typeof RootReducer>;
 
 
 export default RootReducer;

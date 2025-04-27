@@ -8,8 +8,11 @@ export default function CardStats() {
         const appCollaboratorsState = useAppSelector(state => state.app).collaborators ;
     
       useLayoutEffect(() => {
+        console.log(appStatsState.data?.length);
+        
+        if (!appStatsState.data?.length) {
           fetchStats();
-
+        }
        }, [])
   return (
     <>

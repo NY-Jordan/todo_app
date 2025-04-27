@@ -20,7 +20,7 @@ export default function Layout({children, pageTitle} : {children : React.ReactNo
             <SideMenu />
             <div className='lg:w-[87%] dark:bg-slate-800 overflow-y-auto overflow-x-hidden  w-full  pt-4  h-full your-scroll-container'>
                 <Menu pageTitle={pageTitle} />
-                <div className='bg-gray-50  dark:bg-black  p-4 h-full dark:border-t-0 border-t-2'>{children}</div>
+                <div className='bg-gray-50 container-first dark:bg-black  p-4 h-full dark:border-t-0 border-t-2'>{children}</div>
             </div>
       </div>
     </div>

@@ -11,6 +11,7 @@ import Icon from '@mdi/react'
 import { mdiBellOutline, mdiCogOutline, mdiMoonFirstQuarter, mdiMoonFull, mdiMoonWaningCrescent, mdiSunWireless, mdiWhiteBalanceSunny } from '@mdi/js'
 import { useAppDispatch, useAppSelector } from '@/app/store/hook'
 import { toggleTheme } from '@/app/reducers/ThemeReducer'
+import { persistor } from '@/app/store/store'
 
 export default function Menu({pageTitle} : {pageTitle? : string}) {
     const router  = useRouter();
@@ -19,6 +20,7 @@ export default function Menu({pageTitle} : {pageTitle? : string}) {
 
     const handleLogout = () => {
         LogoutService();
+        persistor.purge();
         router.push('/auth/login')
     }
 

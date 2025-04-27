@@ -2,12 +2,25 @@ import { createStore, applyMiddleware } from "redux"
 import thunk from 'redux-thunk';
 import RootReducer from './magasin';
 import { configureStore } from '@reduxjs/toolkit'
+import storage from 'redux-persist/lib/storage';
+import { persistStore, persistReducer } from 'redux-persist';
 
 
- export const store = configureStore({
-    reducer: RootReducer,
-  })
-// Infer the `RootState` and `AppDispatch` types from the store itself
-export type RootState = ReturnType<typeof store.getState>
-// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
+const persistConfig = {
+  key: 'root',
+  storage,
+  whitelist: ['note'],
+};
+
+const persistedReducer = persistReducer<any, any>(persistConfig, RootReducer);
+
+const store = configureStore({
+    reducer: persistedReducer,
+    
+})
+
+const persistor = persistStore(store);
+
 export type AppDispatch = typeof store.dispatch
+
+export { store, persistor };

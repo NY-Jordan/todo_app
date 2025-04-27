@@ -20,7 +20,10 @@ import { fetchStats, fetchTasksActivities, fetUserschCollaborators } from "@/Inf
 import { IUserStats } from "@/domain/entities/user.entities";
 import { StatusStateEnum } from "@/domain/enum/StatusStateEnum";
 import CardStats from "@/presentation/components/CardStats";
-import { ITasksByDate } from "@/domain/entities/task.entities";
+import { ITaskBoard, ITasksByDate } from "@/domain/entities/task.entities";
+import { Tooltip } from 'react-tooltip';
+import { Html } from 'next/document';
+import _ from 'lodash';
 
 export default function index() {
   const { isSM} = useResponsive();
@@ -32,13 +35,19 @@ export default function index() {
   const rescheduleUsersTaskState = useAppSelector(state => state.dailyTask).reschedule
 
   useLayoutEffect(() => {
-    FetchAllProjects();
-
-    fetUserschCollaborators();
+   
+    if (!fecthProjectsState.data?.projects?.length) {
+      FetchAllProjects();
+    }
+    if (!appCollaboratorsState.data?.collaborators?.length) {
+      fetUserschCollaborators();
+    }
   }, [])
 
-  useLayoutEffect(() => {
-    fetchTasksActivities();
+  useEffect(() => {
+    if (!activities?.length) {
+      fetchTasksActivities();
+    }
   }, [])
   
   useMemo(() => {
@@ -88,12 +97,41 @@ export default function index() {
                 <div key={columnIndex} className="flex flex-col gap-1">
                   {
                     column.map((day, dayIndex) => {
-                        return  <div key={dayIndex} className={"w-4 h-4 border   dark:border-gray-700 border-gray-200 rounded-md tooltip tooltip-top "+( activities && activities[day] ? getColorActivities(activities[day]) : 'bg-gray-100 dark:bg-gray-700')} data-tip={day}>
-                      </div>
-                    }
-                     
-                    )
-                  }
+                      const activity = activities?.[day];
+                      const groupedTasks = _.groupBy(activity, 'task_phase.name') as ITaskBoard;
+                      
+                      return (
+                        <div 
+                          key={dayIndex}
+                          id={`tooltip-target-${dayIndex}`}
+                          className={
+                            "w-4 h-4 border dark:border-gray-700 border-gray-200 rounded-md " +
+                            (activity ? getColorActivities(activity) : 'bg-gray-100 dark:bg-gray-700')
+                          }
+                        >
+                         {activity &&  <Tooltip 
+                            anchorSelect={`#tooltip-target-${dayIndex}`}
+                            place="top"
+                            className="!bg-blue-400 !text-white !p-2 !rounded-lg"
+                            render={() => <>
+                              <div className="bg-blue-400 h-full w-full">
+                                <span className="!text-xs !text-center">---{day}---</span>
+                                <div>
+                                {
+                                  Object.keys(groupedTasks).map((phase) => {
+                                    return <div>
+                                      <span>{phase}</span> : <span>{Object.values(groupedTasks).length} task(s)</span> 
+                                    </div>
+                                  })
+                                }
+                                </div>
+                              </div>
+                            </>}
+                          />}
+                        </div>
+                      )
+                    })
+                  }-
                 </div>
               ))
           }

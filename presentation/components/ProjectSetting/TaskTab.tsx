@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useEffect, useMemo, useState } from 'react'
 import { mdiClose, mdiFileEdit, mdiGrid } from '@mdi/js'
 import Icon from '@mdi/react'
-import Tag from '../Tag'
 import { motion } from "framer-motion"
 import AddTaskForm from '../AddTask/AddTaskForm'
 import AssignTaskToUserModal from '../Task/AssignTaskToUserModal'

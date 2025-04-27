@@ -5,11 +5,10 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useEffect, useMemo, useState } from 'react'
 import { FetchAllTasks, fetchCollaborators } from '../Services/Task/TaskService';
 import { StatusStateEnum } from '@/domain/enum/StatusStateEnum';
-import { getProjectCollaborators } from '../Services/projects/ProjectsService';
 
 export default function FetchTasksPresenter(id : string | string[] | undefined) {
 
-    const fecthTasksPagination = useAppSelector(state => state.task).fetch.data.pagination as IPagination;
+    const fecthTasksPagination = useAppSelector(state => state?.task).fetch.data.pagination as IPagination;
     const [currentPage, setCurrentPage] = useState<number>(fecthTasksPagination?.current_page ?? 1);
     const queryClient = useQueryClient();
     const [projectDetails, setProjectDetails] = useState<IProject|undefined>()
@@ -24,7 +23,6 @@ export default function FetchTasksPresenter(id : string | string[] | undefined) 
     
     
     
-        assignTask
     useEffect(() => {
         if (id && typeof id  === 'string') {
           setProjectDetails(queryClient.getQueryData(['projectDetails', id]) as IProject)
@@ -58,21 +56,13 @@ export default function FetchTasksPresenter(id : string | string[] | undefined) 
 
 
 
-
-
-  const { data, error, isLoading } = useQuery({
+    const { data, error, isLoading } = useQuery({
       queryKey: ['collaborators', id],
       queryFn: fetchCollaborators,
       staleTime: 10*(60*1000), // 10 mins
     });
   
-  async function name() {
-    const number = id ;
-    if (number && typeof number === 'string') {
-        const a = await  getProjectCollaborators(parseInt(number));
-    }
-  }
-  name();
+ 
   const collaborators  = data as ICollaborator[];
 
   useEffect(() => {

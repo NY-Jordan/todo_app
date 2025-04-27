@@ -13,9 +13,11 @@ import { faClose } from '@fortawesome/free-solid-svg-icons';
 export default function Notification({active, setActive} : {active : boolean, setActive : React.Dispatch<React.SetStateAction<boolean>>}) {
     const notificationState = useAppSelector(state => state.notifications);
     useEffect(() => {
-        setTimeout(() => {
-          getAllNotification();
-        }, 1000);
+      console.log();
+      
+      if (!notificationState.notifications?.length) {
+        getAllNotification();
+      }
     }, []);
 
     const notifications = notificationState.notifications;

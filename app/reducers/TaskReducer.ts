@@ -211,7 +211,6 @@ const TaskReducer = (state = initialState, action : ActionType) => {
       };
         
     case TaskActions.CHANGE_TASK_PHASE_SUCESS :
-     
       return {
         ...state,
         change_status: { ...state.change_status, status: StatusStateEnum.success, error: null, task : action.payload.task  },

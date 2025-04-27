@@ -1,7 +1,7 @@
 import React, { SetStateAction, useEffect, useState } from 'react'
 import SectionTaskHeader from './SectionTaskHeader'
 import SectionTaskCard from './SectionTaskCard'
-import { AnimatePresence, Reorder } from 'framer-motion'
+import { AnimatePresence, Reorder, motion } from 'framer-motion';
 import AddTask from './AddTask'
 import { useResponsive } from '@/Infrastructure/hooks/useResponsive'
 import { TaskPhasesEnum } from '@/domain/enum/TaskEnum'
@@ -9,53 +9,80 @@ import { ITask } from '@/domain/entities/task.entities'
 import { useAppSelector } from '@/app/store/hook'
 import { StatusStateEnum } from '@/domain/enum/StatusStateEnum'
 import TaskTicketManagement from '../Task/Ticket/TaskTicketManagement'
+import { useDroppable } from '@dnd-kit/core'
+import DroppableArea from './DroppableArea'
+import { data } from '../../../Infrastructure/data/data';
 type props = {
     showMoreButton? : boolean,
     name: string,
+    id : TaskPhasesEnum,
     showTaskFooter? : boolean
-    data : ITask[]    
+    tasks : ITask[]    
 }
 
-export default function SectionTask({showMoreButton, name, data, showTaskFooter}  : props) {
+export default function SectionTask({showMoreButton, name, id,tasks, showTaskFooter}  : props) {
  
-  const initialItems  =  data;
+  const initialItems  =  tasks;
     const [items, setItems] = useState(initialItems);
     const {isTabletOrMobile, isSM} = useResponsive();
     const [ticketsModal, setTicketsModal] = useState(false);
     const [taskTicket, setTaskTicket] = useState<ITask|undefined>(undefined);
     const fetchCollaboratorTasksState = useAppSelector(state => state.task).collaboratorsTasks
     useEffect(() => {
-      setItems(data);
-    }, [data]);
+      setItems(tasks);
+    }, [tasks]);
 
+    const [sectionIsOver, setSectionIsOver] = useState(false);
+
+    const { setNodeRef, isOver, over, active } = useDroppable({
+      id : id,
+      
+    });
+    
+    useEffect(() => {
+      if (!(over?.id === id)) {
+        setSectionIsOver(false);
+        return ;
+      }
+      if (over && active?.data.current?.previousPhase !== over.id) {
+        setSectionIsOver(isOver);
+      }
+    }, [isOver])
+
+    
 
   return (
-    <div style={{  width :  "100%" }} >
-      <SectionTaskHeader count={data.length} showMoreButton={showMoreButton}  name={name} />
-        <Reorder.Group 
-        axis="y" 
-        style={{ marginTop : isSM ? '0%': "10%",  }} 
-        layoutScroll 
-        onReorder={setItems} 
-        values={items}>
-          {fetchCollaboratorTasksState.status === StatusStateEnum.loading ? <div className='flex justify-center'>
+    <motion.div   style={{  width :  "100%" }} className=' h-full'  ref={setNodeRef}  >
+      <SectionTaskHeader count={tasks.length} showMoreButton={showMoreButton}  name={name} />
+       
+          {fetchCollaboratorTasksState.status === StatusStateEnum.loading ?
+          
+          <div className='flex justify-center'>
             <span className="loading loading-spinner loading-xs flex self-center"></span>
           </div>
- :  ( items.length ? items.map((item, key) => (
-            <AnimatePresence>
-             <Reorder.Item  initial={{ opacity: 0, y: -15 }} 
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.2, type: "spring", stiffness: 300, damping: 10 }}  drag  key={item.id}  dragTransition={{ bounceStiffness: 100, bounceDamping: 10 }} value={item} id={item.id.toString()} >
-                
-                <SectionTaskCard showFooter={showTaskFooter} setTaskTicket={setTaskTicket} setTicketsModal={setTicketsModal}  position={key}  color={name === TaskPhasesEnum.Backlog ? 'gray' : (
-                  name === TaskPhasesEnum.Started ? 'blue' : (name === TaskPhasesEnum.InReview ? 'orange' : 'green' )
-                )}  item={item} />
-             </Reorder.Item>
-             </AnimatePresence>
+ :  
+          <>
+            <DroppableArea active={sectionIsOver} />
 
-          ))  : <div className='text-red-600 text-center text-xs'>--Empty--</div>)} 
-        </Reorder.Group>
+            {
+               items.length ? items.map((item, key) => {
+                 return (
+                  <div >
+                
+                      <SectionTaskCard showFooter={showTaskFooter} setTaskTicket={setTaskTicket} setTicketsModal={setTicketsModal}  position={key}  color={name === TaskPhasesEnum.Backlog ? 'gray' : (
+                        name === TaskPhasesEnum.Started ? 'blue' : (name === TaskPhasesEnum.InReview ? 'orange' : 'green' )
+                      )}  item={item} />
+                  </div>
+    
+                )
+               }) 
+                : 
+               <>
+              {  !sectionIsOver &&  <div className='text-red-600 text-center text-xs'>--Empty--</div>}
+               </>
+            }
+          </>} 
         {taskTicket && <TaskTicketManagement  active={ticketsModal} setActive={setTicketsModal} task={taskTicket} />}
-    </div>
+    </motion.div>
   )
 }

@@ -6,7 +6,7 @@ import { deleteProjectInit, resetDeleteProjectState } from '@/app/Actions/Projec
 import { deleteProject, FetchAllProjects } from '@/Infrastructure/Services/projects/ProjectsService'
 import toast from 'react-hot-toast'
 
-export default function ProjectSettingLoader({active} : {active : boolean }) {
+export default function PageDataLoader({active} : {active : boolean }) {
  
 
   return (

@@ -1,82 +1,97 @@
 import React, { useState, useRef, useMemo, useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import Head from 'next/head';
 import { useRouter } from 'next/router';
-
+import toast from 'react-hot-toast';
+import { motion } from 'framer-motion';
+import classNames from 'classnames';
 
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 
+interface CustomEditorProps {
+  initialValue: string;
+  onChange?: (value: string) => void;
+  classStyle?: string;
+  maxWords?: number;
+  disabled?: boolean;
+}
 
-export default function CustomEditor({initialValue, onChange, classStyle} : {initialValue : string, onChange? : Function, classStyle? : string}) {
-  const editor = useRef(null); 
-  const router = useRouter()
-  const [content, setContent] = useState(initialValue); 
-  const options = [ 'bold', 'italic', '|', 'ul', 'ol', '|', 'font', 'fontsize', '|', 'outdent', 'indent', 'align', '|', 'hr', '|', 'fullsize', 'brush', '|', 'table', 'link', '|', 'undo', 'redo',];
-  const sm_options = [ 'bold', 'italic', '|', 'ul', 'ol', '|', 'font', '|', 'outdent', 'indent', 'align','|', 'hr','|', 'image' , '|','video', '|','fullsize', 'brush']
-  
+export default function CustomEditor({
+    initialValue,
+    onChange,
+    classStyle,
+    maxWords,
+    disabled,
+  }: CustomEditorProps) {
+    
+  const editor = useRef<any>(null);
+  const router = useRouter();
+  const [maxCharacters, setMaxCharacters] = useState<number | undefined>(maxWords);
+  const [maxCharactersError, setMaxCharactersError] = useState<boolean>(false);
+  const [contentLength, setContentLength] = useState<number>(0);
+
   useEffect(() => {
-    setContent(initialValue);
-  }, [initialValue]);
+    setMaxCharacters(maxWords);
+  }, [maxWords]);
 
-  
 
-  const config = useMemo( 
-    () => ({   
-      
-    }),
-    []
-  );
-
-  const configs = useMemo(
-    () => ({
-    uploader: {         
-        insertImageAsBase64URI: true,
-        imagesExtensions: ['jpg', 'png', 'jpeg', 'gif', 'svg', 'webp'] // this line is not much important , use if you only strictly want to allow some specific image format
+  const configs = useMemo(() => ({
+    uploader: {
+      insertImageAsBase64URI: true,
+      imagesExtensions: ['jpg', 'png', 'jpeg', 'gif', 'svg', 'webp']
     },
     readonly: false,
+    disabled: disabled,
     placeholder: '',
-/*     defaultActionOnPaste: 'insert_as_html',
- */    defaultLineHeight: 1.5,
-/*     enter: 'div',
- */   // options that we defined in above step.
-    buttons: sm_options,
+    defaultLineHeight: 1.5,
+    buttons: ['bold', 'italic', '|', 'ul', 'ol', '|', 'font', '|', 'outdent', 'indent', 'align', '|', 'hr', '|', 'image', '|', 'video', '|', 'fullsize', 'brush'],
     language: router.locale,
-    buttonsMD: sm_options,
-    buttonsSM: sm_options,
-    buttonsXS: sm_options,
+    autofocus: !disabled,
     statusbar: false,
-    sizeLG: 900,
-    sizeMD: 700,
-    sizeSM: 400,
+    limitChars: maxCharacters,
     toolbarAdaptive: false,
-    }),
-    [router.locale],
-   );
-
-  const handleChange = (value : string) => {
-    if (onChange) {
-      onChange(value)
+    events: {
+      paste: (e: any) => {
+        const value = e.clipboardData.getData('text/html');
+        const plainText = value.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/\s+/g, '');
+        if (maxCharacters && maxCharacters - plainText.length < 0) {
+          toast.error('Le collage a échoué, le nombre maximum de caractères a été atteint.');
+        }
+      }
     }
-  };
+  }), [router.locale, maxCharacters, disabled]);
 
-  useEffect(() => {
-    if ( onChange) {
+  const handleChange = (content: string) => {
+    const plainText = content
+        .replace(/<[^>]+>/g, '')
+        .replace(/&nbsp;/g, ' ')
+        .replace(/\s+/g, '');
+    if (onChange) {
       onChange(content);
     }
-  }, [])
+    setContentLength(plainText.length);
+    setMaxCharactersError(maxCharacters ? plainText.length >= maxCharacters : false);
+  };
 
   return (
-    <>
-      <JoditEditor 
-            ref={editor}            
-            value={content}  
+      <div className={`relative w-full ${disabled ? 'cursor-not-allowed' : ''}`}>
+        {disabled && <div className="absolute inset-0 bg-gray-200 pointer-events-none"></div>}
+        <JoditEditor
+            id="custom-editor"
+            value={initialValue}
+            ref={editor}
+            config={configs}
+            className={classStyle || "w-full h-full bg-white"}
             onChange={handleChange}
-            config={configs} //handle the changes
-            className={classStyle ? classStyle : "w-full h-full  bg-white"}
-            />
-           {/*  <style>
-              {`.jodit-wysiwyg{height:300px !important}`}
-            </style> */}
-    </>
+        />
+        {maxCharacters && (
+            <motion.div
+                animate={{ x: maxCharactersError ? [0, -3, 3, -3, 3, 0] : 0 }}
+                transition={{ duration: 0.3 }}
+                className={maxCharactersError ? 'text-red-700' : 'text-gray-300'}
+            >
+              Max: {maxCharacters - contentLength}
+            </motion.div>
+        )}
+      </div>
   );
 }

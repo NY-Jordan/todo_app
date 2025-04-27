@@ -95,3 +95,33 @@ export function getPreviousTaskPhase (phase : TaskPhasesEnum) : TaskPhasesEnum|n
   }
   return null;
 }
+
+const tailwindColors : Record<string, string>  = {
+ 'yellow-400': '#fbbf24',
+  'blue-400': '#60a5fa',
+  'green-400': '#4ade80',
+  'red-400': '#f87171',
+  'purple-400': '#a78bfa',
+  'pink-400': '#f472b6',
+  'orange-400': '#fb923c',
+  'indigo-400': '#818cf8',
+  'slate-400': '#64748b',
+};
+
+
+
+export function getTailwindColor(color: string): string {
+  return tailwindColors[color] || '';
+}
+
+export const colorOptions = [
+  { label: 'Yellow', value: 'yellow-400' },
+  { label: 'Blue', value: 'blue-400' },
+  { label: 'Green', value: 'green-400' },
+  { label: 'Red', value: 'red-400' },
+  { label: 'Purple', value: 'purple-400' },
+  { label: 'Pink', value: 'pink-400' },
+  { label: 'Orange', value: 'orange-400' },
+  { label: 'Indigo', value: 'indigo-400' },
+  { label: 'Slate', value: 'slate-400' },
+];

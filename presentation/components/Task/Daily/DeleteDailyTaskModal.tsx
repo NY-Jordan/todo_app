@@ -22,11 +22,6 @@ export default function DeleteDailyTaskModal({active, setActive, taskId} : {acti
     deleteDailyTask(taskId);
   }
 
-  console.log('====================================');
-  console.log(deleteTaskState.taskId);
-  console.log('====================================');
-
- 
 
   useEffect(() => {
    
