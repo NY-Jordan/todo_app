@@ -7,6 +7,7 @@ import { getProjectCollaborators } from "../projects/ProjectsService";
 import { QueryKey } from "@tanstack/react-query";
 import { fetchCollaboratorsTasksSuccess } from '../../../app/Actions/TaskActions';
 import { TaskPhasesEnum } from "@/domain/enum/TaskEnum";
+import { log } from "node:console";
 
 export const FetchAllTasks = async (projectId : number, collaboratorId : undefined|string, taskGroupSelected : undefined|number, phaseId : number|undefined, currentPage : number|undefined) => {
     try {
@@ -150,3 +151,24 @@ export const changeTaskPhase = async ( taskId : number,previousPhase : TaskPhase
         store.dispatch(changeTaskPhaseFailed(e))
     }
 }
+
+
+export const searchTasks = async (keyword: string, phaseId?: number): Promise<ITask[] | null> => {
+    try {
+        const params = new URLSearchParams();
+        if (keyword) params.append('query', keyword);
+        if (phaseId !== undefined) params.append('phase_id', phaseId.toString());
+        const response = await ApiClient().get(
+            `/project/tasks/search?${params.toString()}`,
+            {
+                headers: {
+                    Authorization: await getBearerAuthToken(),
+                },
+            }
+        );
+        const data = response.data.tasks;
+        return data;
+    } catch (e) {
+        return null;
+    }
+};

@@ -5,12 +5,15 @@ import { motion } from 'framer-motion';
 import { INote } from '@/domain/entities/note.entities';
 import DeleteNoteModal from './DeleteNoteModal';
 import UpdateNoteModal from './UpdateNoteModal';
+import LinkNoteToTaskModal from './LinkNoteToTaskModal';
 
 export default function CardNote({note} : {note : INote}) {
 
     const [showMoreActive, setShowMoreActive] = useState<boolean>(false);
     const [deleteModal, setDeleteModal] = useState<boolean>(false)
     const [updateModal, setUpdateModal] = useState<boolean>(false)
+    const [noteToLinkModal, setNoteToLinkModal] = useState<boolean>(false);
+
     const buttonAnimationStart = {rotate :  45}
     const buttonAnimationEnd = {rotate :  0  }
 
@@ -45,7 +48,7 @@ export default function CardNote({note} : {note : INote}) {
                     <span className='text-xl'>{note.title.length > 40 ?  note.title.substring(0, 36)+'...' : note.title}</span>
                 </div>
            {!note.is_draft && <div className='flex  justify-between items-center h-[30%]'>
-               
+
                 <div className='flex items-center space-x-4'>
                     <motion.button animate={!showMoreActive ? 'end' : 'start'} variants={buttonAnimationVariants}   onClick={() => setShowMoreActive(!showMoreActive)} className='btn z-50  rounded-full bg-black hover:bg-black border-black hover:border-black  text-white'>
                         <FontAwesomeIcon icon={faPlus} />
@@ -66,6 +69,7 @@ export default function CardNote({note} : {note : INote}) {
                         animate={showMoreActive ? "visible" : "hidden"}
                         transition={{ delay: 0.5  }}
                         className={`btn z-20 rounded-full bg-blue-600 border-blue-600 hover:bg-blue-700 hover:border-blue-700  text-white`}
+                        onClick={() => setNoteToLinkModal(true)}
                     >
                         <FontAwesomeIcon icon={faExchangeAlt} />
                     </motion.button>
@@ -74,6 +78,8 @@ export default function CardNote({note} : {note : INote}) {
         </div>
         <DeleteNoteModal note={note} active={deleteModal} setActive={setDeleteModal} />
         <UpdateNoteModal note={note} active={updateModal} setActive={setUpdateModal} />
+        <LinkNoteToTaskModal active={noteToLinkModal} note={note} setActive={setNoteToLinkModal} /> 
+
     </>
   )
 }

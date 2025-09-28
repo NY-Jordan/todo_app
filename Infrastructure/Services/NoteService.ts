@@ -74,3 +74,16 @@ export const deleteNote = async (noteId : number) => {
     }
 }
 
+
+export const associateNote = async (noteId : number) => {
+    try {
+        const reponse = await ApiClient().post(`/note/associate` ,{
+            headers : {
+                Authorization : await getBearerAuthToken(),
+            }
+        });
+       store.dispatch(deleteNoteProgressSuccess(noteId));
+    } catch (e) {
+        store.dispatch(deleteNoteFailure(e));
+    }
+}

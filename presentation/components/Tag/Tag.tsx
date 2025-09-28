@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 
-export default function Tag({text,status,onClick,clickable = true,textColor,backgroundColor}: {
+export default function Tag({className, text,status,onClick,clickable = true,textColor,backgroundColor}: {
     text: string;
     status?: boolean;
     onClick?: Function;
     clickable?: boolean;
     textColor?: string;
     backgroundColor?: string;
+    className?: string;
 }) {
     const [active, setActive] = useState(status ?? false);
 
@@ -27,7 +28,7 @@ export default function Tag({text,status,onClick,clickable = true,textColor,back
                 color: active ? 'white' : (textColor ?? 'black'),
                 backgroundColor: active ? backgroundColor || '#6777ef' : 'white',
             }}
-            className={`rounded-full text-sm px-4 py-1 border ${
+            className={`${className} rounded-full text-sm px-4 py-1 border ${
                 clickable === false && active === false
                     ? 'hover:cursor-not-allowed'
                     : 'hover:cursor-pointer'

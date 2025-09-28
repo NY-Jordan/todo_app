@@ -21,6 +21,7 @@ import { noteButtonColors } from '@/Infrastructure/helpers/Config';
 import PageDataLoader from '@/presentation/components/PageDataLoader';
 import useRehydrated from '@/Infrastructure/hooks/useRehydrated';
 import { useRouter } from 'next/router';
+import LinkNoteToTaskModal from '@/presentation/components/Notes/LinkNoteToTaskModal';
 export default function index() {
     const router = useRouter();
     const [createNoteModal, setCreateNoteModal] = useState(false);
@@ -34,7 +35,6 @@ export default function index() {
     const [fetchDraft, setFetchDraft] = useState<boolean>(draft === '1' ? true : false);
     const rehydrated = useRehydrated();
     const dispatch = useAppDispatch();
-    
     const handleActiveCreateNoteModal = (color : string) => {
         setCreateNoteModal(true)
         setCreateNoteColor(color);
@@ -95,7 +95,7 @@ export default function index() {
                             <span className='w-6 h-6 rounded-full bg-red-600 text-xs p-1 text-white'>{String(notesState.draft).padStart(2, '0')}</span>
                         </div>
                     </nav>
-                   
+
                    <div className='pr-2'>
                         <div>
                             <span className=' label font-bold'>Create a new note</span>
@@ -119,7 +119,7 @@ export default function index() {
                             <DatePicker className='btn btn-sm dark:bg-gray-600 dark:border-gray-600' dateFormat="yyyy-MM-dd" />
                         </div>
                    </div>
-                  
+
                    <div className='mt-5 pr-2'>
                         <div><span className=' label font-bold'>Choose a Type </span></div>
                         <label className='label'>
@@ -221,15 +221,17 @@ export default function index() {
                             description: '',
                             color: getTailwindColor(noteButtonColors[1]),
                             id: 0,
+                            is_draft : false
                             }}
                         />
                         ) : null}
                     </AnimatePresence>
                 </div>
-                
+
             </div>
        </div>
        {createNoteColor ? <NewNoteModal active={createNoteModal} color={createNoteColor} setActive={setCreateNoteModal} /> : <></>}
+
     </Layout>
   )
 }
